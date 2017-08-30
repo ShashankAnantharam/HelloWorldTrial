@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "EVETS";        //Page title of first Tab is Events
+                    return "EVENTS";        //Page title of first Tab is Events
                 case 1:
                     return "GROUPS";        //Page title of second Tab is Groups
                 case 2:
