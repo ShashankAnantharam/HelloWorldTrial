@@ -133,8 +133,8 @@ public class LPListItemAdapter<T> extends BaseAdapter{
             subtitle="";
         }
 
-        holder.main_text.setText(main_text);
-        holder.subtitle.setText(subtitle);
+        holder.main_text.setText(main_text);            //Set title of list view item
+        holder.subtitle.setText(subtitle);    //Set subtitle of list view item
 
 
         if(getflagstatus(rowItem)==true)

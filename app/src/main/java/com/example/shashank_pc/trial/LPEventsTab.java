@@ -130,11 +130,18 @@ public class LPEventsTab extends Fragment {
          */
 
         List <Event> mAllEvents = new ArrayList<>();
+        Event temp;
+        temp = new Event("Political gathering","This meeting is organized to protest unfair taxes on the middle class of the country.");
+        mAllEvents.add(temp);
+        temp = new Event("Family Function","This event is held to commemorate the 7th TTTTTTTTT.");
+        mAllEvents.add(temp);
+
         for(int i=0;i<27;i++)
         {
-            Event temp= new Event("Event"+Integer.toString(i),"Event_desc");
+            temp= new Event("Event"+Integer.toString(i),"Event_desc");
             mAllEvents.add(temp);
         }
+
         return mAllEvents;
     }
 }

@@ -7,7 +7,8 @@ package com.example.shashank_pc.trial;
 
 public class Generic {
 
-    protected String mName;
+    protected String mName;     //Max only 25 characters allowed for name
+
     protected String mDescription;
     protected boolean mBroadcastLocation;
 

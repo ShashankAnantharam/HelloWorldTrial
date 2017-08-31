@@ -5,7 +5,8 @@ package com.example.shashank_pc.trial;
  */
 
 public class User{
-    protected String mName;
+    protected String mName;         //Max only 25 characters allowed for name
+
     protected String mNumber;
     protected String mlastMessage;
     protected boolean mBroadcastLocation;

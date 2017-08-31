@@ -138,7 +138,6 @@ public class LPContactsTab extends Fragment {
         temp.setBroadcastLocationFlag(true);
         mAllContacts.add(temp);
 
-
         return mAllContacts;
     }
 }

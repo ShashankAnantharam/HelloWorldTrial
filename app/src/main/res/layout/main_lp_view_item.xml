@@ -5,9 +5,9 @@
     android:background="@android:color/white">
     
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="23sp"
+        android:layout_marginTop="9dp"
         android:id="@+id/main_lp_text"
         android:textSize="18sp"
         android:textColor="@android:color/black"
@@ -15,9 +15,11 @@
 
     <TextView
         android:id="@+id/main_lp_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="17sp"
         android:layout_below="@+id/main_lp_text"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="9dp"
         android:textSize="13sp"
         android:focusable="false" />
 
@@ -25,9 +27,8 @@
         android:id="@+id/gps_broadcast_flag"
         android:layout_width="33sp"
         android:layout_height="29sp"
-        android:layout_above="@+id/main_lp_subtitle"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="9dp"
         android:textStyle="bold"
         android:layout_alignParentEnd="true"
         android:focusable="false"
