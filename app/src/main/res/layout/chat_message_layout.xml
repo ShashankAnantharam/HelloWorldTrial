@@ -1,28 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/single_chat_layout_id"
-    android:background="@drawable/single_chat_drawable_left">
+    android:id="@+id/single_chat_main_layout_id"
+    >
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/single_chat_layout_id"
         android:layout_margin="2.5dip"
         android:paddingLeft="10dip"
-        android:id="@+id/single_chat_text"
-        android:textColor="@android:color/primary_text_light"
-        />
+        android:orientation="vertical"
+        >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sender"
-        android:id="@+id/message_creator"
-        android:layout_below="@id/single_chat_text"
-        android:paddingLeft="10dip"
-        android:layout_margin="5dip"
-        android:layout_marginBottom="3dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2.5dip"
+            android:paddingLeft="10dip"
+            android:id="@+id/single_chat_text"
+            android:textColor="@android:color/primary_text_light"
+            />
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sender"
+            android:id="@+id/message_creator"
+            android:layout_below="@id/single_chat_text"
+            android:paddingLeft="10dip"
+            android:layout_margin="5dip"
+            android:layout_marginBottom="3dp"/>
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

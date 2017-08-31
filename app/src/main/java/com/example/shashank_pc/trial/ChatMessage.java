@@ -12,7 +12,7 @@ public class ChatMessage {
 
     public ChatMessage(){}
 
-    public ChatMessage(boolean postion, String message)
+    public ChatMessage(boolean postion, String message, String creator)
     {
         this.message=message;
         this.position=postion;

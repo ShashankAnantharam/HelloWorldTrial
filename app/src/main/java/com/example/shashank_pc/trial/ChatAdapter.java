@@ -22,12 +22,15 @@ import java.util.List;
  * Created by shashank-pc on 8/31/2017.
  */
 
+//TODO Enhance the layout of ChatAdapter List
+
 public class ChatAdapter extends ArrayAdapter<ChatMessage> {
 
     private List<ChatMessage> mChatList = new ArrayList<>();
     private TextView chatText;
     private TextView creator;
     private RelativeLayout chatLayout;
+    private LinearLayout chatMainLayout;
     Context mContext;
 
     public ChatAdapter(Context context, int resource)
@@ -82,20 +85,37 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
 
         chatLayout.setBackgroundResource(mPosition? R.drawable.single_chat_drawable_left : R.drawable.single_chat_drawable_right);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+
+        RelativeLayout.LayoutParams params_chatMessage= (RelativeLayout.LayoutParams) chatText.getLayoutParams();
+        RelativeLayout.LayoutParams params_chatCreator= (RelativeLayout.LayoutParams) creator.getLayoutParams();
+
+        chatMainLayout= (LinearLayout) convertView.findViewById(R.id.single_chat_main_layout_id);
+
         if(mPosition==true)
         {
-            //set chat at left side
-            params.gravity= Gravity.LEFT;
+            //Set chat at left side
+//            chatLayout.setGravity(Gravity.LEFT);
+            chatMainLayout.setGravity(Gravity.LEFT);
+//            params_chatMessage.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+//            creator.setGravity(Gravity.LEFT);
+
         }
         else
         {
-            params.gravity= Gravity.RIGHT;
+            //Set chat at right side
+ //           chatLayout.setGravity(Gravity.RIGHT);
+            chatMainLayout.setGravity(Gravity.RIGHT);
+//           params_chatMessage.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//           params_chatCreator.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//            creator.setGravity(Gravity.RIGHT);
+
         }
 
-        chatText.setLayoutParams(params);
-
+        chatLayout.setLayoutParams(params);
 
         return convertView;
     }

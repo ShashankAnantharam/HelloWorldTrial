@@ -16,6 +16,8 @@ import android.widget.TextView;
  * Created by shashank-pc on 8/26/2017.
  */
 
+//TODO Make function for retrieving chats from Database
+
 public class SEChatsTab  extends Fragment {
 
     private ListView mChatList;
@@ -48,8 +50,9 @@ public class SEChatsTab  extends Fragment {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chatAdapter.add(new ChatMessage(false, mChatText.getText().toString()));
-                
+                ChatMessage nCM= new ChatMessage(false, mChatText.getText().toString(), "Me");
+                chatAdapter.add(nCM);
+
             }
         });
 
