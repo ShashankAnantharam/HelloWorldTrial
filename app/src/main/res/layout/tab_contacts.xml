@@ -9,12 +9,6 @@
     android:background="@android:color/white"
     tools:context="com.example.shashank_pc.trial.MainActivity">
 
-    <TextView
-        android:id="@+id/section_label_contact"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
 
     <ListView
         android:layout_width="match_parent"

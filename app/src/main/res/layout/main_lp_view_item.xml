@@ -10,7 +10,7 @@
         android:layout_marginTop="10dp"
         android:id="@+id/main_lp_text"
         android:textSize="18sp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@android:color/black"
         android:focusable="false" />
 
     <TextView
