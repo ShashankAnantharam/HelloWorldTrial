@@ -8,9 +8,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.shashank_pc.trial.SingleEntityActivity">
 
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <ListView
+        android:id="@+id/chat_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical">
+        
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:text="Send"
+            android:id="@+id/enter_chat_txt"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/chat_send_button"
+            />
+        
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="SEND"
+            android:id="@+id/chat_send_button"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+        
+        
+    </RelativeLayout>
 
 </RelativeLayout>
