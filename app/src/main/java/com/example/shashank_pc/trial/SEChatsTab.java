@@ -20,6 +20,8 @@ public class SEChatsTab  extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.single_entity_chats, container, false);
 
+
+
         return rootView;
     }
 
