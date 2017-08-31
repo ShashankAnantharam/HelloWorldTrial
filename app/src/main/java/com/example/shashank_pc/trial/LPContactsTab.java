@@ -79,7 +79,7 @@ public class LPContactsTab extends Fragment {
 
         //Get the contacts from the database
         if (mContacts == null)
-            mContacts = getAllContacts();
+            mContacts = getAllUsers();
 
 
         //Populate listview with contacts
@@ -120,7 +120,7 @@ public class LPContactsTab extends Fragment {
 
     }
 
-    public List<User> getAllContacts()
+    public List<User> getAllUsers()
     {
         //TODO Change function in order to get contacts from Database
         /*
