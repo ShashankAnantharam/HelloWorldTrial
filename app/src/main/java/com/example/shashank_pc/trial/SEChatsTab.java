@@ -52,6 +52,7 @@ public class SEChatsTab  extends Fragment {
             public void onClick(View v) {
                 ChatMessage nCM= new ChatMessage(false, mChatText.getText().toString(), "Me");
                 chatAdapter.add(nCM);
+                mChatText.setText("");
 
             }
         });
