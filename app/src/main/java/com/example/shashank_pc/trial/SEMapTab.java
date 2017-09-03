@@ -42,6 +42,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private LocationManager locationManager;
 
+    private LocationListener locationListener;
+
 
 
     private double Lat=2000;
@@ -85,8 +87,52 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
  //       Log.d("Tag1", "onViewCreated: ");
 
+        //create locationListener
+        locationListener= new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
 
 
+                double Latitude= location.getLatitude();    //Get latitude
+                Lat=Latitude;
+
+                double Longitude = location.getLongitude();     //Get longitude
+                Long=Longitude;
+
+                Log.d("GPS",Double.toString(Latitude)+" "+Double.toString(Longitude)+"\n");
+
+                LatLng latLng= new LatLng(Latitude, Longitude);
+
+                //Map latitude and longitude
+                if(mMap!=null) {
+                    mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
+
+                    //Zoom in to current location
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+
+                }
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+
+
+        //create locationManager
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -104,47 +150,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         {
             Log.d("MessageDebug","ArrivedNPS");
 
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-
-
-                    double Latitude= location.getLatitude();    //Get latitude
-                    Lat=Latitude;
-
-                    double Longitude = location.getLongitude();     //Get longitude
-                    Long=Longitude;
-
-                    Log.d("GPS",Double.toString(Latitude)+" "+Double.toString(Longitude)+"\n");
-
-                    LatLng latLng= new LatLng(Latitude, Longitude);
-
-                    //Map latitude and longitude
-                    if(mMap!=null) {
-                    mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
-
-                        //Zoom in to current location
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
-
-                    }
-
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            });
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
         }
         //else if location manager is gps provider
@@ -152,48 +158,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         {
             Log.d("MessageDebug","ArrivedGPS");
 
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-
-
-                    double Latitude= location.getLatitude();    //Get latitude
-                    Lat=Latitude;
-
-                    double Longitude = location.getLongitude();     //Get longitude
-                    Long=Longitude;
-                    Log.d("GPS",Double.toString(Latitude)+" "+Double.toString(Longitude)+"\n");
-
-                    LatLng latLng= new LatLng(Latitude, Longitude);
-
-                    //Map latitude and longitude
-                    if(mMap!=null) {
-                    mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
-
-                        //Zoom in to current location
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
-
-                    }
-
-
-
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            });
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
 
 
@@ -211,7 +176,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
         mMap=googleMap;
 
-
+        
 
 
         if(Lat!=2000 && Long!=2000) {
