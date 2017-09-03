@@ -105,8 +105,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 //Map latitude and longitude
                 if(mMap!=null) {
 
-                    mlocationMarker = new Circle();
-                    mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
+                    if(mlocationMarker!=null)
+                    {
+                        mlocationMarker.setCenter(latLng);
+                    }
+                    else {
+
+                        mlocationMarker = mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
+                    }
 
                     //Zoom in to current location
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
