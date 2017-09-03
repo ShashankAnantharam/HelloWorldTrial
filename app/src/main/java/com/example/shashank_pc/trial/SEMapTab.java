@@ -22,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -45,9 +46,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private LocationListener locationListener;
 
 
+    private Circle mlocationMarker=null;
 
-    private double Lat=2000;
-    private double Long=2000;
+
+
 
     private LatLng curr_loc;
 
@@ -92,19 +94,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onLocationChanged(Location location) {
 
-
                 double Latitude= location.getLatitude();    //Get latitude
-                Lat=Latitude;
+
 
                 double Longitude = location.getLongitude();     //Get longitude
-                Long=Longitude;
 
-                Log.d("GPS",Double.toString(Latitude)+" "+Double.toString(Longitude)+"\n");
 
                 LatLng latLng= new LatLng(Latitude, Longitude);
 
                 //Map latitude and longitude
                 if(mMap!=null) {
+
+                    mlocationMarker = new Circle();
                     mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
 
                     //Zoom in to current location
@@ -148,16 +149,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         //check if network provider is network provider
         if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
         {
-            Log.d("MessageDebug","ArrivedNPS");
-
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-
         }
         //else if location manager is gps provider
         else if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
-            Log.d("MessageDebug","ArrivedGPS");
-
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
 
@@ -172,21 +168,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
-
-
         mMap=googleMap;
 
-        
-
-
-        if(Lat!=2000 && Long!=2000) {
-            LatLng curr_loc = new LatLng(Lat, Long);
-
-
-            googleMap.addCircle(new CircleOptions().center(curr_loc).fillColor(Color.BLUE).radius(10));
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr_loc, 18));
-        }
 
     }
 }
