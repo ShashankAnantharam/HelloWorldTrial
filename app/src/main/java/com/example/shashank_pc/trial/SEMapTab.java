@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,12 +70,15 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             FragmentManager fragment = getActivity().getFragmentManager();
 
             mMapFrag = (MapFragment) fragment.findFragmentById(R.id.map);
+            
 
 
             mMapFrag.getMapAsync(this);
 
 
         }
+
+        Log.d("Tag1", "onViewCreated: ");
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -98,6 +102,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     double Latitude= location.getLatitude();    //Get latitude
 
                     double Longitude = location.getLongitude();     //Get longitude
+
+                    Log.d("GPS",Double.toString(Latitude)+" "+Double.toString(Longitude)+"\n");
 
                     LatLng latLng= new LatLng(Latitude, Longitude);
 
@@ -137,6 +143,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     double Latitude= location.getLatitude();    //Get latitude
 
                     double Longitude = location.getLongitude();     //Get longitude
+
+                    Log.d("GPS",Double.toString(Latitude)+" "+Double.toString(Longitude)+"\n");
 
                     LatLng latLng= new LatLng(Latitude, Longitude);
 
