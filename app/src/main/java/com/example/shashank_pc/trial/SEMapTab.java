@@ -43,6 +43,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private LocationManager locationManager;
 
 
+
+    private double Lat=2000;
+    private double Long=2000;
+
     private LatLng curr_loc;
 
     @Override
@@ -70,15 +74,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             FragmentManager fragment = getActivity().getFragmentManager();
 
             mMapFrag = (MapFragment) fragment.findFragmentById(R.id.map);
-            
-
 
             mMapFrag.getMapAsync(this);
 
 
         }
 
-        Log.d("Tag1", "onViewCreated: ");
+
+
+
+ //       Log.d("Tag1", "onViewCreated: ");
+
+
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -95,24 +102,31 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         //check if network provider is network provider
         if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
         {
+            Log.d("MessageDebug","ArrivedNPS");
+
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
 
+
                     double Latitude= location.getLatitude();    //Get latitude
+                    Lat=Latitude;
 
                     double Longitude = location.getLongitude();     //Get longitude
+                    Long=Longitude;
 
                     Log.d("GPS",Double.toString(Latitude)+" "+Double.toString(Longitude)+"\n");
 
                     LatLng latLng= new LatLng(Latitude, Longitude);
 
                     //Map latitude and longitude
+                    if(mMap!=null) {
                     mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
 
-                    //Zoom in to current location
+                        //Zoom in to current location
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
 
+                    }
 
                 }
 
@@ -136,23 +150,30 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         //else if location manager is gps provider
         else if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
+            Log.d("MessageDebug","ArrivedGPS");
+
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
 
+
                     double Latitude= location.getLatitude();    //Get latitude
+                    Lat=Latitude;
 
                     double Longitude = location.getLongitude();     //Get longitude
-
+                    Long=Longitude;
                     Log.d("GPS",Double.toString(Latitude)+" "+Double.toString(Longitude)+"\n");
 
                     LatLng latLng= new LatLng(Latitude, Longitude);
 
                     //Map latitude and longitude
+                    if(mMap!=null) {
                     mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
 
-                    //Zoom in to current location
+                        //Zoom in to current location
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+
+                    }
 
 
 
@@ -174,17 +195,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 }
             });
         }
-        else
-        {
-/*            curr_loc= new LatLng(17,78);
 
-            //Map latitude and longitude
-            mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
 
-            //Zoom in to current location
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
-*/
-        }
+
 
 
 
@@ -195,16 +208,20 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap)
     {
 
- /*       GoogleMap mGMap = googleMap;
+
+        mMap=googleMap;
 
 
-        LatLng curr_loc= new LatLng(17,78);
 
 
-        mGMap.addCircle(new CircleOptions().center(curr_loc).fillColor(Color.BLUE).radius(10));
+        if(Lat!=2000 && Long!=2000) {
+            LatLng curr_loc = new LatLng(Lat, Long);
 
-        mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr_loc,18));
-*/
+
+            googleMap.addCircle(new CircleOptions().center(curr_loc).fillColor(Color.BLUE).radius(10));
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr_loc, 18));
+        }
 
     }
 }
