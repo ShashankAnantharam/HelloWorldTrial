@@ -168,14 +168,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         }
         else
         {
-            LatLng latLng= new LatLng(0,0);
+/*            curr_loc= new LatLng(17,78);
 
             //Map latitude and longitude
             mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
 
             //Zoom in to current location
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
-
+*/
         }
 
 
@@ -187,13 +187,15 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap)
     {
 
-        GoogleMap mGMap = googleMap;
+ /*       GoogleMap mGMap = googleMap;
 
 
-/*
-        mMap.addCircle(new CircleOptions().center(curr_loc).fillColor(Color.BLUE).radius(10));
+        LatLng curr_loc= new LatLng(17,78);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr_loc,18));
+
+        mGMap.addCircle(new CircleOptions().center(curr_loc).fillColor(Color.BLUE).radius(10));
+
+        mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr_loc,18));
 */
 
     }
