@@ -105,17 +105,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 //Map latitude and longitude
                 if(mMap!=null) {
 
-                    if(mlocationMarker!=null)
+                    if(mlocationMarker!=null)       //Not the first time location is initialized
                     {
                         mlocationMarker.setCenter(latLng);
+
                     }
-                    else {
+                    else {                          //First time location is initialized
 
                         mlocationMarker = mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
                     }
 
-                    //Zoom in to current location
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+                    
 
                 }
 
@@ -152,7 +153,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-        
+
         //if location manager is gps provider
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
