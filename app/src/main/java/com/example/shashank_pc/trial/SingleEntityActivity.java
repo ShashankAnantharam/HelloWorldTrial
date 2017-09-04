@@ -134,6 +134,17 @@ public class SingleEntityActivity extends AppCompatActivity {
                     return mSEChatsTab;
                 case 2:
                 //    if(mSEMembersTab==null)
+
+                    /*
+                    This is where testing code starts
+                     */
+                    Intent testActivity= new Intent();
+                    testActivity.setClass(getApplicationContext(),TestActivity.class);
+                    startActivity(testActivity);
+                    /*
+                    This is where testing code ends
+                     */
+
                     mSEMembersTab= new SEMembersTab();
                     return mSEMembersTab;
                 default:
