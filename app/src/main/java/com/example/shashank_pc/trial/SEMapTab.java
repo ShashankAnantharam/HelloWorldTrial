@@ -152,16 +152,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-        //check if network provider is network provider
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-        {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        }
-        //else if location manager is gps provider
-        else if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        
+        //if location manager is gps provider
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
+        //else check if network provider is network provider
+        else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        }
+
 
 
 
