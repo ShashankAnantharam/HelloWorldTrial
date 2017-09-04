@@ -116,7 +116,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
                     }
 
-                    
+
 
                 }
 
