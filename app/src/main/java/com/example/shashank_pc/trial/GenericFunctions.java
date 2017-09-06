@@ -20,4 +20,15 @@ public class GenericFunctions {
         ans+="...";
         return ans;
     }
+
+    public static boolean validatePhone(String phone)
+    {
+        if(phone.length()<10)       //Mobile numbers are usually greater than 10
+            return false;
+        //TODO (function to validate phone number) (Bharath Kota)
+
+
+        return true;
+
+    }
 }

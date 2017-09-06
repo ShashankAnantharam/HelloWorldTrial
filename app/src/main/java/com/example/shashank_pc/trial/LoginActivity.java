@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -29,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +69,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
+
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -93,6 +101,42 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+
+        //Pop dialogue
+
+        AlertDialog.Builder mBuilder= new AlertDialog.Builder(getApplicationContext());
+        View mView= getLayoutInflater().inflate(R.layout.dialog_register, null);
+        final EditText mPhone= (EditText) findViewById(R.id.etPhone);
+        final EditText mPass= (EditText) findViewById(R.id.etPass);
+        final EditText mRtPass= (EditText) findViewById(R.id.etRtPass);
+        Button mRegisterButton = (Button) findViewById(R.id.btnRegister);
+
+  /*      mRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!GenericFunctions.validatePhone(mPhone.getText().toString()))
+                {
+                    Toast.makeText(getApplicationContext(),"Enter a valid Phone number", Toast.LENGTH_SHORT).show();
+                }
+                else if(mPass.getText().toString()==""){
+                    Toast.makeText(getApplicationContext(), "Enter a password", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if(mPass.getText().toString()!=mRtPass.getText().toString())
+                        Toast.makeText(getApplicationContext(), "Retype password", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+*/
+        mBuilder.setView(mView);
+        AlertDialog dialog= mBuilder.create();
+    //    this.showDialog(mView.getId());
+        dialog.show();
+
+
     }
 
     private void populateAutoComplete() {
