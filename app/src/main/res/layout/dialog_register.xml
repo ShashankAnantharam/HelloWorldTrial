@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/etPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Phone Number"
+        android:inputType="phone"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/etPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Password"
+        android:layout_marginTop="5dp"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/etRtPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:hint="Retype password"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_blue_light"
+        android:text="Register" />
+
+</LinearLayout>
