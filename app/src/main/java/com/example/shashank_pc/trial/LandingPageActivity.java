@@ -53,20 +53,30 @@ public class LandingPageActivity extends AppCompatActivity {
         final AlertDialog dialog= mBuilder.create();
         dialog.show();
 
+        
+
 
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String mPassword, mRetypePassword;
+                mPassword=mPass.getText().toString();
+                mRetypePassword=mRtPass.getText().toString();
                 if(!GenericFunctions.validatePhone(mPhone.getText().toString()))
                 {
                     Toast.makeText(getApplicationContext(),"Enter a valid Phone number", Toast.LENGTH_SHORT).show();
                 }
-                else if(mPass.getText().toString()==""){
+
+//                Toast.makeText(getApplicationContext(), mPass.getEditableText().toString() + " "+mRtPass.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                else if(mPassword.equals("")){
                     Toast.makeText(getApplicationContext(), "Enter a password", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    if(mPass.getText().toString()!=mRtPass.getText().toString())
+                    Toast.makeText(getApplicationContext(), mPassword +mRetypePassword, Toast.LENGTH_SHORT).show();
+                    if(!mPassword.equals(mRetypePassword))
                         Toast.makeText(getApplicationContext(), "Retype password", Toast.LENGTH_SHORT).show();
                     else {
                         regFlag=true;
