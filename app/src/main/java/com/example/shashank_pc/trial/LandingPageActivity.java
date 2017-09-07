@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LandingPageActivity extends AppCompatActivity {
 
@@ -35,6 +36,8 @@ public class LandingPageActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    private boolean regFlag=false;
+
     public void getDialogue(){
 
         //Pop dialogue
@@ -46,10 +49,15 @@ public class LandingPageActivity extends AppCompatActivity {
         final EditText mRtPass= (EditText) mView.findViewById(R.id.etRtPass);
         Button mRegisterButton = (Button) mView.findViewById(R.id.btnRegister);
 
+        mBuilder.setView(mView);
+        final AlertDialog dialog= mBuilder.create();
+        dialog.show();
+
+
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            /*    if(!GenericFunctions.validatePhone(mPhone.getText().toString()))
+                if(!GenericFunctions.validatePhone(mPhone.getText().toString()))
                 {
                     Toast.makeText(getApplicationContext(),"Enter a valid Phone number", Toast.LENGTH_SHORT).show();
                 }
@@ -60,15 +68,18 @@ public class LandingPageActivity extends AppCompatActivity {
                 {
                     if(mPass.getText().toString()!=mRtPass.getText().toString())
                         Toast.makeText(getApplicationContext(), "Retype password", Toast.LENGTH_SHORT).show();
+                    else {
+                        regFlag=true;
+                        dialog.dismiss();
+                    }
+
+
                 }
-*/
+
             }
         });
 
 
-        mBuilder.setView(mView);
-        AlertDialog dialog= mBuilder.create();
-        dialog.show();
 
     }
 
@@ -77,6 +88,7 @@ public class LandingPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
+
 
         getDialogue();
 
