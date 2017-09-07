@@ -129,6 +129,9 @@ public class LPContactsTab extends Fragment {
 
         List <User> mAllContacts = new ArrayList<>();
 
+        if(LandingPageActivity.mUserID=="")
+            return mAllContacts;
+
         User temp= new User("Shashank Anantharam","9701420818");
         temp.setBroadcastLocationFlag(false);
         mAllContacts.add(temp);

@@ -117,6 +117,10 @@ public class LPGroupsTab extends Fragment {
          */
 
         List <Group> mAllGroups = new ArrayList<>();
+
+        if(LandingPageActivity.mUserID=="")
+            return mAllGroups;
+
         for(int i=0;i<18;i++)
         {
             Group temp= new Group("Group","Group_desc");

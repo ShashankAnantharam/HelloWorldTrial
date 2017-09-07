@@ -139,8 +139,9 @@ public class LandingPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
-        if(regFlag==false)
+        if(regFlag==false) {
             getDialogue();
+        }
         else {
             loadLayout();
 
