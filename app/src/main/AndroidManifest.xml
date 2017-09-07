@@ -50,7 +50,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".CheckInActivity"
-            android:theme="@style/Theme.AppCompat">
+            android:theme="@style/Theme.AppCompat.Light">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

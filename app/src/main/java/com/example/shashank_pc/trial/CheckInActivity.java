@@ -31,7 +31,7 @@ public class CheckInActivity extends AppCompatActivity{
 
         //Pop dialogue
 
-        AlertDialog.Builder mBuilder= new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder mBuilder= new AlertDialog.Builder(this);
         View mView= getLayoutInflater().inflate(R.layout.dialog_register, null);
         final EditText mPhone= (EditText) mView.findViewById(R.id.etPhone);
         final EditText mPass= (EditText) mView.findViewById(R.id.etPass);
