@@ -1,5 +1,6 @@
 package com.example.shashank_pc.trial;
 
+import android.content.DialogInterface;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -53,7 +54,13 @@ public class LandingPageActivity extends AppCompatActivity {
         final AlertDialog dialog= mBuilder.create();
         dialog.show();
 
-        
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface D) {
+                if(regFlag==false)
+                    dialog.show();
+            }
+        });
 
 
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
@@ -67,15 +74,12 @@ public class LandingPageActivity extends AppCompatActivity {
                 {
                     Toast.makeText(getApplicationContext(),"Enter a valid Phone number", Toast.LENGTH_SHORT).show();
                 }
-
-//                Toast.makeText(getApplicationContext(), mPass.getEditableText().toString() + " "+mRtPass.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                else if(mPassword.equals("")){
+               else if(mPassword.equals("")){
                     Toast.makeText(getApplicationContext(), "Enter a password", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), mPassword +mRetypePassword, Toast.LENGTH_SHORT).show();
+
                     if(!mPassword.equals(mRetypePassword))
                         Toast.makeText(getApplicationContext(), "Retype password", Toast.LENGTH_SHORT).show();
                     else {
