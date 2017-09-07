@@ -129,7 +129,13 @@ public class LPEventsTab extends Fragment {
         Function to get All events from the Database. HardCoded now
          */
 
+
+
         List <Event> mAllEvents = new ArrayList<>();
+
+        if(LandingPageActivity.mUserID=="")
+            return mAllEvents;
+
         Event temp;
         temp = new Event("Political gathering","This meeting is organized to protest unfair taxes on the middle class of the country.");
         mAllEvents.add(temp);

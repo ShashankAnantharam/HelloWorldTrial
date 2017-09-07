@@ -39,6 +39,8 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private boolean regFlag=false;
 
+    public static String mUserID="";
+
     public void getDialogue(){
 
         //Pop dialogue
@@ -59,7 +61,12 @@ public class LandingPageActivity extends AppCompatActivity {
             public void onDismiss(DialogInterface D) {
                 if(regFlag==false)
                     dialog.show();
+                else {
+                    Toast.makeText(getApplicationContext(), "Come here", Toast.LENGTH_SHORT).show();
+                    loadLayout();
+                }
             }
+
         });
 
 
@@ -84,6 +91,7 @@ public class LandingPageActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Retype password", Toast.LENGTH_SHORT).show();
                     else {
                         regFlag=true;
+                        mUserID=mPhone.getText().toString();
                         dialog.dismiss();
                     }
 
@@ -97,14 +105,8 @@ public class LandingPageActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landing_page);
-
-
-        getDialogue();
+    public void loadLayout()
+    {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -128,6 +130,21 @@ public class LandingPageActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_landing_page);
+
+        if(regFlag==false)
+            getDialogue();
+        else {
+            loadLayout();
+
+                }
     }
 
 
