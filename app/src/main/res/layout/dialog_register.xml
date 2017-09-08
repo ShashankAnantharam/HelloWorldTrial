@@ -10,7 +10,7 @@
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="Sign Up"
         android:textSize="27sp"
         android:textStyle="bold"
         android:textColor="@android:color/holo_blue_dark"
@@ -55,12 +55,12 @@
 
     <Button
         android:id="@+id/btnRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200sp"
+        android:layout_height="70sp"
         android:textColor="@color/colorPrimaryDark"
         android:layout_marginTop="10dp"
-        android:background="@android:color/holo_blue_light"
-        android:text="Register"
+        android:background="@drawable/register_button"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_gravity="center"
         android:layout_marginBottom="35dp"/>
 
