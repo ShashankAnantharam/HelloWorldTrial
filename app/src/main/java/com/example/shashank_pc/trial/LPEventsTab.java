@@ -142,11 +142,7 @@ public class LPEventsTab extends Fragment {
         temp = new Event("Family Function","This event is held to commemorate the 7th TTTTTTTTT.");
         mAllEvents.add(temp);
 
-        for(int i=0;i<27;i++)
-        {
-            temp= new Event("Event"+Integer.toString(i),"Event_desc");
-            mAllEvents.add(temp);
-        }
+
 
         return mAllEvents;
     }

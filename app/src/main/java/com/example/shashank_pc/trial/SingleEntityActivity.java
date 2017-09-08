@@ -36,8 +36,10 @@ public class SingleEntityActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    String mName;
-    char mType;
+    public static String mName;
+    public static char mType;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

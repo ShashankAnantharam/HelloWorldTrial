@@ -121,11 +121,10 @@ public class LPGroupsTab extends Fragment {
         if(LandingPageActivity.mUserID=="")
             return mAllGroups;
 
-        for(int i=0;i<18;i++)
-        {
-            Group temp= new Group("Group","Group_desc");
-            mAllGroups.add(temp);
-        }
+        Group temp;
+        temp = new Group("Founders","We are the founders of the app");
+        mAllGroups.add(temp);
+
         return mAllGroups;
     }
 }

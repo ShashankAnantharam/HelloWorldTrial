@@ -20,14 +20,22 @@ public class SEMembersTab  extends LPContactsTab{
     @Override
     public List<User> getAllUsers() {
         List <User> mAllMembers = new ArrayList<>();
+        User temp;
+        if(SingleEntityActivity.mType=='U')
+        {
+            temp= new User(SingleEntityActivity.mName, "55554");
+            mAllMembers.add(temp);
+            return mAllMembers;
+        }
 
-        User temp= new User("AkashKant","55554");
+
+        temp = new User("Shashank Anantharam", LandingPageActivity.mUserID);    //TODO parameterize name
         temp.setBroadcastLocationFlag(false);
         mAllMembers.add(temp);
-        temp = new User("Mohit Bajaj", "55554");
+        temp= new User("Bharath Kota","55554");
+        temp.setBroadcastLocationFlag(false);
         mAllMembers.add(temp);
-        temp = new User("Abhishek Gupta", "55554");
-        temp.setBroadcastLocationFlag(true);
+        temp = new User("Mehtab Ahmed", "55554");
         mAllMembers.add(temp);
         temp = new User("Muthimon", "55554");
         temp.setBroadcastLocationFlag(true);
