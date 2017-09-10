@@ -27,9 +27,9 @@ public class GenericFunctions {
             return false;
         }
         else if (phone.length()==10){    // Assume Indian Phone Number
-            int check_number;
+            long check_number;
             try {
-                check_number = Integer.parseInt(phone);
+                check_number = Long.parseLong(phone);
             } catch (NumberFormatException e) {
                 return false;
             }
