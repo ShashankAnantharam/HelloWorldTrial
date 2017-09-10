@@ -21,14 +21,21 @@ public class GenericFunctions {
         return ans;
     }
 
-    public static boolean validatePhone(String phone)
+    public static boolean validatePhone(String phone) //TODO (function to validate phone number) (Bharath Kota)
     {
-        if(phone.length()<10)       //Mobile numbers are usually greater than 10
+        if(phone.length()<10) {       //Mobile numbers are usually greater than 10
             return false;
-        //TODO (function to validate phone number) (Bharath Kota)
-        //Received file
-
-        return true;
-
+        }
+        else if (phone.length()==10){    // Assume Indian Phone Number
+            int check_number;
+            try {
+                check_number = Integer.parseInt(phone);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+            return true;
+        }else {
+            return false;
+        }
     }
 }
