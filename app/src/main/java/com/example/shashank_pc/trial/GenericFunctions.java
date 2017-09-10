@@ -26,7 +26,7 @@ public class GenericFunctions {
         if(phone.length()<10)       //Mobile numbers are usually greater than 10
             return false;
         //TODO (function to validate phone number) (Bharath Kota)
-
+        //Received file
 
         return true;
 
