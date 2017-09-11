@@ -139,7 +139,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
                     /*
                     This is where testing code starts
-                     */
+                     
                     Intent testActivity= new Intent();
                     testActivity.setClass(getApplicationContext(),TestActivity.class);
                     startActivity(testActivity);
