@@ -21,12 +21,9 @@ public class GenericFunctions {
         return ans;
     }
 
-    public static boolean validatePhone(String phone) //TODO (function to validate phone number) (Bharath Kota)
+    public static boolean validatePhone(String phone) //function to validate phone number (Bharath Kota)
     {
-        if(phone.length()<10) {       //Mobile numbers are usually greater than 10
-            return false;
-        }
-        else if (phone.length()==10){    // Assume Indian Phone Number
+        if (phone.length()==10){    // Assume Indian Phone Number
             long check_number;
             try {
                 check_number = Long.parseLong(phone);
@@ -34,8 +31,19 @@ public class GenericFunctions {
                 return false;
             }
             return true;
-        }else {
-            return false;
         }
+
+            return false;
+
+    }
+
+    public static boolean isPasswordFine(String password)   //TODO Function to check if password is fine
+    {
+
+
+        //Please specify the conditions you set for the password in your comment (Length > 6, atleast one integer, etc.)
+
+        return true;
+
     }
 }

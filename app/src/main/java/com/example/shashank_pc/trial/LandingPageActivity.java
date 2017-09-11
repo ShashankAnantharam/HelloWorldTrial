@@ -49,6 +49,7 @@ public class LandingPageActivity extends AppCompatActivity {
         View mView= getLayoutInflater().inflate(R.layout.dialog_register, null);
         final EditText mPhone= (EditText) mView.findViewById(R.id.etPhone);
         final EditText mPass= (EditText) mView.findViewById(R.id.etPass);
+        final EditText mName= (EditText) mView.findViewById(R.id.etName);
         final EditText mRtPass= (EditText) mView.findViewById(R.id.etRtPass);
         Button mRegisterButton = (Button) mView.findViewById(R.id.btnRegister);
 
@@ -62,7 +63,7 @@ public class LandingPageActivity extends AppCompatActivity {
                 if(regFlag==false)
                     dialog.show();
                 else {
-                    Toast.makeText(getApplicationContext(), "Come here", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Welcome "+mName.getText().toString(), Toast.LENGTH_SHORT).show();
                     loadLayout();
                 }
             }
@@ -83,6 +84,10 @@ public class LandingPageActivity extends AppCompatActivity {
                 }
                else if(mPassword.equals("")){
                     Toast.makeText(getApplicationContext(), "Enter a password", Toast.LENGTH_SHORT).show();
+                }
+                else if(!GenericFunctions.isPasswordFine(mPassword))
+                {
+                    Toast.makeText(getApplicationContext(), "Password does not meet requirements", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
