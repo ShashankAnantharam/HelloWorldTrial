@@ -39,7 +39,9 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private boolean regFlag=false;
 
-    public static String mUserID="";
+    private String mUserID="";
+
+    private String mUserName="";
 
     public void getDialogue(){
 
@@ -97,6 +99,7 @@ public class LandingPageActivity extends AppCompatActivity {
                     else {
                         regFlag=true;
                         mUserID=mPhone.getText().toString();
+                        mUserName=mName.getText().toString();
                         dialog.dismiss();
                     }
 
@@ -202,18 +205,24 @@ public class LandingPageActivity extends AppCompatActivity {
             switch (position){
                 case 0:
                     //Return events tab fragment
-                    if(eventLPTab==null)
-                        eventLPTab= new LPEventsTab();
+                    if(eventLPTab==null) {
+                        eventLPTab = new LPEventsTab();
+                        eventLPTab.passUserDetails(mUserID,mUserName);
+                    }
                     return eventLPTab;
                 case 1:
                     // Return groups tab fragment
-                    if(groupLPTab==null)
-                        groupLPTab= new LPGroupsTab();
+                    if(groupLPTab==null) {
+                        groupLPTab = new LPGroupsTab();
+                        groupLPTab.passUserDetails(mUserID,mUserName);
+                    }
                     return groupLPTab;
                 case 2:
                     //Return contacts tab fragment
-                    if(contactLPTab==null)
-                        contactLPTab= new LPContactsTab();
+                    if(contactLPTab==null) {
+                        contactLPTab = new LPContactsTab();
+                        contactLPTab.passUserDetails(mUserID,mUserName);
+                    }
                     return contactLPTab;
             }
 

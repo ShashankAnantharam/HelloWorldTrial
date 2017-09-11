@@ -31,7 +31,16 @@ public class LPEventsTab extends Fragment {
 
     private View rootView;
 
+    private String mUserID;
+    private String mUserName;
 
+
+
+    public void passUserDetails(String userID, String userName)
+    {
+        mUserID=userID;
+        mUserName=userName;
+    }
 
 
     @Override
@@ -111,6 +120,10 @@ public class LPEventsTab extends Fragment {
                 listClickActivity.putExtra("Description",description);
                 listClickActivity.putExtra("Type",'E');
                 listClickActivity.putExtra("IsGPSBroadcast",isGPSBroadcast);
+                listClickActivity.putExtra("Username",mUserName);
+                listClickActivity.putExtra("UserID",mUserID);
+
+                //TODO broadcase Event ID
 
                 //Start new activity
                 startActivity(listClickActivity);
@@ -133,7 +146,7 @@ public class LPEventsTab extends Fragment {
 
         List <Event> mAllEvents = new ArrayList<>();
 
-        if(LandingPageActivity.mUserID=="")
+        if(mUserID=="")
             return mAllEvents;
 
         Event temp;

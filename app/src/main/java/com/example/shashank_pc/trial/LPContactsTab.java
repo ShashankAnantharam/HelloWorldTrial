@@ -30,6 +30,17 @@ public class LPContactsTab extends Fragment {
 
     private View rootView;
 
+    protected String mUserID;
+    protected String mUserName;
+
+
+
+    public void passUserDetails(String userID, String userName)
+    {
+        mUserID=userID;
+        mUserName=userName;
+    }
+
 
 
 
@@ -100,14 +111,18 @@ public class LPContactsTab extends Fragment {
                     Toast.makeText(getContext(), "Clicked on Contact", Toast.LENGTH_SHORT).show();
                     User user = (User) listView.getItemAtPosition(position);
                     String name = user.getName();
+                    String number = user.getNumber();
                     String description = user.getLastChatMessage();
                     boolean isGPSBroadcast = user.getBroadcastLocationFlag();
 
                     //Pass Name, Description, type(User) and IsGPSBroadcast flag to next activity
                     listClickActivity.putExtra("Name", name);
+                    listClickActivity.putExtra("ID", number);
                     listClickActivity.putExtra("Description", description);
                     listClickActivity.putExtra("Type", 'U');
                     listClickActivity.putExtra("IsGPSBroadcast", isGPSBroadcast);
+                    listClickActivity.putExtra("Username",mUserName);
+                    listClickActivity.putExtra("UserID",mUserID);
 
                     //Start new activity
                     startActivity(listClickActivity);
@@ -129,10 +144,10 @@ public class LPContactsTab extends Fragment {
 
         List <User> mAllContacts = new ArrayList<>();
 
-        if(LandingPageActivity.mUserID=="")
+        if(mUserID=="")
             return mAllContacts;
 
-        User temp= new User("Shashank Anantharam",LandingPageActivity.mUserID);
+        User temp= new User(mUserName,mUserID);
         temp.setBroadcastLocationFlag(false);
         mAllContacts.add(temp);
         temp = new User("Bharat Kota", "9177787179");

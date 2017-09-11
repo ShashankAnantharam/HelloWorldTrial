@@ -36,8 +36,14 @@ public class SingleEntityActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    public static String mName;
-    public static char mType;
+
+    private String mEntityName;
+    private String mEntityID;
+
+    private char mType;
+
+    private String mUserName;
+    private String mUserID;
 
 
 
@@ -47,11 +53,16 @@ public class SingleEntityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_single_entity);
 
         Intent caller = getIntent();
-        mName= caller.getStringExtra("Name");
+        mEntityName= caller.getStringExtra("Name");
+        mEntityID=caller.getStringExtra("ID");
         mType=caller.getCharExtra("Type", ' ');
 
+        mUserName=caller.getStringExtra("Username");
+        mUserID=caller.getStringExtra("UserID");
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(mName);
+        toolbar.setTitle(mEntityName);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -139,7 +150,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
                     /*
                     This is where testing code starts
-                     
+
                     Intent testActivity= new Intent();
                     testActivity.setClass(getApplicationContext(),TestActivity.class);
                     startActivity(testActivity);
@@ -148,6 +159,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                      */
 
                     mSEMembersTab= new SEMembersTab();
+                    mSEMembersTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
                     return mSEMembersTab;
                 default:
                     return null;

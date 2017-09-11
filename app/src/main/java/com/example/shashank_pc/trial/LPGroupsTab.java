@@ -27,6 +27,17 @@ public class LPGroupsTab extends Fragment {
 
     private View rootView;
 
+    private String mUserID;
+    private String mUserName;
+
+
+
+    public void passUserDetails(String userID, String userName)
+    {
+        mUserID=userID;
+        mUserName=userName;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,6 +109,10 @@ public class LPGroupsTab extends Fragment {
                 listClickActivity.putExtra("Description",description);
                 listClickActivity.putExtra("Type",'G');
                 listClickActivity.putExtra("IsGPSBroadcast",isGPSBroadcast);
+                listClickActivity.putExtra("Username",mUserName);
+                listClickActivity.putExtra("UserID",mUserID);
+
+                //TODO broadcase Group ID
 
                 //Start new activity
                 startActivity(listClickActivity);
@@ -118,7 +133,7 @@ public class LPGroupsTab extends Fragment {
 
         List <Group> mAllGroups = new ArrayList<>();
 
-        if(LandingPageActivity.mUserID=="")
+        if(mUserID=="")
             return mAllGroups;
 
         Group temp;

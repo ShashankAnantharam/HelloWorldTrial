@@ -26,6 +26,8 @@ public class User{
 
     public String getName(){return mName;}
 
+    public String getNumber(){return mNumber;}
+
     public String getLastChatMessage() {return mlastMessage;}
 
     public void setBroadcastLocationFlag(boolean BroadcastLocation){this.mBroadcastLocation=BroadcastLocation;}
