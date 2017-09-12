@@ -30,9 +30,10 @@
         android:id="@+id/etName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLength="18"
         android:ems="10"
         android:hint="Name"
-        android:inputType="text"
+        android:inputType="textCapWords"
         android:layout_marginTop="5dp" />
 
     <EditText
