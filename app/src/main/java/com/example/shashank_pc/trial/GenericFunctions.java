@@ -1,5 +1,7 @@
 package com.example.shashank_pc.trial;
 
+import static com.example.shashank_pc.trial.R.id.password;
+
 /**
  * Created by shashank-pc on 8/31/2017.
  */
@@ -39,11 +41,8 @@ public class GenericFunctions {
 
     public static boolean isPasswordFine(String password)   //TODO Function to check if password is fine
     {
-
-
         //Please specify the conditions you set for the password in your comment (Length > 6, atleast one integer, etc.)
-
-        return true;
+        return password.matches("^(?=.*[A-Z])(?=.*[!@#$&*%+=])(?=.*[0-9])(?=.*[a-z]).{6,}$");
 
     }
 }

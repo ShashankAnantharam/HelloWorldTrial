@@ -84,26 +84,22 @@ public class LandingPageActivity extends AppCompatActivity {
                 {
                     Toast.makeText(getApplicationContext(),"Enter a valid Phone number", Toast.LENGTH_SHORT).show();
                 }
-               else if(mPassword.equals("")){
+                else if(mPassword.equals("")){
                     Toast.makeText(getApplicationContext(), "Enter a password", Toast.LENGTH_SHORT).show();
+                }
+                else if(!mPassword.equals(mRetypePassword)) {
+                    Toast.makeText(getApplicationContext(), "Password and Retype Password dont match", Toast.LENGTH_SHORT).show();
                 }
                 else if(!GenericFunctions.isPasswordFine(mPassword))
                 {
-                    Toast.makeText(getApplicationContext(), "Password does not meet requirements", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Password doesen't meet requirements : Upper case, lower case, special char, digit & atleast 6 charachters !", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-
-                    if(!mPassword.equals(mRetypePassword))
-                        Toast.makeText(getApplicationContext(), "Retype password", Toast.LENGTH_SHORT).show();
-                    else {
-                        regFlag=true;
-                        mUserID=mPhone.getText().toString();
-                        mUserName=mName.getText().toString();
-                        dialog.dismiss();
-                    }
-
-
+                    regFlag=true;
+                    mUserID=mPhone.getText().toString();
+                    mUserName=mName.getText().toString();
+                    dialog.dismiss();
                 }
 
             }
