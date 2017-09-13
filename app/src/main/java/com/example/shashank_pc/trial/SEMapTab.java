@@ -25,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -46,7 +47,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private LocationListener locationListener;
 
 
-    private Circle mlocationMarker=null;
+    private Marker mlocationMarker=null;
 
 
 
@@ -107,12 +108,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     if(mlocationMarker!=null)       //Not the first time location is initialized
                     {
-                        mlocationMarker.setCenter(latLng);
+                        mlocationMarker.setPosition(latLng);
 
                     }
                     else {                          //First time location is initialized
 
-                        mlocationMarker = mMap.addCircle(new CircleOptions().center(latLng).fillColor(Color.BLUE).radius(10));
+                        mlocationMarker = mMap.addMarker(new MarkerOptions().position(latLng));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
                     }
 
