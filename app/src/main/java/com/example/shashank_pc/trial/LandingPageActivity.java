@@ -1,9 +1,18 @@
 package com.example.shashank_pc.trial;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +28,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import static java.security.AccessController.getContext;
 
 public class LandingPageActivity extends AppCompatActivity {
 
@@ -42,6 +53,62 @@ public class LandingPageActivity extends AppCompatActivity {
     private String mUserID="";
 
     private String mUserName="";
+
+    private BroadcastReceiver locationBroadcastReceiver;
+
+    private boolean gpsflag;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+ /*
+ Receive and listen to the location from GPS_Service
+  */
+        if(locationBroadcastReceiver==null)
+        {
+
+            locationBroadcastReceiver= new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    double latitude= intent.getDoubleExtra("Latitude",0);
+                    double longitude= intent.getDoubleExtra("Longitude",0);
+                    Toast.makeText(getApplicationContext(),latitude+" "+longitude,Toast.LENGTH_SHORT).show();
+
+
+                }
+            };
+
+        }
+        registerReceiver(locationBroadcastReceiver,new IntentFilter("location_update"));
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        /*
+        Stop broadcast receiver and GPS Service once app is closed
+         */
+        super.onDestroy();
+        if(locationBroadcastReceiver!=null)
+        {
+            unregisterReceiver(locationBroadcastReceiver);
+        }
+        Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);
+        stopService(gpsIntent);
+//        Toast.makeText(getApplicationContext(),"ON DESTROY CALLED",Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    //    Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);
+   //     stopService(gpsIntent);
+
+  //      Toast.makeText(getApplicationContext(),"ON PAUSE CALLED",Toast.LENGTH_SHORT);
+    }
 
     public void getDialogue(){
 
@@ -67,6 +134,9 @@ public class LandingPageActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(getApplicationContext(), "Welcome "+mName.getText().toString(), Toast.LENGTH_SHORT).show();
                     loadLayout();
+                    Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
+                    startService(gpsIntent);
+                    gpsflag=true;
                 }
             }
 
@@ -129,8 +199,20 @@ public class LandingPageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+
+                Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
+                if(gpsflag==true) {
+                    Toast.makeText(getApplicationContext(),"Stop Service",Toast.LENGTH_SHORT);
+                    stopService(gpsIntent);
+                    gpsflag=false;
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Start Service",Toast.LENGTH_SHORT);
+                    startService(gpsIntent);
+                    gpsflag=true;
+                }
+
             }
         });
 
@@ -142,16 +224,36 @@ public class LandingPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
+        locationBroadcastReceiver=null;
 
         if(regFlag==false) {
             getDialogue();
         }
         else {
             loadLayout();
+//            runtimePermissions();
+
+            Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);  //Intent to GPS service class
+            gpsflag=true;
+            startService(gpsIntent);
 
                 }
     }
 
+ /*   private boolean runtimePermissions()
+    {
+        if(Build.VERSION.SDK_INT >=23 &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},100);
+
+            return true;
+        }
+
+        return false;
+    }
+*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
