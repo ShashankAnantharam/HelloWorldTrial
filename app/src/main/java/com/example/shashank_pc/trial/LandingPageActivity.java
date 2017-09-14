@@ -64,14 +64,14 @@ public class LandingPageActivity extends AppCompatActivity {
     private boolean gpsflag;
 
     private FirebaseDatabase database;
+    private DatabaseReference writeGPSLat;
+    private DatabaseReference writeGPSLong;
 
     @Override
     protected void onResume() {
         super.onResume();
 
 
-        final DatabaseReference writeGPSLat= database.getReference("Users/"+mUserID+"/Lat");
-        final DatabaseReference writeGPSLong= database.getReference("Users/"+mUserID+"/Long");
 
 
  /*
@@ -210,6 +210,9 @@ public class LandingPageActivity extends AppCompatActivity {
     {
 
         database = FirebaseDatabase.getInstance();
+        writeGPSLat= database.getReference("Users/"+mUserID+"/Lat");
+        writeGPSLong= database.getReference("Users/"+mUserID+"/Long");
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
