@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
@@ -50,6 +51,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private boolean regFlag=false;
 
+
     private String mUserID="";
 
     private String mUserName="";
@@ -75,7 +77,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
                     double latitude= intent.getDoubleExtra("Latitude",0);
                     double longitude= intent.getDoubleExtra("Longitude",0);
-                    Toast.makeText(getApplicationContext(),latitude+" "+longitude,Toast.LENGTH_SHORT).show();
+  //                  Toast.makeText(getApplicationContext(),latitude+" "+longitude,Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -132,7 +134,6 @@ public class LandingPageActivity extends AppCompatActivity {
                 if(regFlag==false)
                     dialog.show();
                 else {
-                    Toast.makeText(getApplicationContext(), "Welcome "+mName.getText().toString(), Toast.LENGTH_SHORT).show();
                     loadLayout();
                     Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
                     startService(gpsIntent);
@@ -166,9 +167,21 @@ public class LandingPageActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    SharedPreferences userDetails = getSharedPreferences("UserDetails",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor userDetailsEdit= userDetails.edit();
+
                     regFlag=true;
+
                     mUserID=mPhone.getText().toString();
+                    userDetailsEdit.putString("UserID",mUserID);
+
                     mUserName=mName.getText().toString();
+                    userDetailsEdit.putString("UserName",mUserName);
+
+                    userDetailsEdit.putString("Password", mPass.getText().toString());
+
+                    userDetailsEdit.commit();
+
                     dialog.dismiss();
                 }
 
@@ -220,11 +233,32 @@ public class LandingPageActivity extends AppCompatActivity {
     }
 
 
+
+    private boolean initUserDetails()
+    {
+
+        SharedPreferences userDetails = getSharedPreferences("UserDetails",Context.MODE_PRIVATE);
+
+
+        if(userDetails.getString("UserID","")=="")
+            return false;
+
+        mUserID = userDetails.getString("UserID","");
+        mUserName=userDetails.getString("UserName","");
+
+        Toast.makeText(getApplicationContext(),"Welcome "+mUserName+" "+mUserID+" "+userDetails.getString("Password",""),
+                Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
         locationBroadcastReceiver=null;
+
+        regFlag=initUserDetails();
 
         if(regFlag==false) {
             getDialogue();
