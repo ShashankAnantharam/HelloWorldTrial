@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,13 +49,27 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private LocationListener locationListener;
 
-
     private Marker mlocationMarker=null;
 
-
-
-
     private LatLng curr_loc;
+
+
+
+    private String mUserID;
+    private String mUserName;
+    private String mEntityName;
+    private String mEntityID;
+    private char mType;
+
+    public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
+    {
+        mUserID= userID;
+        mUserName=userName;
+        mEntityName=entityName;
+        mEntityID=entityID;
+        mType=type;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +93,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
+
+            Toast.makeText(getContext(),mUserID,Toast.LENGTH_SHORT).show();
+
             FragmentManager fragment = getActivity().getFragmentManager();
 
             mMapFrag = (MapFragment) fragment.findFragmentById(R.id.map);

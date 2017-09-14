@@ -140,6 +140,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                 case 0:
                //     if(mSEMapTab==null)
                     mSEMapTab= new SEMapTab();
+                    mSEMapTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
                     return mSEMapTab;
                 case 1:
                //     if(mSEChatsTab==null)
