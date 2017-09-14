@@ -31,6 +31,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Iterator;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -42,15 +49,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private View rootView;
 
     private MapFragment mMapFrag;
-
     private GoogleMap mMap;
-
     private LocationManager locationManager;
-
     private LocationListener locationListener;
-
     private Marker mlocationMarker=null;
-
     private LatLng curr_loc;
 
 
@@ -61,6 +63,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private String mEntityID;
     private char mType;
 
+
+    private FirebaseDatabase database;
+    private Marker mContactMarker=null;
+    private DatabaseReference contactLatLong;
+
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
     {
         mUserID= userID;
@@ -68,6 +75,63 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         mEntityName=entityName;
         mEntityID=entityID;
         mType=type;
+    }
+
+    private void mContactInit()
+    {
+        String contactFirebaseAddress= "Users/"+mEntityID;
+        if(contactLatLong==null) {
+
+            contactLatLong = database.getReference(contactFirebaseAddress);
+            Toast.makeText(getContext(),contactFirebaseAddress,Toast.LENGTH_SHORT).show();
+        }
+
+        contactLatLong.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                LatLng contactLatLng=null;
+                double latitude=10000, longtitude=-10000;
+                int i=0;
+                for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                {
+                    double temp= snapshot.getValue(Double.class);
+                    if(i==0) {
+                        latitude = temp;
+                    }
+                    else if(i==1)
+                    {
+                        longtitude=temp;
+                    }
+                    i++;
+
+                }
+                contactLatLng= new LatLng(latitude,longtitude);
+                if(mMap!=null) {
+
+
+                    if(mContactMarker!=null)       //Not the first time location is initialized
+                    {
+                        mContactMarker.setPosition(contactLatLng);
+
+                    }
+                    else {                          //First time location is initialized
+
+                        mContactMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                title(mEntityName).
+                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
 
@@ -94,7 +158,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
 
-            Toast.makeText(getContext(),mUserID,Toast.LENGTH_SHORT).show();
+            database = FirebaseDatabase.getInstance();
+            Toast.makeText(getContext(),mEntityID,Toast.LENGTH_SHORT).show();
 
             FragmentManager fragment = getActivity().getFragmentManager();
 
@@ -104,6 +169,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
         }
+
 
 
 
@@ -176,7 +242,6 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-
         //if location manager is gps provider
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
@@ -189,7 +254,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         }
 
 
-
+        if(mType=='U')
+            mContactInit();
 
 
 
