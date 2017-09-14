@@ -30,6 +30,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import static java.security.AccessController.getContext;
 
 public class LandingPageActivity extends AppCompatActivity {
@@ -60,9 +63,15 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private boolean gpsflag;
 
+    private FirebaseDatabase database;
+
     @Override
     protected void onResume() {
         super.onResume();
+
+
+        final DatabaseReference writeGPSLat= database.getReference("Users/"+mUserID+"/Lat");
+        final DatabaseReference writeGPSLong= database.getReference("Users/"+mUserID+"/Long");
 
 
  /*
@@ -76,7 +85,12 @@ public class LandingPageActivity extends AppCompatActivity {
                 public void onReceive(Context context, Intent intent) {
 
                     double latitude= intent.getDoubleExtra("Latitude",0);
+
+                    writeGPSLat.setValue(latitude);
+
                     double longitude= intent.getDoubleExtra("Longitude",0);
+                    writeGPSLong.setValue(longitude);
+
   //                  Toast.makeText(getApplicationContext(),latitude+" "+longitude,Toast.LENGTH_SHORT).show();
 
 
@@ -195,6 +209,8 @@ public class LandingPageActivity extends AppCompatActivity {
     public void loadLayout()
     {
 
+        database = FirebaseDatabase.getInstance();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -257,6 +273,8 @@ public class LandingPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
         locationBroadcastReceiver=null;
+
+
 
         regFlag=initUserDetails();
 
