@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.PowerManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -46,6 +47,8 @@ public class LandingPageActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    private PowerManager.WakeLock wakeLock;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -114,6 +117,7 @@ public class LandingPageActivity extends AppCompatActivity {
         }
         Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);
         stopService(gpsIntent);
+        wakeLock.release();
 //        Toast.makeText(getApplicationContext(),"ON DESTROY CALLED",Toast.LENGTH_SHORT);
     }
 
@@ -212,6 +216,10 @@ public class LandingPageActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         writeGPSLat= database.getReference("Users/"+mUserID+"/Lat");
         writeGPSLong= database.getReference("Users/"+mUserID+"/Long");
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");
+        wakeLock.acquire();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
