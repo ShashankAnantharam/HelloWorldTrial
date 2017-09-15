@@ -102,10 +102,12 @@ public class LPGroupsTab extends Fragment {
                 Group group=(Group)listView.getItemAtPosition(position);
                 String name = group.getName();
                 String description= group.getDescription();
+                String groupID= group.getID();
                 boolean isGPSBroadcast= group.getBroadcastLocationFlag();
 
                 //Pass Name, Description, type(Group) and IsGPSBroadcast flag to next activity
                 listClickActivity.putExtra("Name",name);
+                listClickActivity.putExtra("ID", groupID);
                 listClickActivity.putExtra("Description",description);
                 listClickActivity.putExtra("Type",'G');
                 listClickActivity.putExtra("IsGPSBroadcast",isGPSBroadcast);
@@ -137,8 +139,10 @@ public class LPGroupsTab extends Fragment {
             return mAllGroups;
 
         Group temp;
-        temp = new Group("Founders","We are the founders of the app");
+        temp = new Group("Founders","We are the founders of the app","G00000000002");
         mAllGroups.add(temp);
+ //       temp = new Group("Family","Plot No 7, Road No 49", "G00000000001");
+ //       mAllGroups.add(temp);
 
         return mAllGroups;
     }

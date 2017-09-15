@@ -37,7 +37,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -67,6 +69,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private FirebaseDatabase database;
     private Marker mContactMarker=null;
     private DatabaseReference contactLatLong;
+
+    private List<Marker> mGroupMarkers=null;
+    private List<mMapContact> mGroupContacts=null;
+    private DatabaseReference groupFlags;
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
     {
@@ -131,6 +137,60 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             }
         });
 
+
+    }
+
+    private class mMapContact{
+        boolean flag;
+        DatabaseReference ref;
+        String name;
+
+        public mMapContact(boolean flag, DatabaseReference ref, String name)
+        {
+            this.flag=flag;
+            this.ref=ref;
+            this.name=name;
+        }
+    }
+
+    private void mGroupInit()
+    {
+        String groupFirebaseAddress = "Groups/"+mEntityID;
+
+        groupFlags = database.getReference(groupFirebaseAddress);
+
+        groupFlags.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //TODO CODE HERE
+                if(mGroupContacts==null)
+                {
+                    long len=dataSnapshot.getChildrenCount();
+                    mGroupMarkers= new ArrayList<Marker>();
+
+                    for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                    {
+
+                        boolean tFlag=snapshot.getValue(Boolean.class);
+                        String tID=snapshot.getKey();
+                        Toast.makeText(getContext(),tID,Toast.LENGTH_SHORT).show();
+                        DatabaseReference tRef = database.getReference("Users/" + tID);
+
+
+
+
+
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -256,6 +316,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
         if(mType=='U')
             mContactInit();
+        else if(mType=='G')
+            mGroupInit();
 
 
 

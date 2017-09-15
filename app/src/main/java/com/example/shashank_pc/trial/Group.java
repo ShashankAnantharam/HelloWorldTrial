@@ -11,6 +11,8 @@ public class Group extends Generic {
         super(name, description);
     }
 
+    public Group(String name, String description, String ID){super(name, description, ID);}
+
 
     public Group(String name)
     {
