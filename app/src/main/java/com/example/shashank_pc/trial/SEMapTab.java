@@ -72,6 +72,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private DatabaseReference contactLatLong;
 
     private List<mMapContact> mGroupContacts=null;
+    private List<Marker> mGroupMarkers=null;
     private HashMap<String,Integer> mGroupMap=null;
     private DatabaseReference groupFlags;
 
@@ -179,6 +180,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                      */
 
                     mGroupContacts = new ArrayList<mMapContact>();
+                    mGroupMarkers = new ArrayList<Marker>();
                     mGroupMap = new HashMap<String, Integer>();
                 }
 
@@ -198,22 +200,30 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     }
                     else if(mGroupContactID!=mUserID)
                     {
-                        /*
-                        Attach new UserID to group
+
+                                                /*
+                        Attach new UserID to group Hashmap
                          */
 
-                        mGroupMap.put(mGroupContactID,mGroupContacts.size());    //Update in hashmap
+                        mGroupMap.put(mGroupContactID,mGroupContacts.size());
+
+                        /*
+                        Attach new marker to GroupMarkers
+                         */
+
+                        Marker tMarker=null;
+                        mGroupMarkers.add(tMarker);
+
+
 
                         boolean tFlag = true;
 
                         final String tID=mGroupContactID;
 
+
                         DatabaseReference tRef= database.getReference("Users/"+tID);
 
                         ValueEventListener tValEventLis= new ValueEventListener() {
-
-                            Marker tMarker;
-
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -244,15 +254,23 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                 if(mMap!=null) {
 
 
-                                    if(tMarker!=null)       //Not the first time location is initialized
+
+
+                                    if(mGroupMarkers.get(mGroupMap.get(tID))!=null)       //Not the first time location is initialized
                                     {
-                                        tMarker.setPosition(contactLatLng);
+                                        mGroupMarkers.get(mGroupMap.get(tID)).setPosition(contactLatLng);
                                     }
-                                    else {                          //First time location is initialized
-                                        tMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                    else {
+
+                                        //First time location is initialized
+                                        Marker currMarker=mGroupMarkers.get(mGroupMap.get(tID));
+                                        currMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
                                                 title(tID).
                                                 icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
+                                        //Set new marker to groupMap
+                                        mGroupMarkers.set(mGroupMap.get(tID),currMarker);
                                     }
+
                                 }
 
 
