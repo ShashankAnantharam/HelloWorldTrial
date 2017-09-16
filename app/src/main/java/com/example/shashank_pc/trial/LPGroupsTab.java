@@ -141,8 +141,8 @@ public class LPGroupsTab extends Fragment {
         Group temp;
         temp = new Group("Founders","We are the founders of the app","G00000000002");
         mAllGroups.add(temp);
- //       temp = new Group("Family","Plot No 7, Road No 49", "G00000000001");
- //       mAllGroups.add(temp);
+        temp = new Group("Family","Plot No 7, Road No 49", "G00000000001");
+        mAllGroups.add(temp);
 
         return mAllGroups;
     }

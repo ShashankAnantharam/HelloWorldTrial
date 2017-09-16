@@ -38,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -70,8 +71,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private Marker mContactMarker=null;
     private DatabaseReference contactLatLong;
 
-    private List<Marker> mGroupMarkers=null;
     private List<mMapContact> mGroupContacts=null;
+    private HashMap<String,Integer> mGroupMap=null;
     private DatabaseReference groupFlags;
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
@@ -141,15 +142,24 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     }
 
     private class mMapContact{
+
+        /*
+        Class that represents a single contact of a group/event.
+         */
         boolean flag;
         DatabaseReference ref;
         String name;
+        ValueEventListener valueEventListener;
+        boolean VELFlag;
 
-        public mMapContact(boolean flag, DatabaseReference ref, String name)
+        public mMapContact(boolean flag, DatabaseReference ref, String name, ValueEventListener valueEventListener)
         {
             this.flag=flag;
             this.ref=ref;
             this.name=name;
+            this.valueEventListener=valueEventListener;
+            VELFlag=true;  //When constructor called, the valueEventListener is added to ref
+
         }
     }
 
@@ -163,28 +173,152 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //TODO CODE HERE
-                if(mGroupContacts==null)
+                if(mGroupMap==null) {
+                    /*
+                    First time initialize hashmap and arraylist
+                     */
+
+                    mGroupContacts = new ArrayList<mMapContact>();
+                    mGroupMap = new HashMap<String, Integer>();
+                }
+
+                for(DataSnapshot snapshot: dataSnapshot.getChildren())
                 {
-                    long len=dataSnapshot.getChildrenCount();
-                    mGroupMarkers= new ArrayList<Marker>();
 
-                    for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                    String mGroupContactID=snapshot.getKey();
+
+                    if(mGroupMap.containsKey(mGroupContactID))
                     {
-
-                        boolean tFlag=snapshot.getValue(Boolean.class);
-                        String tID=snapshot.getKey();
-                        Toast.makeText(getContext(),tID,Toast.LENGTH_SHORT).show();
-                        DatabaseReference tRef = database.getReference("Users/" + tID);
-
-
-
+                        /*
+                        If UserID already exists in Array
+                         */
+                        mGroupContacts.get(mGroupMap.get(mGroupContactID)).flag=true;
 
 
                     }
+                    else if(mGroupContactID!=mUserID)
+                    {
+                        /*
+                        Attach new UserID to group
+                         */
+
+                        mGroupMap.put(mGroupContactID,mGroupContacts.size());    //Update in hashmap
+
+                        boolean tFlag = true;
+
+                        final String tID=mGroupContactID;
+
+                        DatabaseReference tRef= database.getReference("Users/"+tID);
+
+                        ValueEventListener tValEventLis= new ValueEventListener() {
+
+                            Marker tMarker;
+
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                /*
+                                Get Latitude and Longitude
+                                 */
+                                LatLng contactLatLng=null;
+                                double latitude=10000, longtitude=-10000;
+                                int i=0;
+                                for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                                {
+                                    double temp= snapshot.getValue(Double.class);
+                                    if(i==0) {
+                                        latitude = temp;
+                                    }
+                                    else if(i==1)
+                                    {
+                                        longtitude=temp;
+                                    }
+                                    i++;
+
+                                }
+                                contactLatLng= new LatLng(latitude,longtitude);
+                               /*
+                               Set marker
+                                */
+
+                                if(mMap!=null) {
+
+
+                                    if(tMarker!=null)       //Not the first time location is initialized
+                                    {
+                                        tMarker.setPosition(contactLatLng);
+                                    }
+                                    else {                          //First time location is initialized
+                                        tMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                                title(tID).
+                                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
+                                    }
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        };
+
+                        tRef.addValueEventListener(tValEventLis);
+
+                        mMapContact mapContact = new mMapContact(tFlag,tRef,tID,tValEventLis);
+
+
+                        mGroupContacts.add(mapContact);
+
+
+                    }
+
+                    /*
+                    Traverse list
+                     */
+
+                    for(mMapContact mapContact: mGroupContacts)
+                    {
+                        Toast.makeText(getContext(),mapContact.name,Toast.LENGTH_SHORT).show();
+                        if(mapContact.flag==true)
+                        {
+                            /*
+                            If flag is true, set to false
+                             */
+                            mapContact.flag=false;
+
+                            if(mapContact.VELFlag==false)
+                            {
+                                                            /*
+                            If value event listener was disabled,enable it
+                             */
+
+                                mapContact.ref.addValueEventListener(mapContact.valueEventListener);
+                                mapContact.VELFlag=true;
+                            }
+
+                        }
+                        else if(mapContact.flag==false)
+                        {
+                            /*
+                            If flag is false, remove the value event listener
+                             */
+                            mapContact.ref.removeEventListener(mapContact.valueEventListener);
+                            mapContact.VELFlag=false;
+                        }
+
+                    }
+
+
+
+
+
                 }
-
-
             }
+
+
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
