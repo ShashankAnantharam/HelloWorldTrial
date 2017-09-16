@@ -73,6 +73,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private List<mMapContact> mGroupContacts=null;
     private List<Marker> mGroupMarkers=null;
+    private List<ValueEventListener> mGroupListeners=null;
     private HashMap<String,Integer> mGroupMap=null;
     private DatabaseReference groupFlags;
 
@@ -183,7 +184,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     mGroupContacts = new ArrayList<mMapContact>();
                     mGroupMarkers = new ArrayList<Marker>();
+                    mGroupListeners=new ArrayList<ValueEventListener>();
                     mGroupMap = new HashMap<String, Integer>();
+
                 }
 
                 for(DataSnapshot snapshot: dataSnapshot.getChildren())
@@ -216,6 +219,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         Marker tMarker=null;
                         mGroupMarkers.add(tMarker);
 
+
+
+
+
                         /*
                         New Map Contact
                          */
@@ -230,7 +237,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 //                        Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
 
-                        tRef.addValueEventListener(new ValueEventListener() {
+                        /*
+                        Attach a new listener to Group
+                         */
+
+                        mGroupListeners.add(tRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -288,7 +299,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                 Toast.makeText(getContext(), "Database Error", Toast.LENGTH_SHORT).show();
 
                             }
-                        });
+                        }));
 
 
 
