@@ -245,7 +245,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
                                 /*
                                 Get Latitude and Longitude
                                  */
@@ -312,10 +312,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     Traverse list
                      */
 
+                    int i_mapcontact=0;
                     for(mMapContact mapContact: mGroupContacts)
                     {
 
-                        if(mapContact.flag==true)
+
+                        if(mapContact.flag)
                         {
                             /*
                             If flag is true, set to false
@@ -329,9 +331,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                                             /*
                             If value event listener was disabled,enable it
                              */
-//TODO Make ValueEventListener from existing code and finish these functionalities
-//                                mapContact.ref.addValueEventListener(mapContact.valueEventListener);
-//                                mapContact.VELFlag=true;
+
+                                mapContact.ref.addValueEventListener(mGroupListeners.get(i_mapcontact));
+                                mapContact.VELFlag=true;
                             }
 
                         }
@@ -340,8 +342,19 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             /*
                             If flag is false, remove the value event listener and set VELFFlag to false
                              */
+                            Toast.makeText(getContext(), mapContact.name,Toast.LENGTH_SHORT).show();
+
+                            /*
+                          //TODO  Error here.
+                             */
+
+                    //        mapContact.ref.removeEventListener(mGroupListeners.get(i_mapcontact));
+                            mapContact.VELFlag=false;
 
                         }
+
+
+                        i_mapcontact++;
 
                     }
 
