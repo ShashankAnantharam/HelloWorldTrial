@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -173,9 +174,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
         groupFlags = database.getReference(groupFirebaseAddress);
 
-        groupFlags.addValueEventListener(new ValueEventListener() {
+
+
+        groupFlags.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //TODO CODE HERE
                 if(mGroupMap==null) {
                     /*
@@ -189,10 +192,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 }
 
-                for(DataSnapshot snapshot: dataSnapshot.getChildren())
-                {
 
-                    String mGroupContactID=snapshot.getKey();
+
+                    String mGroupContactID=dataSnapshot.getKey();
 
                     if(mGroupMap.containsKey(mGroupContactID))
                     {
@@ -220,13 +222,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         mGroupMarkers.add(tMarker);
 
 
-
-
-
                         /*
                         New Map Contact
                          */
-
 
                         boolean tFlag = true;
 
@@ -245,7 +243,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            //    Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
+                                //    Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
                                 /*
                                 Get Latitude and Longitude
                                  */
@@ -301,78 +299,38 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             }
                         }));
 
-
-
                         mGroupContacts.add( new mMapContact(tFlag,tRef,tName));
 
-
                     }
-
-                    /*
-                    Traverse list
-                     */
-
-                    int i_mapcontact=0;
-                    for(mMapContact mapContact: mGroupContacts)
-                    {
-
-
-                        if(mapContact.flag)
-                        {
-                            /*
-                            If flag is true, set to false
-                             */
-                            mapContact.flag=false;
-
- //                           Toast.makeText(getContext(),mapContact.name,Toast.LENGTH_SHORT).show();
-
-                            if(mapContact.VELFlag==false)
-                            {
-                                                            /*
-                            If value event listener was disabled,enable it
-                             */
-
-                                mapContact.ref.addValueEventListener(mGroupListeners.get(i_mapcontact));
-                                mapContact.VELFlag=true;
-                            }
-
-                        }
-                        else if(mapContact.flag==false)
-                        {
-                            /*
-                            If flag is false, remove the value event listener and set VELFFlag to false
-                             */
-                            Toast.makeText(getContext(), mapContact.name,Toast.LENGTH_SHORT).show();
-
-                            /*
-                          //TODO  Error here.
-                             */
-
-                    //        mapContact.ref.removeEventListener(mGroupListeners.get(i_mapcontact));
-                            mapContact.VELFlag=false;
-
-                        }
-
-
-                        i_mapcontact++;
-
-                    }
-
-
-
-
 
                 }
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
             }
 
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
+            }
 
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+
+
+
+
+
 
     }
 
