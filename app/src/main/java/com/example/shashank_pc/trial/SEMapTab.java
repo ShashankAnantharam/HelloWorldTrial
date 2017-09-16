@@ -198,7 +198,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
                     }
-                    else if(mGroupContactID!=mUserID)
+                    else if(!mGroupContactID.equals(mUserID))
                     {
 
                                                 /*
@@ -223,9 +223,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                         DatabaseReference tRef= database.getReference("Users/"+tID);
 
+                        Toast.makeText(getContext(),tID,Toast.LENGTH_SHORT).show();
+
                         ValueEventListener tValEventLis= new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+
 
                                 /*
                                 Get Latitude and Longitude
@@ -251,10 +254,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                Set marker
                                 */
 
+
+
                                 if(mMap!=null) {
-
-
-
 
                                     if(mGroupMarkers.get(mGroupMap.get(tID))!=null)       //Not the first time location is initialized
                                     {
@@ -263,8 +265,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                     else {
 
                                         //First time location is initialized
-                                        Marker currMarker=mGroupMarkers.get(mGroupMap.get(tID));
-                                        currMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                        Marker currMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
                                                 title(tID).
                                                 icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
                                         //Set new marker to groupMap
@@ -298,7 +299,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     for(mMapContact mapContact: mGroupContacts)
                     {
-                        Toast.makeText(getContext(),mapContact.name,Toast.LENGTH_SHORT).show();
+
                         if(mapContact.flag==true)
                         {
                             /*
