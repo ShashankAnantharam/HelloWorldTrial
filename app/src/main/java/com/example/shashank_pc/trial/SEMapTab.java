@@ -150,15 +150,15 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         boolean flag;
         DatabaseReference ref;
         String name;
-        ValueEventListener valueEventListener;
+  //      ValueEventListener valueEventListener;
         boolean VELFlag;
 
-        public mMapContact(boolean flag, DatabaseReference ref, String name, ValueEventListener valueEventListener)
+        public mMapContact(boolean flag, DatabaseReference ref, String name) //, ValueEventListener valueEventListener)
         {
             this.flag=flag;
             this.ref=ref;
             this.name=name;
-            this.valueEventListener=valueEventListener;
+//            this.valueEventListener=valueEventListener;
             VELFlag=true;  //When constructor called, the valueEventListener is added to ref
 
         }
@@ -219,23 +219,22 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         /*
                         New Map Contact
                          */
-                        final mMapContact mapContact = new mMapContact();
 
 
-                        mapContact.flag = true;
+                        boolean tFlag = true;
 
-                        mapContact.name=mGroupContactID;
+                        final String tName=mGroupContactID;
 
 
-                        mapContact.ref= database.getReference("Users/"+mapContact.name);
+                        DatabaseReference tRef= database.getReference("Users/"+tName);
 
-//                        Toast.makeText(getContext(),mapContact.name,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
 
-                        mapContact.valueEventListener= new ValueEventListener() {
+                        tRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-
+                                Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
                                 /*
                                 Get Latitude and Longitude
                                  */
@@ -264,18 +263,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                                 if(mMap!=null) {
 
-                                    if(mGroupMarkers.get(mGroupMap.get(mapContact.name))!=null)       //Not the first time location is initialized
+                                    if(mGroupMarkers.get(mGroupMap.get(tName))!=null)       //Not the first time location is initialized
                                     {
-                                        mGroupMarkers.get(mGroupMap.get(mapContact.name)).setPosition(contactLatLng);
+                                        mGroupMarkers.get(mGroupMap.get(tName)).setPosition(contactLatLng);
                                     }
                                     else {
 
                                         //First time location is initialized
                                         Marker currMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
-                                                title(mapContact.name).
+                                                title(tName).
                                                 icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
                                         //Set new marker to groupMap
-                                        mGroupMarkers.set(mGroupMap.get(mapContact.name),currMarker);
+                                        mGroupMarkers.set(mGroupMap.get(tName),currMarker);
                                     }
 
                                 }
@@ -286,16 +285,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
+                                Toast.makeText(getContext(), "Database Error", Toast.LENGTH_SHORT).show();
+
                             }
-                        };
-
-                        mapContact.ref.addValueEventListener(mapContact.valueEventListener);
+                        });
 
 
 
-
-
-                        mGroupContacts.add(mapContact);
+                        mGroupContacts.add( new mMapContact(tFlag,tRef,tName));
 
 
                     }
@@ -321,19 +318,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                                             /*
                             If value event listener was disabled,enable it
                              */
-
-                                mapContact.ref.addValueEventListener(mapContact.valueEventListener);
-                                mapContact.VELFlag=true;
+//TODO Make ValueEventListener from existing code and finish these functionalities
+//                                mapContact.ref.addValueEventListener(mapContact.valueEventListener);
+//                                mapContact.VELFlag=true;
                             }
 
                         }
                         else if(mapContact.flag==false)
                         {
                             /*
-                            If flag is false, remove the value event listener
+                            If flag is false, remove the value event listener and set VELFFlag to false
                              */
-                            mapContact.ref.removeEventListener(mapContact.valueEventListener);
-                            mapContact.VELFlag=false;
+
                         }
 
                     }
