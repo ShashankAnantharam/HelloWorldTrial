@@ -156,6 +156,7 @@ public class LPContactsTab extends Fragment {
         mAllContacts.add(temp);
         temp = new User("Mehtab Ahmed", "9177787327");
         temp.setBroadcastLocationFlag(false);
+        temp= new User("Phani", "9494426683");
         mAllContacts.add(temp);
 
         return mAllContacts;
