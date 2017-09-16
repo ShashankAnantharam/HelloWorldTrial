@@ -314,6 +314,20 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
+                String tName= dataSnapshot.getKey();        //Get ID
+
+                int index= mGroupMap.get(tName);        //Get Group Member index in array
+
+                mGroupContacts.get(index).flag=false;
+
+                mGroupContacts.get(index).ref.removeEventListener(
+                        mGroupListeners.get(index)
+                );
+
+
+
+
+
             }
 
             @Override
