@@ -1,7 +1,9 @@
 package com.example.shashank_pc.trial;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,8 @@ public class LPContactsTab extends Fragment {
 
     protected String mUserID;
     protected String mUserName;
+
+    SharedPreferences preferences;
 
 
 
@@ -67,8 +71,7 @@ public class LPContactsTab extends Fragment {
 
         }
 
-
-
+        preferences = getContext().getSharedPreferences("LPLists", Context.MODE_PRIVATE);
         return rootView;
     }
 
@@ -142,6 +145,8 @@ public class LPContactsTab extends Fragment {
         Function to get All contacts from the Database. HardCoded now
          */
 
+        boolean mBroadcastLocationFlag;
+
         List <User> mAllContacts = new ArrayList<>();
 
         if(mUserID=="")
@@ -151,12 +156,20 @@ public class LPContactsTab extends Fragment {
         temp.setBroadcastLocationFlag(false);
         mAllContacts.add(temp);
         temp = new User("Shashank A","9701420818");
+        mBroadcastLocationFlag=preferences.getBoolean("9701420818",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
         temp = new User("Bharat Kota", "9177787179");
+        mBroadcastLocationFlag=preferences.getBoolean("9177787179",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
         temp = new User("Mehtab Ahmed", "9177787327");
-        temp.setBroadcastLocationFlag(false);
+        mBroadcastLocationFlag=preferences.getBoolean("9177787327",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        mAllContacts.add(temp);
         temp= new User("Phani", "9494426683");
+        mBroadcastLocationFlag=preferences.getBoolean("9494426683",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
  //       temp = new User("Abhinav", "9000377713");
 //        mAllContacts.add(temp);

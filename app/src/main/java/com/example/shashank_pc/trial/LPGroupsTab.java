@@ -1,6 +1,8 @@
 package com.example.shashank_pc.trial;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.InflateException;
@@ -29,6 +31,10 @@ public class LPGroupsTab extends Fragment {
 
     private String mUserID;
     private String mUserName;
+
+
+    SharedPreferences preferences;
+
 
 
 
@@ -61,7 +67,7 @@ public class LPGroupsTab extends Fragment {
 
         }
 
-
+        preferences = getContext().getSharedPreferences("LPLists", Context.MODE_PRIVATE);
         return rootView;
     }
 
@@ -138,11 +144,18 @@ public class LPGroupsTab extends Fragment {
         if(mUserID=="")
             return mAllGroups;
 
+
+
         Group temp;
+        boolean mBroadcastLocationFlag;
         temp = new Group("Founders","We are the founders of the app","G00000000002");
+        mBroadcastLocationFlag=preferences.getBoolean("G00000000002",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllGroups.add(temp);
- //       temp = new Group("Family","Plot No 7, Road No 49", "G00000000001");
- //       mAllGroups.add(temp);
+        temp = new Group("Family","Plot No 7, Road No 49", "G00000000001");
+        mBroadcastLocationFlag=preferences.getBoolean("G00000000001",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        mAllGroups.add(temp);
 
         return mAllGroups;
     }

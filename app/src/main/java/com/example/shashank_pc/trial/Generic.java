@@ -40,6 +40,10 @@ public class Generic {
         return mName+ " : " +mDescription;
     }
 
+    public void initBroadcastLocationFlag(boolean BroadcastLocation)
+    {this.mBroadcastLocation = BroadcastLocation;}
+
+
     public void setBroadcastLocationFlag(boolean BroadcastLocation, String userID){
 
         this.mBroadcastLocation=BroadcastLocation;

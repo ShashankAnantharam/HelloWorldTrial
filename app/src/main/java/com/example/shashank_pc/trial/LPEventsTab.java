@@ -1,5 +1,6 @@
 package com.example.shashank_pc.trial;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ public class LPEventsTab extends Fragment {
     private String mUserID;
     private String mUserName;
 
+    SharedPreferences preferences;
 
 
     public void passUserDetails(String userID, String userName)
@@ -70,7 +72,7 @@ public class LPEventsTab extends Fragment {
 
 
 
-
+        preferences = getContext().getSharedPreferences("LPLists", Context.MODE_PRIVATE);
         return rootView;
     }
 
@@ -150,9 +152,17 @@ public class LPEventsTab extends Fragment {
             return mAllEvents;
 
         Event temp;
-        temp = new Event("Political gathering","This meeting is organized to protest unfair taxes on the middle class of the country.");
+        boolean mBroadcastLocationFlag;
+
+        temp = new Event("Political gathering","This meeting is organized to protest unfair taxes on the middle class of the country."
+        ,"E0000000001");
+        mBroadcastLocationFlag=preferences.getBoolean("E0000000001",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllEvents.add(temp);
-        temp = new Event("Family Function","This event is held to commemorate the 7th TTTTTTTTT.");
+        temp = new Event("Family Function","This event is held to commemorate the 7th TTTTTTTTT."
+        ,"E0000000002");
+        mBroadcastLocationFlag=preferences.getBoolean("E0000000002",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllEvents.add(temp);
 
 

@@ -32,5 +32,7 @@ public class User{
 
     public void setBroadcastLocationFlag(boolean BroadcastLocation){this.mBroadcastLocation=BroadcastLocation;}
 
+    public void initBroadcastLocationFlag(boolean BroadcastLocation){this.mBroadcastLocation=BroadcastLocation;}
+
     public boolean getBroadcastLocationFlag(){return mBroadcastLocation;}
 }

@@ -196,12 +196,33 @@ public class LPListItemAdapter<T> extends BaseAdapter{
     }
     public void locationBroadcastButtonOnClickActivity(T rowItem, boolean mLBflag, View convertView)
     {
+        SharedPreferences preferences = context.getSharedPreferences("LPLists",Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit= preferences.edit();
+
+
         if(rowItem instanceof Event)    //If Row Item is an Event
+        {
             ((Event) rowItem).setBroadcastLocationFlag(mLBflag, userID);
-        else if(rowItem instanceof Group)
+            edit.putBoolean(((Event) rowItem).getID(),mLBflag);
+            edit.commit();
+        }
+        else if(rowItem instanceof Group) {
             ((Group) rowItem).setBroadcastLocationFlag(mLBflag, userID);
-        else if(rowItem instanceof User)
+            edit.putBoolean(((Group) rowItem).getID(),mLBflag);
+            edit.commit();
+
+        }
+        else if(rowItem instanceof User) {
             ((User) rowItem).setBroadcastLocationFlag(mLBflag);
+            edit.putBoolean(((User) rowItem).getNumber(),mLBflag);
+            edit.commit();
+        }
+
+
+
+
+
+
 
         if(mLBflag==true)
             Toast.makeText(convertView.getContext(), "GPS broadcasting ON", Toast.LENGTH_SHORT).show();

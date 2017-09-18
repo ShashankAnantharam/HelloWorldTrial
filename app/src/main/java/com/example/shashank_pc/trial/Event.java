@@ -8,9 +8,9 @@ public class Event extends Generic {
 
     private int ID;
     private static int idGenerator=0;
-    public Event(String name, String description)
+    public Event(String name, String description, String eID)
     {
-        super(name, description);
+        super(name, description, eID);
         idGenerator++;
         ID=idGenerator;
     }
