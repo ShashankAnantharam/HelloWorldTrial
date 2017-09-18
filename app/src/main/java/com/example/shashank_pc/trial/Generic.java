@@ -1,5 +1,6 @@
 package com.example.shashank_pc.trial;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
@@ -47,6 +48,15 @@ public class Generic {
         Start Firebase Code here
          */
         FirebaseDatabase database= FirebaseDatabase.getInstance();
+        String address;
+        if(mID.charAt(0)=='G')
+            address="Groups/";
+        else
+            address="Events/";
+
+        address+=mID;
+
+        DatabaseReference ref = database.getReference(address);
 
         if(BroadcastLocation)
         {
@@ -62,6 +72,7 @@ public class Generic {
 
             https://firebase.google.com/docs/database/android/read-and-write (Add user function to be used to add user to group node)
              */
+
 
 
         }
