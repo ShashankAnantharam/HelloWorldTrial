@@ -74,7 +74,6 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private List<mMapContact> mGroupContacts=null;
     private List<Marker> mGroupMarkers=null;
-    private List<ValueEventListener> mGroupListeners=null;
     private HashMap<String,Integer> mGroupMap=null;
     private DatabaseReference groupFlags;
 
@@ -152,16 +151,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         boolean flag;
         DatabaseReference ref;
         String name;
-  //      ValueEventListener valueEventListener;
-        boolean VELFlag;
+        ValueEventListener valueEventListener;
 
-        public mMapContact(boolean flag, DatabaseReference ref, String name) //, ValueEventListener valueEventListener)
+        public mMapContact(boolean flag, DatabaseReference ref, String name, ValueEventListener valueEventListener)
         {
             this.flag=flag;
             this.ref=ref;
             this.name=name;
-//            this.valueEventListener=valueEventListener;
-            VELFlag=true;  //When constructor called, the valueEventListener is added to ref
+            this.valueEventListener=valueEventListener;
 
         }
 
@@ -187,21 +184,26 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     mGroupContacts = new ArrayList<mMapContact>();
                     mGroupMarkers = new ArrayList<Marker>();
-                    mGroupListeners=new ArrayList<ValueEventListener>();
                     mGroupMap = new HashMap<String, Integer>();
 
                 }
 
 
 
-                    String mGroupContactID=dataSnapshot.getKey();
+                    final String mGroupContactID=dataSnapshot.getKey();
 
                     if(mGroupMap.containsKey(mGroupContactID))
                     {
                         /*
                         If UserID already exists in Array
                          */
-                        mGroupContacts.get(mGroupMap.get(mGroupContactID)).flag=true;
+                        if(mGroupContacts.get(mGroupMap.get(mGroupContactID)).flag==false) {
+                            mGroupContacts.get(mGroupMap.get(mGroupContactID)).flag = true;
+                            mGroupContacts.get(mGroupMap.get(mGroupContactID)).ref.addValueEventListener(
+
+                                    mGroupContacts.get(mGroupMap.get(mGroupContactID)).valueEventListener
+                            );
+                        }
 
 
                     }
@@ -218,7 +220,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         Attach new marker to GroupMarkers
                          */
 
-                        Marker tMarker=null;
+                        final Marker tMarker=null;
                         mGroupMarkers.add(tMarker);
 
 
@@ -239,7 +241,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         Attach a new listener to Group
                          */
 
-                        mGroupListeners.add(tRef.addValueEventListener(new ValueEventListener() {
+                        ValueEventListener tValList= tRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -272,18 +274,16 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                                 if(mMap!=null) {
 
-                                    if(mGroupMarkers.get(mGroupMap.get(tName))!=null)       //Not the first time location is initialized
+                                    if(mGroupMarkers.get(mGroupMap.get(mGroupContactID))!=null)       //Not the first time location is initialized
                                     {
-                                        mGroupMarkers.get(mGroupMap.get(tName)).setPosition(contactLatLng);
+                                        mGroupMarkers.get(mGroupMap.get(mGroupContactID)).setPosition(contactLatLng);
                                     }
                                     else {
 
                                         //First time location is initialized
-                                        Marker currMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                        mGroupMarkers.set(mGroupMap.get(mGroupContactID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
                                                 title(tName).
-                                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
-                                        //Set new marker to groupMap
-                                        mGroupMarkers.set(mGroupMap.get(tName),currMarker);
+                                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
                                     }
 
                                 }
@@ -297,9 +297,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                 Toast.makeText(getContext(), "Database Error", Toast.LENGTH_SHORT).show();
 
                             }
-                        }));
+                        });
 
-                        mGroupContacts.add( new mMapContact(tFlag,tRef,tName));
+                        mGroupContacts.add( new mMapContact(tFlag,tRef,tName,tValList));
 
                     }
 
@@ -321,7 +321,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 mGroupContacts.get(index).flag=false;
 
                 mGroupContacts.get(index).ref.removeEventListener(
-                        mGroupListeners.get(index)
+                        mGroupContacts.get(index).valueEventListener
                 );
 
 
