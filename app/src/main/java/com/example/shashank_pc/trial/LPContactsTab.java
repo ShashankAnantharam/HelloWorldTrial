@@ -100,7 +100,7 @@ public class LPContactsTab extends Fragment {
 
         //Set intent to enable switching to new activity
         final Intent listClickActivity = new Intent();
-        listClickActivity.setClass(getContext(), SingleEntityActivity.class);
+        listClickActivity.setClass(getContext(), SingleContactActivity.class);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

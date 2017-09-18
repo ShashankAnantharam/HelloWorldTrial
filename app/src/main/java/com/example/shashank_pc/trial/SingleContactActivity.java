@@ -146,22 +146,7 @@ public class SingleContactActivity extends AppCompatActivity {
                     //     if(mSEChatsTab==null)
                     mSEChatsTab= new SEChatsTab();
                     return mSEChatsTab;
-                case 2:
-                    //    if(mSEMembersTab==null)
 
-                    /*
-                    This is where testing code starts
-
-                    Intent testActivity= new Intent();
-                    testActivity.setClass(getApplicationContext(),TestActivity.class);
-                    startActivity(testActivity);
-                    /*
-                    This is where testing code ends
-                     */
-
-                    mSEMembersTab= new SEMembersTab();
-                    mSEMembersTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
-                    return mSEMembersTab;
                 default:
                     return null;
             }
@@ -170,8 +155,8 @@ public class SingleContactActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 2 total pages.
+            return 2;
         }
 
         @Override
@@ -181,8 +166,7 @@ public class SingleContactActivity extends AppCompatActivity {
                     return "MAP";
                 case 1:
                     return "CHAT";
-                case 2:
-                    return "MEMBERS";
+
             }
             return null;
         }
