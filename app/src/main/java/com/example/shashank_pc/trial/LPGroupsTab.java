@@ -85,7 +85,7 @@ public class LPGroupsTab extends Fragment {
 
         //Populate listview with Groups
         LPListItemAdapter<Group> arrayAdapter= new LPListItemAdapter<Group>(getContext(),
-                mGroups);
+                mGroups, mUserID);
         listView.setAdapter(arrayAdapter);
 
         //Set intent to enable switching to new activity

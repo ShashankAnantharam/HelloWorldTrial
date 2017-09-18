@@ -94,7 +94,7 @@ public class LPContactsTab extends Fragment {
 
 
         //Populate listview with contacts
-        LPListItemAdapter<User> arrayAdapter = new LPListItemAdapter<>(getContext(), mContacts);
+        LPListItemAdapter<User> arrayAdapter = new LPListItemAdapter<>(getContext(), mContacts, mUserID);
         listView.setAdapter(arrayAdapter);
 
 

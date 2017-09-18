@@ -96,7 +96,7 @@ public class LPEventsTab extends Fragment {
 
         //Populate listview with Events
         LPListItemAdapter<Event> arrayAdapter= new LPListItemAdapter<Event>(getContext(),
-                mEvents);
+                mEvents, mUserID);
         listView.setAdapter(arrayAdapter);
 
         //Set intent to enable switching to new activity

@@ -36,11 +36,13 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
     Context context;
     List<T> rowItems;
+    String userID;
 
-    public LPListItemAdapter(Context context, List<T> rowItems)
+    public LPListItemAdapter(Context context, List<T> rowItems, String userID)
     {
         this.context=context;
         this.rowItems=rowItems;
+        this.userID=userID;
 
     }
 
@@ -195,9 +197,9 @@ public class LPListItemAdapter<T> extends BaseAdapter{
     public void locationBroadcastButtonOnClickActivity(T rowItem, boolean mLBflag, View convertView)
     {
         if(rowItem instanceof Event)    //If Row Item is an Event
-            ((Event) rowItem).setBroadcastLocationFlag(mLBflag);
+            ((Event) rowItem).setBroadcastLocationFlag(mLBflag, userID);
         else if(rowItem instanceof Group)
-            ((Group) rowItem).setBroadcastLocationFlag(mLBflag);
+            ((Group) rowItem).setBroadcastLocationFlag(mLBflag, userID);
         else if(rowItem instanceof User)
             ((User) rowItem).setBroadcastLocationFlag(mLBflag);
 
