@@ -203,6 +203,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                                     mGroupContacts.get(mGroupMap.get(mGroupContactID)).valueEventListener
                             );
+                            mGroupMarkers.get(mGroupMap.get(mGroupContactID)).setVisible(true);
                         }
 
 
@@ -323,6 +324,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 mGroupContacts.get(index).ref.removeEventListener(
                         mGroupContacts.get(index).valueEventListener
                 );
+
+                mGroupMarkers.get(index).setVisible(false);
 
 
 
