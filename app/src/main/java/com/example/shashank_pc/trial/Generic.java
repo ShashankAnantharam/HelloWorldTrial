@@ -51,7 +51,7 @@ public class Generic {
         /*
         Start Firebase Code here
          */
-        FirebaseDatabase database= FirebaseDatabase.getInstance();
+        FirebaseDatabase database= FirebaseDatabase.getInstance(); //connectivity
         String address;
         if(mID.charAt(0)=='G')
             address="Groups/";
@@ -60,10 +60,11 @@ public class Generic {
 
         address+=mID;
 
-        DatabaseReference ref = database.getReference(address);
+        DatabaseReference ref = database.getReference(address); //go to that reference location
 
         if(BroadcastLocation)
         {
+                ref.child(userID).setValue("");
             /*
             If Button is Clicked, then attach UserID string as key, "" as value to the node mID
           Groups
@@ -76,12 +77,10 @@ public class Generic {
 
             https://firebase.google.com/docs/database/android/read-and-write (Add user function to be used to add user to group node)
              */
-
-
-
         }
         else
         {
+             ref.child(userID).removeValue();
             /*
             If Button is not clicked, then remove child UserID from node
 
@@ -94,9 +93,6 @@ public class Generic {
 
             Use ref.child(key).remove(); to remove nodes
              */
-
-
-
         }
 
 
