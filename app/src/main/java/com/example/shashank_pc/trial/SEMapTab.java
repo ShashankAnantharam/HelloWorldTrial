@@ -175,11 +175,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
             case 'E':
                 FirebaseAddressString+= "Events/";
-                Toast.makeText(getContext(),mEntityID,Toast.LENGTH_SHORT).show();
 
         }
 
         FirebaseAddressString+=mEntityID;
+
 
         memberFlags = database.getReference(FirebaseAddressString);
 
@@ -204,8 +204,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     final String mMemberID=dataSnapshot.getKey();
 
-                    Toast.makeText(getContext(),mMemberID,Toast.LENGTH_SHORT).show();
-
+//TODO Events Null pointer handling when self is added (Already taken care of, but to make code more secure)
                     if(mMembersHashMap.containsKey(mMemberID))
                     {
                         /*
