@@ -168,19 +168,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private void membersInit()
     {
         String FirebaseAddressString = "";
-        switch (mType)
-        {
-            case 'G':
-                FirebaseAddressString+= "Groups/";
+        
 
-            case 'E':
-                FirebaseAddressString+= "Events/";
+        if(mType=='G')
+            FirebaseAddressString+= "Groups/";
+        else if(mType=='E')
+            FirebaseAddressString+= "Events/";
 
-        }
 
         FirebaseAddressString+=mEntityID;
 
 
+//        Toast.makeText(getContext(),mType,Toast.LENGTH_SHORT).show();
         memberFlags = database.getReference(FirebaseAddressString);
 
 
@@ -205,6 +204,15 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     final String mMemberID=dataSnapshot.getKey();
 
 //TODO Events Null pointer handling when self is added (Already taken care of, but to make code more secure)
+
+                    try{
+                    //    Toast.makeText(getContext(),mMemberID,Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
                     if(mMembersHashMap.containsKey(mMemberID))
                     {
                         /*
@@ -483,6 +491,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
+
 
 
         if(mType=='U')
