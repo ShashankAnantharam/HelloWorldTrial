@@ -315,8 +315,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                try {
+
                     String tName = dataSnapshot.getKey();        //Get ID
+
+                if(mGroupMap.get(tName)!=null) {
 
                     int index = mGroupMap.get(tName);        //Get Group Member index in array
 
@@ -327,11 +329,6 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     );
 
                     mGroupMarkers.get(index).setVisible(false);
-                }
-                catch(NullPointerException n)
-                {
-
-
                 }
 
 
