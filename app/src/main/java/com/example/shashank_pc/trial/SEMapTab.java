@@ -72,10 +72,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private Marker mContactMarker=null;
     private DatabaseReference contactLatLong;
 
-    private List<mMapContact> mGroupContacts=null;
-    private List<Marker> mGroupMarkers=null;
-    private HashMap<String,Integer> mGroupMap=null;
-    private DatabaseReference groupFlags;
+    private List<mMapContact> mMembersList=null;
+    private List<Marker> mMarkersList=null;
+    private HashMap<String,Integer> mMembersHashMap=null;
+    private DatabaseReference memberFlags;
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
     {
@@ -165,64 +165,78 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         public mMapContact(){}
     }
 
-    private void mGroupInit()
+    private void membersInit()
     {
-        String groupFirebaseAddress = "Groups/"+mEntityID;
+        String FirebaseAddressString = "";
+        switch (mType)
+        {
+            case 'G':
+                FirebaseAddressString+= "Groups/";
 
-        groupFlags = database.getReference(groupFirebaseAddress);
+            case 'E':
+                FirebaseAddressString+= "Events/";
+                Toast.makeText(getContext(),mEntityID,Toast.LENGTH_SHORT).show();
+
+        }
+
+        FirebaseAddressString+=mEntityID;
+
+        memberFlags = database.getReference(FirebaseAddressString);
 
 
 
-        groupFlags.addChildEventListener(new ChildEventListener() {
+        memberFlags.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //TODO CODE HERE
-                if(mGroupMap==null) {
+                if(mMembersHashMap==null) {
                     /*
                     First time initialize hashmap and arraylist
                      */
 
-                    mGroupContacts = new ArrayList<mMapContact>();
-                    mGroupMarkers = new ArrayList<Marker>();
-                    mGroupMap = new HashMap<String, Integer>();
+                    mMembersList = new ArrayList<mMapContact>();
+                    mMarkersList = new ArrayList<Marker>();
+                    mMembersHashMap = new HashMap<String, Integer>();
 
                 }
 
 
 
-                    final String mGroupContactID=dataSnapshot.getKey();
+                    final String mMemberID=dataSnapshot.getKey();
 
-                    if(mGroupMap.containsKey(mGroupContactID))
+                    Toast.makeText(getContext(),mMemberID,Toast.LENGTH_SHORT).show();
+
+                    if(mMembersHashMap.containsKey(mMemberID))
                     {
                         /*
                         If UserID already exists in Array
                          */
-                        if(mGroupContacts.get(mGroupMap.get(mGroupContactID)).flag==false) {
-                            mGroupContacts.get(mGroupMap.get(mGroupContactID)).flag = true;
-                            mGroupContacts.get(mGroupMap.get(mGroupContactID)).ref.addValueEventListener(
+                        if(mMembersList.get(mMembersHashMap.get(mMemberID)).flag==false) {
+                            mMembersList.get(mMembersHashMap.get(mMemberID)).flag = true;
+                            mMembersList.get(mMembersHashMap.get(mMemberID)).ref.addValueEventListener(
 
-                                    mGroupContacts.get(mGroupMap.get(mGroupContactID)).valueEventListener
+                                    mMembersList.get(mMembersHashMap.get(mMemberID)).valueEventListener
                             );
-                            mGroupMarkers.get(mGroupMap.get(mGroupContactID)).setVisible(true);
+                            mMarkersList.get(mMembersHashMap.get(mMemberID)).setVisible(true);
                         }
 
 
                     }
-                    else if(!mGroupContactID.equals(mUserID))
+                    else if(!mMemberID.equals(mUserID))
                     {
 
                                                 /*
                         Attach new UserID to group Hashmap
                          */
 
-                        mGroupMap.put(mGroupContactID,mGroupContacts.size());
+                        mMembersHashMap.put(mMemberID,mMembersList.size());
 
                         /*
                         Attach new marker to GroupMarkers
                          */
 
                         final Marker tMarker=null;
-                        mGroupMarkers.add(tMarker);
+                        mMarkersList.add(tMarker);
 
 
                         /*
@@ -231,7 +245,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                         boolean tFlag = true;
 
-                        final String tName=mGroupContactID;
+                        final String tName=mMemberID;
 
 
                         DatabaseReference tRef= database.getReference("Users/"+tName);
@@ -275,14 +289,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                                 if(mMap!=null) {
 
-                                    if(mGroupMarkers.get(mGroupMap.get(mGroupContactID))!=null)       //Not the first time location is initialized
+                                    if(mMarkersList.get(mMembersHashMap.get(mMemberID))!=null)       //Not the first time location is initialized
                                     {
-                                        mGroupMarkers.get(mGroupMap.get(mGroupContactID)).setPosition(contactLatLng);
+                                        mMarkersList.get(mMembersHashMap.get(mMemberID)).setPosition(contactLatLng);
                                     }
                                     else {
 
                                         //First time location is initialized
-                                        mGroupMarkers.set(mGroupMap.get(mGroupContactID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                        mMarkersList.set(mMembersHashMap.get(mMemberID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
                                                 title(tName).
                                                 icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
                                     }
@@ -300,7 +314,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             }
                         });
 
-                        mGroupContacts.add( new mMapContact(tFlag,tRef,tName,tValList));
+                        mMembersList.add( new mMapContact(tFlag,tRef,tName,tValList));
 
                     }
 
@@ -318,17 +332,17 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     String tName = dataSnapshot.getKey();        //Get ID
 
-                if(mGroupMap.get(tName)!=null) {
+                if(mMembersHashMap.get(tName)!=null) {
 
-                    int index = mGroupMap.get(tName);        //Get Group Member index in array
+                    int index = mMembersHashMap.get(tName);        //Get Group Member index in array
 
-                    mGroupContacts.get(index).flag = false;
+                    mMembersList.get(index).flag = false;
 
-                    mGroupContacts.get(index).ref.removeEventListener(
-                            mGroupContacts.get(index).valueEventListener
+                    mMembersList.get(index).ref.removeEventListener(
+                            mMembersList.get(index).valueEventListener
                     );
 
-                    mGroupMarkers.get(index).setVisible(false);
+                    mMarkersList.get(index).setVisible(false);
                 }
 
 
@@ -474,8 +488,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
         if(mType=='U')
             mContactInit();
-        else if(mType=='G')
-            mGroupInit();
+        else if(mType=='G' || mType=='E')
+            membersInit();
 
 
 

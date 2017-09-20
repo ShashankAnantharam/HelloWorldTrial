@@ -115,10 +115,12 @@ public class LPEventsTab extends Fragment {
                 Event event=(Event)listView.getItemAtPosition(position);
                 String name = event.getName();
                 String description= event.getDescription();
+                String eventID=event.getID();
                 boolean isGPSBroadcast= event.getBroadcastLocationFlag();
 
                 //Pass Name, Description, type(Event) and IsGPSBroadcast flag to next activity
                 listClickActivity.putExtra("Name",name);
+                listClickActivity.putExtra("ID", eventID);
                 listClickActivity.putExtra("Description",description);
                 listClickActivity.putExtra("Type",'E');
                 listClickActivity.putExtra("IsGPSBroadcast",isGPSBroadcast);
