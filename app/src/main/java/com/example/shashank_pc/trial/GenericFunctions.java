@@ -46,3 +46,11 @@ public class GenericFunctions {
 
     }
 }
+
+
+/*
+FAQs:
+
+1) App not broadcasting GPS when it is paused or phone is locked?
+Ans) Phone is in power saving mode. App MUST broadcast GPS when it is paused or phone is locked.
+ */
