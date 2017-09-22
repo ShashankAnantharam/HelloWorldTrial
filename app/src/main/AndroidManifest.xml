@@ -25,7 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".LandingPageActivity"
             android:label="@string/app_name"
@@ -59,7 +59,9 @@
         <activity
             android:name=".SingleContactActivity"
             android:label="@string/title_activity_single_contacts"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".GroupCreateActivity"
+            android:label="Create Group"></activity>
     </application>
 
 </manifest>

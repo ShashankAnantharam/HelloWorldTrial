@@ -336,6 +336,12 @@ public class LandingPageActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if(id == R.id.action_create_group)
+        {
+            Intent newGroupIntent= new Intent(LandingPageActivity.this, GroupCreateActivity.class);
+            startActivity(newGroupIntent);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
