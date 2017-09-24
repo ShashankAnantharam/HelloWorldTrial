@@ -31,6 +31,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -65,6 +68,10 @@ public class LandingPageActivity extends AppCompatActivity {
     private BroadcastReceiver locationBroadcastReceiver;
 
     private boolean gpsflag;
+
+
+    private DatabaseReference contactNodeRef;
+    private ChildEventListener contactNodeChildListener;
 
 
     private DatabaseReference writeGPSLat;
@@ -118,6 +125,7 @@ public class LandingPageActivity extends AppCompatActivity {
         Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);
         stopService(gpsIntent);
         wakeLock.release();
+        contactNodeRef.removeEventListener(contactNodeChildListener);
 //        Toast.makeText(getApplicationContext(),"ON DESTROY CALLED",Toast.LENGTH_SHORT);
     }
 
@@ -253,6 +261,47 @@ public class LandingPageActivity extends AppCompatActivity {
                     startService(gpsIntent);
                     gpsflag=true;
                 }
+
+            }
+        });
+
+        startContactListener();
+
+    }
+
+    private void startContactListener(){
+        contactNodeRef= Generic.database.getReference("Users/"+mUserID+"/Cts");
+
+        final Intent contactListner= new Intent("contact_listener");
+
+
+
+        contactNodeChildListener=contactNodeRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+               // Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+                contactListner.putExtra(dataSnapshot.getKey(),true);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+//                Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+                contactListner.putExtra(dataSnapshot.getKey(),false);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
