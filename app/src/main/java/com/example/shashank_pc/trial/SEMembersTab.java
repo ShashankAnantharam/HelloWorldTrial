@@ -47,17 +47,9 @@ public class SEMembersTab  extends LPContactsTab{
 
 
         temp = new User(mUserName, mUserID);    //TODO parameterize name
-        temp.setBroadcastLocationFlag(false);
+        temp.initBroadcastLocationFlag(false);
         mAllMembers.add(temp);
-        temp= new User("Bharath Kota","55554");
-        temp.setBroadcastLocationFlag(false);
-        mAllMembers.add(temp);
-        temp = new User("Mehtab Ahmed", "55554");
-        mAllMembers.add(temp);
-        temp = new User("Muthimon", "55554");
-        temp.setBroadcastLocationFlag(true);
-        mAllMembers.add(temp);
-
+ 
         return mAllMembers;
     }
 }

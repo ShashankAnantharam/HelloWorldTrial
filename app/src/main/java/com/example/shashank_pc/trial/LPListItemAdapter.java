@@ -213,7 +213,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
         }
         else if(rowItem instanceof User) {
-            ((User) rowItem).setBroadcastLocationFlag(mLBflag);
+            ((User) rowItem).setBroadcastLocationFlag(mLBflag, userID);
             edit.putBoolean(((User) rowItem).getNumber(),mLBflag);
             edit.commit();
         }
