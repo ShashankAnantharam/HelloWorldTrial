@@ -68,7 +68,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private char mType;
 
 
-    private FirebaseDatabase database;
+
     private Marker mContactMarker=null;
     private DatabaseReference contactLatLong;
 
@@ -91,7 +91,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         String contactFirebaseAddress= "Users/"+mEntityID;
         if(contactLatLong==null) {
 
-            contactLatLong = database.getReference(contactFirebaseAddress);
+            contactLatLong = Generic.database.getReference(contactFirebaseAddress);
       //      Toast.makeText(getContext(),contactFirebaseAddress,Toast.LENGTH_SHORT).show();
         }
 
@@ -180,7 +180,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
 //        Toast.makeText(getContext(),mType,Toast.LENGTH_SHORT).show();
-        memberFlags = database.getReference(FirebaseAddressString);
+        memberFlags = Generic.database.getReference(FirebaseAddressString);
 
 
 
@@ -255,7 +255,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         final String tName=mMemberID;
 
 
-                        DatabaseReference tRef= database.getReference("Users/"+tName);
+                        DatabaseReference tRef= Generic.database.getReference("Users/"+tName);
 
 //                        Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
 
@@ -397,7 +397,6 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
 
-            database = FirebaseDatabase.getInstance();
  //           Toast.makeText(getContext(),mEntityID,Toast.LENGTH_SHORT).show();
 
             FragmentManager fragment = getActivity().getFragmentManager();

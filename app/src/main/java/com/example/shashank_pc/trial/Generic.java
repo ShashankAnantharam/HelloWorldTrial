@@ -15,6 +15,8 @@ public class Generic {
     protected String mDescription;
     protected boolean mBroadcastLocation;
 
+    public static FirebaseDatabase database;
+
 
     public Generic(String name, String description)
     {
@@ -51,7 +53,7 @@ public class Generic {
         /*
         Start Firebase Code here
          */
-        FirebaseDatabase database= FirebaseDatabase.getInstance(); //connectivity
+
         String address;
         if(mID.charAt(0)=='G')
             address="Groups/";
