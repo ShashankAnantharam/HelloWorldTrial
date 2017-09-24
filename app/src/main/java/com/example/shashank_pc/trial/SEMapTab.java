@@ -2,7 +2,10 @@ package com.example.shashank_pc.trial;
 
 import android.Manifest;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -39,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -69,13 +73,19 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
 
+    private BroadcastReceiver contactBroadcastReceiver;
+    private boolean isLocationAllowed=false;
+    private boolean wasLocationAllowed=false;
     private Marker mContactMarker=null;
     private DatabaseReference contactLatLong;
+    private ValueEventListener contactLatLongEventListener;
 
     private List<mMapContact> mMembersList=null;
     private List<Marker> mMarkersList=null;
     private HashMap<String,Integer> mMembersHashMap=null;
     private DatabaseReference memberFlags;
+
+
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
     {
@@ -88,57 +98,106 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void mContactInit()
     {
-        String contactFirebaseAddress= "Users/"+mEntityID+"/Loc";
-        if(contactLatLong==null) {
+        final String contactFirebaseAddress= "Users/"+mEntityID+"/Loc";
 
-            contactLatLong = Generic.database.getReference(contactFirebaseAddress);
-      //      Toast.makeText(getContext(),contactFirebaseAddress,Toast.LENGTH_SHORT).show();
+
+
+        if(contactBroadcastReceiver==null)
+        {
+
+            contactBroadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    wasLocationAllowed=isLocationAllowed;
+                    isLocationAllowed=intent.getBooleanExtra(mEntityID,false);
+
+                    Toast.makeText(getContext(),mEntityID,Toast.LENGTH_SHORT).show();
+                    if(isLocationAllowed)
+                    {
+                        //Contact is Visible
+
+                        if(mContactMarker==null)
+                        {
+                            //First time initialize contact marker
+                            if(contactLatLong==null) {
+
+                                contactLatLong = Generic.database.getReference(contactFirebaseAddress);
+                                //      Toast.makeText(getContext(),contactFirebaseAddress,Toast.LENGTH_SHORT).show();
+                            }
+
+                            contactLatLongEventListener=contactLatLong.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    LatLng contactLatLng=null;
+                                    double latitude=10000, longtitude=-10000;
+                                    int i=0;
+                                    for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                                    {
+                                        double temp= snapshot.getValue(Double.class);
+                                        if(i==0) {
+                                            latitude = temp;
+                                        }
+                                        else if(i==1)
+                                        {
+                                            longtitude=temp;
+                                        }
+                                        i++;
+
+                                    }
+                                    contactLatLng= new LatLng(latitude,longtitude);
+                                    if(mMap!=null) {
+
+
+                                        if(mContactMarker!=null)       //Not the first time location is initialized
+                                        {
+                                            mContactMarker.setPosition(contactLatLng);
+
+                                        }
+                                        else {                          //First time location is initialized
+
+                                            mContactMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                                    title(mEntityName).
+                                                    icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
+                                        }
+
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
+                        else if(wasLocationAllowed==false)
+                        {
+                            //GPS already initialized but location broadcast of contact was turned off
+
+                            contactLatLong.addValueEventListener(contactLatLongEventListener);
+                            mContactMarker.setVisible(true);
+
+                        }
+
+                    }
+                    else
+                    {
+                        //Contact is invisible
+
+                        if(wasLocationAllowed==true)
+                        {
+                            //Location was allowed before but not now
+                            contactLatLong.removeEventListener(contactLatLongEventListener);
+                            mContactMarker.setVisible(false);
+                        }
+                    }
+
+                }
+            };
         }
-
-        contactLatLong.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                LatLng contactLatLng=null;
-                double latitude=10000, longtitude=-10000;
-                int i=0;
-                for(DataSnapshot snapshot: dataSnapshot.getChildren())
-                {
-                    double temp= snapshot.getValue(Double.class);
-                    if(i==0) {
-                        latitude = temp;
-                    }
-                    else if(i==1)
-                    {
-                        longtitude=temp;
-                    }
-                    i++;
-
-                }
-                contactLatLng= new LatLng(latitude,longtitude);
-                if(mMap!=null) {
-
-
-                    if(mContactMarker!=null)       //Not the first time location is initialized
-                    {
-                        mContactMarker.setPosition(contactLatLng);
-
-                    }
-                    else {                          //First time location is initialized
-
-                        mContactMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
-                                title(mEntityName).
-                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
-                    }
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        getContext().registerReceiver(contactBroadcastReceiver,new IntentFilter("contact_listener"));
 
 
     }
@@ -510,5 +569,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         mMap=googleMap;
 
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        getContext().unregisterReceiver(contactBroadcastReceiver);
     }
 }

@@ -171,6 +171,10 @@ public class LPContactsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean("9494426683",false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
+        temp= new User("Mom", "9848120818");
+        mBroadcastLocationFlag=preferences.getBoolean("9494426683",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        mAllContacts.add(temp);
  //       temp = new User("Abhinav", "9000377713");
 //        mAllContacts.add(temp);
  //       temp = new User("Vishal", "9989182838");

@@ -72,6 +72,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private DatabaseReference contactNodeRef;
     private ChildEventListener contactNodeChildListener;
+    private Intent contactListner;
 
 
     private DatabaseReference writeGPSLat;
@@ -272,8 +273,7 @@ public class LandingPageActivity extends AppCompatActivity {
     private void startContactListener(){
         contactNodeRef= Generic.database.getReference("Users/"+mUserID+"/Cts");
 
-        final Intent contactListner= new Intent("contact_listener");
-
+        contactListner= new Intent("contact_listener");
 
 
         contactNodeChildListener=contactNodeRef.addChildEventListener(new ChildEventListener() {
@@ -281,6 +281,7 @@ public class LandingPageActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                // Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
                 contactListner.putExtra(dataSnapshot.getKey(),true);
+                sendBroadcast(contactListner);
             }
 
             @Override
@@ -293,6 +294,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
 //                Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
                 contactListner.putExtra(dataSnapshot.getKey(),false);
+                sendBroadcast(contactListner);
             }
 
             @Override
