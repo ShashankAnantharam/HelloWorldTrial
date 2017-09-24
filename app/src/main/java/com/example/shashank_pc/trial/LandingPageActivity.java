@@ -215,8 +215,8 @@ public class LandingPageActivity extends AppCompatActivity {
 
         Generic.database = FirebaseDatabase.getInstance();
 
-        writeGPSLat= Generic.database.getReference("Users/"+mUserID+"/Lat");
-        writeGPSLong= Generic.database.getReference("Users/"+mUserID+"/Long");
+        writeGPSLat= Generic.database.getReference("Users/"+mUserID+"/Loc/Lat");
+        writeGPSLong= Generic.database.getReference("Users/"+mUserID+"/Loc/Long");
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");

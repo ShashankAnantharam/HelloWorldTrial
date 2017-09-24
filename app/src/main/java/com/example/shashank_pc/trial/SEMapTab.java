@@ -88,7 +88,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void mContactInit()
     {
-        String contactFirebaseAddress= "Users/"+mEntityID;
+        String contactFirebaseAddress= "Users/"+mEntityID+"/Loc";
         if(contactLatLong==null) {
 
             contactLatLong = Generic.database.getReference(contactFirebaseAddress);
@@ -255,7 +255,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         final String tName=mMemberID;
 
 
-                        DatabaseReference tRef= Generic.database.getReference("Users/"+tName);
+                        DatabaseReference tRef= Generic.database.getReference("Users/"+tName+"/Loc");
 
 //                        Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
 
