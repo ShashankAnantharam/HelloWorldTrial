@@ -66,7 +66,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private boolean gpsflag;
 
-
+    private FirebaseDatabase database;
     private DatabaseReference writeGPSLat;
     private DatabaseReference writeGPSLong;
 
@@ -213,10 +213,9 @@ public class LandingPageActivity extends AppCompatActivity {
     public void loadLayout()
     {
 
-        Generic.database = FirebaseDatabase.getInstance();
-
-        writeGPSLat= Generic.database.getReference("Users/"+mUserID+"/Lat");
-        writeGPSLong= Generic.database.getReference("Users/"+mUserID+"/Long");
+        database = FirebaseDatabase.getInstance();
+        writeGPSLat= database.getReference("Users/"+mUserID+"/Lat");
+        writeGPSLong= database.getReference("Users/"+mUserID+"/Long");
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");
