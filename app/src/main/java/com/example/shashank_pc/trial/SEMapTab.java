@@ -96,6 +96,62 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         mType=type;
     }
 
+
+    private void contactMarkerinit(String contactFirebaseAddress)
+    {
+        if(contactLatLong==null) {
+
+            contactLatLong = Generic.database.getReference(contactFirebaseAddress);
+            //      Toast.makeText(getContext(),contactFirebaseAddress,Toast.LENGTH_SHORT).show();
+        }
+
+        contactLatLongEventListener=contactLatLong.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                LatLng contactLatLng=null;
+                double latitude=10000, longtitude=-10000;
+                int i=0;
+                for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                {
+                    double temp= snapshot.getValue(Double.class);
+                    if(i==0) {
+                        latitude = temp;
+                    }
+                    else if(i==1)
+                    {
+                        longtitude=temp;
+                    }
+                    i++;
+
+                }
+                contactLatLng= new LatLng(latitude,longtitude);
+                if(mMap!=null) {
+
+
+                    if(mContactMarker!=null)       //Not the first time location is initialized
+                    {
+                        mContactMarker.setPosition(contactLatLng);
+
+                    }
+                    else {                          //First time location is initialized
+
+                        mContactMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                title(mEntityName).
+                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
     private void mContactInit()
     {
         final String contactFirebaseAddress= "Users/"+mEntityID+"/Loc";
@@ -111,8 +167,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     wasLocationAllowed=isLocationAllowed;
                     isLocationAllowed=intent.getBooleanExtra(mEntityID,false);
-
-                    Toast.makeText(getContext(),mEntityID,Toast.LENGTH_SHORT).show();
+                    
                     if(isLocationAllowed)
                     {
                         //Contact is Visible
@@ -120,56 +175,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         if(mContactMarker==null)
                         {
                             //First time initialize contact marker
-                            if(contactLatLong==null) {
-
-                                contactLatLong = Generic.database.getReference(contactFirebaseAddress);
-                                //      Toast.makeText(getContext(),contactFirebaseAddress,Toast.LENGTH_SHORT).show();
-                            }
-
-                            contactLatLongEventListener=contactLatLong.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    LatLng contactLatLng=null;
-                                    double latitude=10000, longtitude=-10000;
-                                    int i=0;
-                                    for(DataSnapshot snapshot: dataSnapshot.getChildren())
-                                    {
-                                        double temp= snapshot.getValue(Double.class);
-                                        if(i==0) {
-                                            latitude = temp;
-                                        }
-                                        else if(i==1)
-                                        {
-                                            longtitude=temp;
-                                        }
-                                        i++;
-
-                                    }
-                                    contactLatLng= new LatLng(latitude,longtitude);
-                                    if(mMap!=null) {
-
-
-                                        if(mContactMarker!=null)       //Not the first time location is initialized
-                                        {
-                                            mContactMarker.setPosition(contactLatLng);
-
-                                        }
-                                        else {                          //First time location is initialized
-
-                                            mContactMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
-                                                    title(mEntityName).
-                                                    icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
-                                        }
-
-
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
+                            contactMarkerinit(contactFirebaseAddress);
 
                         }
                         else if(wasLocationAllowed==false)
