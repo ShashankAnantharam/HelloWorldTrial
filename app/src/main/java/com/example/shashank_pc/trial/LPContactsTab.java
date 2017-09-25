@@ -55,7 +55,11 @@ public class LPContactsTab extends Fragment {
             if(v==null)
                 return;
 
-            Toast.makeText(getContext(),"Updated View",Toast.LENGTH_SHORT).show();
+            //TODO Pragmatic solution. Make better
+            if(arrayAdapter!=null)
+                arrayAdapter.notifyDataSetChanged();
+
+//            Toast.makeText(getContext(),"Updated View",Toast.LENGTH_SHORT).show();
         }
     }
 
