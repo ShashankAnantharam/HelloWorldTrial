@@ -47,6 +47,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
+
 /**
  * Created by shashank-pc on 8/26/2017.
  */
@@ -156,7 +158,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     {
         final String contactFirebaseAddress= "Users/"+mEntityID+"/Loc";
 
-
+        if(isBroadcastingLocation.containsKey(mEntityID) && isBroadcastingLocation.get(mEntityID)==true)
+        {
+            //Initialize the marker because already the Contact is broadcasting his/her location
+            contactMarkerinit(contactFirebaseAddress);
+            isLocationAllowed=true;
+        }
 
         if(contactBroadcastReceiver==null)
         {
@@ -167,7 +174,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     wasLocationAllowed=isLocationAllowed;
                     isLocationAllowed=intent.getBooleanExtra(mEntityID,false);
-                    
+
                     if(isLocationAllowed)
                     {
                         //Contact is Visible

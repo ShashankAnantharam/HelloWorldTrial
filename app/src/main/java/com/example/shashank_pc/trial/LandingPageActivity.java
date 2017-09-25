@@ -37,6 +37,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 import static java.security.AccessController.getContext;
 
 public class LandingPageActivity extends AppCompatActivity {
@@ -73,6 +75,7 @@ public class LandingPageActivity extends AppCompatActivity {
     private DatabaseReference contactNodeRef;
     private ChildEventListener contactNodeChildListener;
     private Intent contactListner;
+    public static HashMap<String,Boolean> isBroadcastingLocation;
 
 
     private DatabaseReference writeGPSLat;
@@ -271,6 +274,8 @@ public class LandingPageActivity extends AppCompatActivity {
     }
 
     private void startContactListener(){
+        isBroadcastingLocation = new HashMap<>();
+
         contactNodeRef= Generic.database.getReference("Users/"+mUserID+"/Cts");
 
         contactListner= new Intent("contact_listener");
@@ -280,8 +285,17 @@ public class LandingPageActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                // Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+                if(isBroadcastingLocation.containsKey(dataSnapshot.getKey()))
+                {
+                    isBroadcastingLocation.remove(dataSnapshot.getKey());
+                }
+                isBroadcastingLocation.put(dataSnapshot.getKey(),true);
+
+
+
                 contactListner.putExtra(dataSnapshot.getKey(),true);
                 sendBroadcast(contactListner);
+
             }
 
             @Override
@@ -293,6 +307,12 @@ public class LandingPageActivity extends AppCompatActivity {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
 //                Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+                if(isBroadcastingLocation.containsKey(dataSnapshot.getKey()))
+                {
+                    isBroadcastingLocation.remove(dataSnapshot.getKey());
+                }
+                isBroadcastingLocation.put(dataSnapshot.getKey(),false);
+
                 contactListner.putExtra(dataSnapshot.getKey(),false);
                 sendBroadcast(contactListner);
             }
