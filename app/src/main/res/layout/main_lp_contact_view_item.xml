@@ -3,6 +3,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
+   
+    <ImageView
+        android:id="@+id/is_contact_broadcasting_gps"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="desc"
+        android:layout_marginTop="9dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:focusable="false"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
     
     <TextView
         android:layout_width="match_parent"
@@ -11,6 +22,7 @@
         android:id="@+id/main_lp_contact_text"
         android:textSize="18sp"
         android:textColor="@android:color/black"
+        android:layout_toRightOf="@id/is_contact_broadcasting_gps"
         android:focusable="false" />
 
     <TextView
@@ -20,6 +32,7 @@
         android:layout_below="@+id/main_lp_contact_text"
         android:layout_marginTop="7dp"
         android:layout_marginBottom="9dp"
+        android:layout_toRightOf="@id/is_contact_broadcasting_gps"
         android:textSize="13sp"
         android:focusable="false" />
 
