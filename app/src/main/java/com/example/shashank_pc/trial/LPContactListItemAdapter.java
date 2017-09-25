@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+
+import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
 
 /**
  * Created by shashank-pc on 9/25/2017.
@@ -54,6 +57,7 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
         TextView main_text;
         TextView subtitle;
         Button locationBroadcastFlag;
+        ImageView isContactBroadcastingFlag;
 
     }
 
@@ -81,6 +85,7 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
             holder.main_text= (TextView) convertView.findViewById(R.id.main_lp_contact_text);
             holder.subtitle= (TextView) convertView.findViewById(R.id.main_lp_contact_subtitle);
             holder.locationBroadcastFlag= (Button) convertView.findViewById(R.id.contact_gps_broadcast_flag);
+            holder.isContactBroadcastingFlag = (ImageView) convertView.findViewById(R.id.is_contact_broadcasting_gps);
 
             convertView.setTag(holder);
 
@@ -95,12 +100,18 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
         String main_text;
         String subtitle;
         boolean buttons;
+        boolean isContactBroadcastingLocationFlag=false;
 
         if(rowItem instanceof User)
         {
             main_text=((User) rowItem).getName();
             subtitle=((User) rowItem).getLastChatMessage();
 
+            if(isBroadcastingLocation.containsKey(((User) rowItem).getNumber()) &&
+                    isBroadcastingLocation.get(((User) rowItem).getNumber())==true)
+            {
+                isContactBroadcastingLocationFlag=true;
+            }
 
         }
         else
@@ -123,6 +134,21 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
 
             holder.locationBroadcastFlag.setBackground(convertView.getResources().getDrawable(R.drawable.lp_list_button_black));
 
+        }
+
+        if(isContactBroadcastingLocationFlag)
+        {
+            //Contact is broadcasting GPS
+            holder.isContactBroadcastingFlag.setImageDrawable(
+                    convertView.getResources().getDrawable(R.drawable.contact_loc_broadcasting_on)
+            );
+        }
+        else
+        {
+            //Contact is not broadcasting GPS
+            holder.isContactBroadcastingFlag.setImageDrawable(
+                    convertView.getResources().getDrawable(R.drawable.contact_loc_broadcasting_off)
+            );
         }
 
 
