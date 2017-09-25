@@ -167,8 +167,8 @@ public class LPContactsTab extends Fragment {
         /*
         Function to get All contacts from the Database. HardCoded now
          */
-
-        ContactListMap = new HashMap<>();
+        if(ContactListMap==null)
+            ContactListMap = new HashMap<>();
         boolean mBroadcastLocationFlag;
 
         List <User> mAllContacts = new ArrayList<>();
@@ -187,7 +187,7 @@ public class LPContactsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        ContactListMap.put(name,i);
+        ContactListMap.put(number,i);
         i++;
 
         name="Bharat Kota";
@@ -196,7 +196,7 @@ public class LPContactsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        ContactListMap.put(name,i);
+        ContactListMap.put(number,i);
         i++;
 
         name="Mehtab Ahmed";
@@ -205,7 +205,7 @@ public class LPContactsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        ContactListMap.put(name,i);
+        ContactListMap.put(number,i);
         i++;
 
 
@@ -215,7 +215,7 @@ public class LPContactsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        ContactListMap.put(name,i);
+        ContactListMap.put(number,i);
         i++;
 
         name="Mom";
@@ -224,7 +224,7 @@ public class LPContactsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        ContactListMap.put(name,i);
+        ContactListMap.put(number,i);
         i++;
 
 //               temp = new User("Abhinav", "9000377713");

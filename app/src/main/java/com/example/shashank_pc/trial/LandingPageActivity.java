@@ -67,6 +67,12 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private String mUserName="";
 
+    private LPEventsTab mEventLPTab;
+    private LPGroupsTab mGroupLPTab;
+    private LPContactsTab mContactLPTab;
+
+
+
     private BroadcastReceiver locationBroadcastReceiver;
 
     private boolean gpsflag;
@@ -296,6 +302,16 @@ public class LandingPageActivity extends AppCompatActivity {
                 contactListner.putExtra(dataSnapshot.getKey(),true);
                 sendBroadcast(contactListner);
 
+
+                if(mContactLPTab!=null)
+                {
+//                    Toast.makeText(getApplicationContext(),dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+                    if(LPContactsTab.ContactListMap.containsKey(dataSnapshot.getKey()))
+                    {
+                        mContactLPTab.updateListAtPosition(LPContactsTab.ContactListMap.get(dataSnapshot.getKey()));
+                    }
+                }
+
             }
 
             @Override
@@ -315,6 +331,16 @@ public class LandingPageActivity extends AppCompatActivity {
 
                 contactListner.putExtra(dataSnapshot.getKey(),false);
                 sendBroadcast(contactListner);
+
+                if(mContactLPTab!=null)
+                {
+                    if(LPContactsTab.ContactListMap.containsKey(dataSnapshot.getKey()))
+                    {
+
+                        mContactLPTab.updateListAtPosition(LPContactsTab.ContactListMap.get(dataSnapshot.getKey()));
+
+                    }
+                }
             }
 
             @Override
@@ -427,10 +453,9 @@ public class LandingPageActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        LPEventsTab eventLPTab;
-        LPGroupsTab groupLPTab;
-        LPContactsTab contactLPTab;
+        private LPEventsTab eventLPTab;
+        private LPGroupsTab groupLPTab;
+        private LPContactsTab contactLPTab;
 
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -461,6 +486,7 @@ public class LandingPageActivity extends AppCompatActivity {
                     if(contactLPTab==null) {
                         contactLPTab = new LPContactsTab();
                         contactLPTab.passUserDetails(mUserID,mUserName);
+                        mContactLPTab=contactLPTab;
                     }
                     return contactLPTab;
             }
