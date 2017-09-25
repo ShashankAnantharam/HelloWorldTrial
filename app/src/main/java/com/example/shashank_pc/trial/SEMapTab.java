@@ -588,6 +588,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void onDestroy() {
         super.onDestroy();
 
-        getContext().unregisterReceiver(contactBroadcastReceiver);
+        if(mType=='C')
+            getContext().unregisterReceiver(contactBroadcastReceiver);
     }
 }
