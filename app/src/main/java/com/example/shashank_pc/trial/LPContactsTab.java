@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -36,6 +37,8 @@ public class LPContactsTab extends Fragment {
     protected String mUserName;
 
     SharedPreferences preferences;
+
+    public static HashMap<String,Integer> ContactListMap;
 
 
 
@@ -101,6 +104,7 @@ public class LPContactsTab extends Fragment {
         listView.setAdapter(arrayAdapter);
 
 
+
         //Set intent to enable switching to new activity
         final Intent listClickActivity = new Intent();
         listClickActivity.setClass(getContext(), SingleContactActivity.class);
@@ -145,6 +149,7 @@ public class LPContactsTab extends Fragment {
         Function to get All contacts from the Database. HardCoded now
          */
 
+        ContactListMap = new HashMap<>();
         boolean mBroadcastLocationFlag;
 
         List <User> mAllContacts = new ArrayList<>();
@@ -152,30 +157,58 @@ public class LPContactsTab extends Fragment {
         if(mUserID=="")
             return mAllContacts;
 
-        User temp= new User(mUserName,mUserID);
-        temp.initBroadcastLocationFlag(false);
-        mAllContacts.add(temp);
-        temp = new User("Shashank A","9701420818");
-        mBroadcastLocationFlag=preferences.getBoolean("9701420818",false);
+        int i=0;
+        String name,number;
+
+        
+
+        name="Shashank";
+        number="9701420818";
+        User temp = new User(name,number);
+        mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        temp = new User("Bharat Kota", "9177787179");
-        mBroadcastLocationFlag=preferences.getBoolean("9177787179",false);
+        ContactListMap.put(name,i);
+        i++;
+
+        name="Bharat Kota";
+        number="9177787179";
+        temp = new User(name,number);
+        mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        temp = new User("Mehtab Ahmed", "9177787327");
-        mBroadcastLocationFlag=preferences.getBoolean("9177787327",false);
+        ContactListMap.put(name,i);
+        i++;
+
+        name="Mehtab Ahmed";
+        number="9177787327";
+        temp = new User(name,number);
+        mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        temp= new User("Phani", "9494426683");
-        mBroadcastLocationFlag=preferences.getBoolean("9494426683",false);
+        ContactListMap.put(name,i);
+        i++;
+
+
+        name="Phani";
+        number="9494426683";
+        temp = new User(name,number);
+        mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
-        temp= new User("Mom", "9848120818");
-        mBroadcastLocationFlag=preferences.getBoolean("9848120818",false);
+        ContactListMap.put(name,i);
+        i++;
+
+        name="Mom";
+        number="9848120818";
+        temp = new User(name,number);
+        mBroadcastLocationFlag=preferences.getBoolean(number,false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
- //       temp = new User("Abhinav", "9000377713");
+        ContactListMap.put(name,i);
+        i++;
+
+//               temp = new User("Abhinav", "9000377713");
 //        mAllContacts.add(temp);
  //       temp = new User("Vishal", "9989182838");
  //       mAllContacts.add(temp);
