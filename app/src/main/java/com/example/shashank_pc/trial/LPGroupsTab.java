@@ -152,11 +152,11 @@ public class LPGroupsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean("G00000000002",false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllGroups.add(temp);
-//        temp = new Group("Family","Plot No 7, Road No 49", "G00000000001");
-//        mBroadcastLocationFlag=preferences.getBoolean("G00000000001",false);
-//        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-//        mAllGroups.add(temp);
-
+/*        temp = new Group("Family","Plot No 7, Road No 49", "G00000000001");
+        mBroadcastLocationFlag=preferences.getBoolean("G00000000001",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        mAllGroups.add(temp);
+*/
         return mAllGroups;
     }
 }

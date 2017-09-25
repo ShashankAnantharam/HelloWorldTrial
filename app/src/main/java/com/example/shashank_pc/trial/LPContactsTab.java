@@ -222,6 +222,7 @@ public class LPContactsTab extends Fragment {
         ContactListMap.put(number,i);
         i++;
 
+        /*
         name="Mom";
         number="9848120818";
         temp = new User(name,number);
@@ -230,6 +231,17 @@ public class LPContactsTab extends Fragment {
         mAllContacts.add(temp);
         ContactListMap.put(number,i);
         i++;
+
+        name="Dad";
+        number="9949774464";
+        temp = new User(name,number);
+        mBroadcastLocationFlag=preferences.getBoolean(number,false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        mAllContacts.add(temp);
+        ContactListMap.put(number,i);
+        i++;
+
+        */
 
 //               temp = new User("Abhinav", "9000377713");
 //        mAllContacts.add(temp);
