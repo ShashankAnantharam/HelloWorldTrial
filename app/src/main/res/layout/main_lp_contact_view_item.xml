@@ -6,7 +6,7 @@
    
     <ImageView
         android:id="@+id/is_contact_broadcasting_gps"
-        android:layout_width="50dp"
+        android:layout_width="63dp"
         android:layout_height="63dp"
         android:contentDescription="desc"
         android:layout_marginTop="3dp"
