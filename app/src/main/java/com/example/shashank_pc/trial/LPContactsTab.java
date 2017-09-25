@@ -36,9 +36,28 @@ public class LPContactsTab extends Fragment {
     protected String mUserID;
     protected String mUserName;
 
+    private LPContactListItemAdapter<User> arrayAdapter;
+    private ListView listView;
+
     SharedPreferences preferences;
 
     public static HashMap<String,Integer> ContactListMap;
+
+    public void updateListAtPosition(int position)
+    {
+        if(listView.getCount()>position)
+        {
+            //No segmentation fault because of wrong indexing
+
+            View v = listView.getChildAt(position -
+            listView.getFirstVisiblePosition());
+
+            if(v==null)
+                return;
+
+            Toast.makeText(getContext(),"Updated View",Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
 
@@ -90,7 +109,7 @@ public class LPContactsTab extends Fragment {
         super.onViewCreated(rootView, savedInstanceState);
 
         //Initialize Listview
-        final ListView listView;
+
         listView = (ListView) rootView.findViewById(R.id.section_list_contact);
 
 
@@ -100,7 +119,7 @@ public class LPContactsTab extends Fragment {
 
 
         //Populate listview with contacts
-        LPContactListItemAdapter<User> arrayAdapter = new LPContactListItemAdapter<>(getContext(), mContacts, mUserID);
+        arrayAdapter = new LPContactListItemAdapter<>(getContext(), mContacts, mUserID);
         listView.setAdapter(arrayAdapter);
 
 
@@ -160,7 +179,7 @@ public class LPContactsTab extends Fragment {
         int i=0;
         String name,number;
 
-        
+
 
         name="Shashank";
         number="9701420818";
