@@ -97,7 +97,7 @@ public class LPContactsTab extends Fragment {
 
 
         //Populate listview with contacts
-        LPListItemAdapter<User> arrayAdapter = new LPListItemAdapter<>(getContext(), mContacts, mUserID);
+        LPContactListItemAdapter<User> arrayAdapter = new LPContactListItemAdapter<>(getContext(), mContacts, mUserID);
         listView.setAdapter(arrayAdapter);
 
 
@@ -169,6 +169,10 @@ public class LPContactsTab extends Fragment {
         mAllContacts.add(temp);
         temp= new User("Phani", "9494426683");
         mBroadcastLocationFlag=preferences.getBoolean("9494426683",false);
+        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        mAllContacts.add(temp);
+        temp= new User("Mom", "9848120818");
+        mBroadcastLocationFlag=preferences.getBoolean("9848120818",false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllContacts.add(temp);
  //       temp = new User("Abhinav", "9000377713");

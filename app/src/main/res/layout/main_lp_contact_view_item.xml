@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="23sp"
+        android:layout_marginTop="9dp"
+        android:id="@+id/main_lp_contact_text"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/main_lp_contact_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="17sp"
+        android:layout_below="@+id/main_lp_contact_text"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="9dp"
+        android:textSize="13sp"
+        android:focusable="false" />
+
+    <Button
+        android:id="@+id/contact_gps_broadcast_flag"
+        android:layout_width="33sp"
+        android:layout_height="29sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_marginTop="9dp"
+        android:textStyle="bold"
+        android:layout_alignParentEnd="true"
+        android:focusable="false"
+        />
+
+</RelativeLayout>
