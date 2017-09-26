@@ -194,7 +194,7 @@ public class LPContactsTab extends Fragment {
         ContactListMap.put(number,i);
         i++;
 
-        name="Bharat Kota";
+        name="Bharath Kota";
         number="9177787179";
         temp = new User(name,number);
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
@@ -223,7 +223,7 @@ public class LPContactsTab extends Fragment {
         i++;
 
 
-        name="Mom";
+/*        name="Mom";
         number="9848120818";
         temp = new User(name,number);
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
@@ -232,7 +232,7 @@ public class LPContactsTab extends Fragment {
         ContactListMap.put(number,i);
         i++;
 
-        name="Dad";
+        name="Ananth";
         number="9949774464";
         temp = new User(name,number);
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
@@ -241,7 +241,7 @@ public class LPContactsTab extends Fragment {
         ContactListMap.put(number,i);
         i++;
 
-
+*/
 
 //               temp = new User("Abhinav", "9000377713");
 //        mAllContacts.add(temp);
