@@ -8,31 +8,64 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.shashank_pc.trial.SingleEntityActivity">
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
         android:background="@android:color/holo_blue_dark"
+        android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/AppTheme.AppBarOverlay">
 
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/holo_blue_dark"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/holo_blue_dark"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        </android.support.v7.widget.Toolbar>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        </android.support.v4.widget.NestedScrollView >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="23sp"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"
+                        android:layout_alignParentStart="true"
+                        android:id="@+id/single_entity_title"
+                        android:text="Title"
+                        android:textStyle="bold"
+                        />
+
+                    <Button
+                        android:layout_width="33dp"
+                        android:layout_height="29dp"
+                        android:id="@+id/single_entity_contact_gps_broadcast_flag"
+                        android:background="@android:color/white"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_alignParentEnd="true"/>
+
+
+                </RelativeLayout>
+
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -40,16 +73,9 @@
             android:layout_height="wrap_content"
             android:background="@android:color/holo_blue_dark"
             app:tabIndicatorColor="@android:color/white"
-            app:tabIndicatorHeight="3.5sp"/>
+            app:tabIndicatorHeight="3.5sp" />
 
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 
 
 </android.support.design.widget.CoordinatorLayout>

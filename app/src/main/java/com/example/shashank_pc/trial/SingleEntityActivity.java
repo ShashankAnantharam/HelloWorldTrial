@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
 
 public class SingleEntityActivity extends AppCompatActivity {
@@ -45,6 +46,9 @@ public class SingleEntityActivity extends AppCompatActivity {
     private String mUserName;
     private String mUserID;
 
+    private TextView mTitle;
+    private Button isgpsBroadcast;
+
 
 
     @Override
@@ -60,9 +64,13 @@ public class SingleEntityActivity extends AppCompatActivity {
         mUserName=caller.getStringExtra("Username");
         mUserID=caller.getStringExtra("UserID");
 
+        mTitle=(TextView) findViewById(R.id.single_entity_title);
+        mTitle.setText(mEntityName);
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(mEntityName);
+//        toolbar.setTitle(mEntityName);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
