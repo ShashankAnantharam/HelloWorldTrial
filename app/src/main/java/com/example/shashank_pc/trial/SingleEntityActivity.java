@@ -169,9 +169,9 @@ public class SingleEntityActivity extends AppCompatActivity {
 
     public void setGPSBroadcastButtoncolor(boolean GPSBroadcastFlag) {
         if(GPSBroadcastFlag)
-            isGPSBroadcast.setBackground(getDrawable(R.drawable.lp_list_button_blue));
+            isGPSBroadcast.setBackground(getDrawable(R.drawable.single_entity_activity_button_on));
         else
-            isGPSBroadcast.setBackground(getDrawable(R.drawable.lp_list_button_black));
+            isGPSBroadcast.setBackground(getDrawable(R.drawable.single_entity_activity_button_off));
     }
 
     public void setGPSBroadcastSharedPreferences(boolean GPSBroadcastFlag) {
