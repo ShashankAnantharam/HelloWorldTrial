@@ -1,6 +1,8 @@
 package com.example.shashank_pc.trial;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +22,9 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import static java.security.AccessController.getContext;
 
 public class SingleEntityActivity extends AppCompatActivity {
 
@@ -45,9 +50,14 @@ public class SingleEntityActivity extends AppCompatActivity {
 
     private String mUserName;
     private String mUserID;
+    private boolean isGPSBroadcastFlag;
 
     private TextView mTitle;
-    private Button isgpsBroadcast;
+    private Button isGPSBroadcast;
+
+    private Event mEvent;
+    private Group mGroup;
+    private User mContact;
 
 
 
@@ -56,10 +66,25 @@ public class SingleEntityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_entity);
 
+
         Intent caller = getIntent();
         mEntityName= caller.getStringExtra("Name");
         mEntityID=caller.getStringExtra("ID");
         mType=caller.getCharExtra("Type", ' ');
+        isGPSBroadcastFlag = caller.getBooleanExtra("IsGPSBroadcast",false);
+
+        if(mType=='E') {
+            mEvent = new Event(mEntityName, "", mEntityID);
+            mEvent.initBroadcastLocationFlag(isGPSBroadcastFlag);
+        }
+        else if(mType=='G'){
+            mGroup = new Group(mEntityName, "", mEntityID);
+            mGroup.initBroadcastLocationFlag(isGPSBroadcastFlag);
+        }
+        else if(mType=='U'){
+            mContact = new User(mEntityName,mEntityID);
+            mContact.initBroadcastLocationFlag(isGPSBroadcastFlag);
+        }
 
         mUserName=caller.getStringExtra("Username");
         mUserID=caller.getStringExtra("UserID");
@@ -67,6 +92,26 @@ public class SingleEntityActivity extends AppCompatActivity {
         mTitle=(TextView) findViewById(R.id.single_entity_title);
         mTitle.setText(mEntityName);
 
+        isGPSBroadcast = (Button) findViewById(R.id.single_entity_contact_gps_broadcast_flag);
+
+        setGPSBroadcastButtoncolor(isGPSBroadcastFlag);
+
+        isGPSBroadcast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isGPSBroadcastFlag) {
+                    isGPSBroadcastFlag = false;
+                    Toast.makeText(getApplicationContext(), "GPS broadcasting OFF", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    isGPSBroadcastFlag = true;
+                    Toast.makeText(getApplicationContext(), "GPS broadcasting ON", Toast.LENGTH_SHORT).show();
+                }
+                    setGPSBroadcastButtoncolor(isGPSBroadcastFlag);
+                    setGPSBroadcastSharedPreferences(isGPSBroadcastFlag);
+            }
+        });
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -82,6 +127,9 @@ public class SingleEntityActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+
+
 
       /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -117,6 +165,40 @@ public class SingleEntityActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setGPSBroadcastButtoncolor(boolean GPSBroadcastFlag) {
+        if(GPSBroadcastFlag)
+            isGPSBroadcast.setBackground(getDrawable(R.drawable.lp_list_button_blue));
+        else
+            isGPSBroadcast.setBackground(getDrawable(R.drawable.lp_list_button_black));
+    }
+
+    public void setGPSBroadcastSharedPreferences(boolean GPSBroadcastFlag) {
+        SharedPreferences preferences = getSharedPreferences("LPLists", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit= preferences.edit();
+
+        if(mType=='E')
+        {
+            //Event
+            mEvent.setBroadcastLocationFlag(GPSBroadcastFlag,mUserID);
+            edit.putBoolean(mEntityID,GPSBroadcastFlag);
+            edit.commit();
+        }
+        else if(mType=='G')
+        {
+            //Group
+            mGroup.setBroadcastLocationFlag(GPSBroadcastFlag,mUserID);
+            edit.putBoolean(mEntityID,GPSBroadcastFlag);
+            edit.commit();
+        }
+        else if(mType=='U')
+        {
+            //Contact
+            mContact.setBroadcastLocationFlag(GPSBroadcastFlag,mUserID);
+            edit.putBoolean(mEntityID,GPSBroadcastFlag);
+            edit.commit();
+        }
     }
 
     /**

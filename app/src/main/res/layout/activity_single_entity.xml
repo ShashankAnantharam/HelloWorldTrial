@@ -57,6 +57,7 @@
                         android:id="@+id/single_entity_contact_gps_broadcast_flag"
                         android:background="@android:color/white"
                         style="?android:attr/borderlessButtonStyle"
+                        android:focusable="false"
                         android:layout_alignParentEnd="true"/>
 
 
