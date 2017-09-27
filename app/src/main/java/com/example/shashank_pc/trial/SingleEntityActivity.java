@@ -72,7 +72,7 @@ public class SingleEntityActivity extends AppCompatActivity {
         mEntityName= caller.getStringExtra("Name");
         mEntityID=caller.getStringExtra("ID");
         mType=caller.getCharExtra("Type", ' ');
-        isGPSBroadcastFlag = caller.getBooleanExtra("IsGPSBroadcast",false);
+        isGPSBroadcastFlag = getGPSBroadcastFLag(mEntityID);
 
         if(mType=='E') {
             mEvent = new Event(mEntityName, "", mEntityID);
@@ -144,6 +144,13 @@ public class SingleEntityActivity extends AppCompatActivity {
             }
         });
         */
+
+    }
+
+    boolean getGPSBroadcastFLag(String ID)
+    {
+        SharedPreferences preferences = getSharedPreferences("LPLists", Context.MODE_PRIVATE);
+        return preferences.getBoolean(ID,false);
 
     }
 
