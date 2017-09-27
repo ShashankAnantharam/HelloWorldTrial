@@ -95,6 +95,14 @@ public class LandingPageActivity extends AppCompatActivity {
             mGroupLPTab.refresh();
         }
 
+        if(mEventLPTab!=null) {
+            mEventLPTab.refresh();
+        }
+
+        if(mContactLPTab!=null){
+            mContactLPTab.refresh();
+        }
+
 
 
 
@@ -477,6 +485,7 @@ public class LandingPageActivity extends AppCompatActivity {
                     if(eventLPTab==null) {
                         eventLPTab = new LPEventsTab();
                         eventLPTab.passUserDetails(mUserID,mUserName);
+                        mEventLPTab=eventLPTab;
                     }
                     return eventLPTab;
                 case 1:

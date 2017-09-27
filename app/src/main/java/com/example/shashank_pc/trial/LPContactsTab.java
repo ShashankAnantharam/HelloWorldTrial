@@ -43,6 +43,14 @@ public class LPContactsTab extends Fragment {
 
     public static HashMap<String,Integer> ContactListMap;
 
+    public void refresh()
+    {
+        if(arrayAdapter!=null) {
+            arrayAdapter.notifyDataSetChanged();
+        }
+
+    }
+
     public void updateListAtPosition(int position)
     {
         if(listView.getCount()>position)
@@ -223,7 +231,7 @@ public class LPContactsTab extends Fragment {
         i++;
 
 
-/*        name="Mom";
+        name="Mom";
         number="9848120818";
         temp = new User(name,number);
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
@@ -232,7 +240,7 @@ public class LPContactsTab extends Fragment {
         ContactListMap.put(number,i);
         i++;
 
-        name="Ananth";
+        name="Dad";
         number="9949774464";
         temp = new User(name,number);
         mBroadcastLocationFlag=preferences.getBoolean(number,false);
@@ -241,7 +249,7 @@ public class LPContactsTab extends Fragment {
         ContactListMap.put(number,i);
         i++;
 
-*/
+
 
 //               temp = new User("Abhinav", "9000377713");
 //        mAllContacts.add(temp);

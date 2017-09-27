@@ -35,8 +35,18 @@ public class LPEventsTab extends Fragment {
     private String mUserID;
     private String mUserName;
 
+    private LPListItemAdapter<Event> arrayAdapter;
+
     SharedPreferences preferences;
 
+
+    public void refresh()
+    {
+        if(arrayAdapter!=null) {
+            arrayAdapter.notifyDataSetChanged();
+        }
+
+    }
 
     public void passUserDetails(String userID, String userName)
     {
@@ -97,7 +107,7 @@ public class LPEventsTab extends Fragment {
             mEvents=getAllEvents();
 
         //Populate listview with Events
-        LPListItemAdapter<Event> arrayAdapter= new LPListItemAdapter<Event>(getContext(),
+        arrayAdapter= new LPListItemAdapter<Event>(getContext(),
                 mEvents, mUserID);
         listView.setAdapter(arrayAdapter);
 
