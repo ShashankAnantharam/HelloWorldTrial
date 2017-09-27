@@ -29,6 +29,32 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="23sp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:layout_alignParentStart="true"
+                android:id="@+id/single_entity_contact_title"
+                android:text="Title"
+                android:textStyle="bold"
+                />
+
+            <Button
+                android:layout_width="33dp"
+                android:layout_height="29dp"
+                android:id="@+id/contact_gps_broadcast_flag"
+                android:background="@android:color/white"
+                style="?android:attr/borderlessButtonStyle"
+                android:focusable="false"
+                android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
         </android.support.v7.widget.Toolbar>
 
         </android.support.v4.widget.NestedScrollView >

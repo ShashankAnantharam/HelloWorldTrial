@@ -184,9 +184,12 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
 
     public boolean getflagstatus(T rowItem)
     {
-        boolean flagStatus=false;
+        SharedPreferences preferences = context.getSharedPreferences("LPLists", Context.MODE_PRIVATE);
+        String mEntityID="";
         if(rowItem instanceof User)
-            flagStatus= ((User) rowItem).getBroadcastLocationFlag();
+            mEntityID=((User) rowItem).getNumber();
+
+        boolean flagStatus=preferences.getBoolean(mEntityID,false);
 
         return flagStatus;
     }

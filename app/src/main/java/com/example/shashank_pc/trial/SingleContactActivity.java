@@ -1,6 +1,8 @@
 package com.example.shashank_pc.trial;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -18,7 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SingleContactActivity extends AppCompatActivity {
 
@@ -44,6 +48,12 @@ public class SingleContactActivity extends AppCompatActivity {
 
     private String mUserName;
     private String mUserID;
+    private boolean isGPSBroadcastFlag;
+
+    private TextView mTitle;
+    private Button isGPSBroadcast;
+
+    private User mContact;
 
 
 
@@ -56,9 +66,42 @@ public class SingleContactActivity extends AppCompatActivity {
         mEntityName= caller.getStringExtra("Name");
         mEntityID=caller.getStringExtra("ID");
         mType=caller.getCharExtra("Type", ' ');
+        isGPSBroadcastFlag = getGPSBroadcastFLag(mEntityID);
+
+        if(mType=='U'){
+            mContact = new User(mEntityName,mEntityID);
+            mContact.initBroadcastLocationFlag(isGPSBroadcastFlag);
+        }
 
         mUserName=caller.getStringExtra("Username");
         mUserID=caller.getStringExtra("UserID");
+
+        mTitle=(TextView) findViewById(R.id.single_entity_contact_title);
+        mTitle.setText(mEntityName);
+
+        isGPSBroadcast = (Button) findViewById(R.id.contact_gps_broadcast_flag);
+
+        setGPSBroadcastButtoncolor(isGPSBroadcastFlag);
+
+        isGPSBroadcast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isGPSBroadcastFlag) {
+                    isGPSBroadcastFlag = false;
+                    Toast.makeText(getApplicationContext(), "GPS broadcasting OFF", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    isGPSBroadcastFlag = true;
+                    Toast.makeText(getApplicationContext(), "GPS broadcasting ON", Toast.LENGTH_SHORT).show();
+                }
+                setGPSBroadcastButtoncolor(isGPSBroadcastFlag);
+                setGPSBroadcastSharedPreferences(isGPSBroadcastFlag);
+
+
+            }
+        });
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -89,6 +132,13 @@ public class SingleContactActivity extends AppCompatActivity {
     }
 
 
+    boolean getGPSBroadcastFLag(String ID)
+    {
+        SharedPreferences preferences = getSharedPreferences("LPLists", Context.MODE_PRIVATE);
+        return preferences.getBoolean(ID,false);
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -109,6 +159,27 @@ public class SingleContactActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void setGPSBroadcastButtoncolor(boolean GPSBroadcastFlag) {
+        if(GPSBroadcastFlag)
+            isGPSBroadcast.setBackground(getDrawable(R.drawable.single_entity_activity_button_on));
+        else
+            isGPSBroadcast.setBackground(getDrawable(R.drawable.single_entity_activity_button_off));
+    }
+
+    public void setGPSBroadcastSharedPreferences(boolean GPSBroadcastFlag) {
+        SharedPreferences preferences = getSharedPreferences("LPLists", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit= preferences.edit();
+
+        if(mType=='U')
+        {
+            //Contact
+            mContact.setBroadcastLocationFlag(GPSBroadcastFlag,mUserID);
+            edit.putBoolean(mEntityID,GPSBroadcastFlag);
+            edit.commit();
+        }
     }
 
     /**
