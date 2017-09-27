@@ -27,6 +27,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 import static com.example.shashank_pc.trial.R.id.container;
+import static java.security.AccessController.getContext;
 
 /**
  * Created by shashank-pc on 8/23/2017.
@@ -184,13 +185,17 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
     public boolean getflagstatus(T rowItem)
     {
-        boolean flagStatus=false;
+        SharedPreferences preferences = context.getSharedPreferences("LPLists", Context.MODE_PRIVATE);
+        String mEntityID="";
+
         if(rowItem instanceof Event)
-            flagStatus=((Event) rowItem).getBroadcastLocationFlag();
+            mEntityID=((Event) rowItem).getID();
         else if(rowItem instanceof  Group)
-            flagStatus=((Group) rowItem).getBroadcastLocationFlag();
+            mEntityID=((Group) rowItem).getID();
         else if(rowItem instanceof User)
-            flagStatus= ((User) rowItem).getBroadcastLocationFlag();
+            mEntityID=((User) rowItem).getNumber();
+
+        boolean flagStatus=preferences.getBoolean(mEntityID,false);
 
         return flagStatus;
     }

@@ -32,11 +32,19 @@ public class LPGroupsTab extends Fragment {
     private String mUserID;
     private String mUserName;
 
+    private LPListItemAdapter<Group> arrayAdapter;
 
     SharedPreferences preferences;
 
 
 
+    public void refresh()
+    {
+        if(arrayAdapter!=null) {
+            arrayAdapter.notifyDataSetChanged();
+        }
+
+    }
 
     public void passUserDetails(String userID, String userName)
     {
@@ -90,7 +98,7 @@ public class LPGroupsTab extends Fragment {
             mGroups=getAllGroups();
 
         //Populate listview with Groups
-        LPListItemAdapter<Group> arrayAdapter= new LPListItemAdapter<Group>(getContext(),
+        arrayAdapter= new LPListItemAdapter<Group>(getContext(),
                 mGroups, mUserID);
         listView.setAdapter(arrayAdapter);
 

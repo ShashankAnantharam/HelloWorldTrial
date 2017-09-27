@@ -91,6 +91,11 @@ public class LandingPageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        if(mGroupLPTab!=null) {
+            mGroupLPTab.refresh();
+        }
+
+
 
 
 
@@ -479,6 +484,7 @@ public class LandingPageActivity extends AppCompatActivity {
                     if(groupLPTab==null) {
                         groupLPTab = new LPGroupsTab();
                         groupLPTab.passUserDetails(mUserID,mUserName);
+                        mGroupLPTab=groupLPTab;
                     }
                     return groupLPTab;
                 case 2:

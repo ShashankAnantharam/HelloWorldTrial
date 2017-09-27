@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import static java.security.AccessController.getContext;
 
 public class SingleEntityActivity extends AppCompatActivity {
@@ -110,6 +111,8 @@ public class SingleEntityActivity extends AppCompatActivity {
                 }
                     setGPSBroadcastButtoncolor(isGPSBroadcastFlag);
                     setGPSBroadcastSharedPreferences(isGPSBroadcastFlag);
+
+
             }
         });
 
