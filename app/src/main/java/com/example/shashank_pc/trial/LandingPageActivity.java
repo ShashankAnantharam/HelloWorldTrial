@@ -63,7 +63,7 @@ public class LandingPageActivity extends AppCompatActivity {
     private boolean regFlag=false;
 
 
-    private String mUserID="";
+    private static String mUserID="";
 
     private String mUserName="";
 
@@ -86,6 +86,12 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private DatabaseReference writeGPSLat;
     private DatabaseReference writeGPSLong;
+
+    public static String getUserID()
+    {
+        return mUserID;
+    }
+
 
     @Override
     protected void onResume() {
@@ -119,10 +125,10 @@ public class LandingPageActivity extends AppCompatActivity {
 
                     double latitude= intent.getDoubleExtra("Latitude",0);
 
-                    writeGPSLat.setValue(latitude);
+//                    writeGPSLat.setValue(latitude);
 
                     double longitude= intent.getDoubleExtra("Longitude",0);
-                    writeGPSLong.setValue(longitude);
+//                    writeGPSLong.setValue(longitude);
 
   //                  Toast.makeText(getApplicationContext(),latitude+" "+longitude,Toast.LENGTH_SHORT).show();
 

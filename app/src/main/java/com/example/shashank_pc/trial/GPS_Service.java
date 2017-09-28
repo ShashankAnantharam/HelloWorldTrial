@@ -30,6 +30,9 @@ public class GPS_Service extends Service {
 
     private LocationListener locationListener;
     private LocationManager locationManager;
+    private DatabaseReference writeGPSLat;
+    private DatabaseReference writeGPSLong;
+
 
     @Nullable
     @Override
@@ -40,6 +43,12 @@ public class GPS_Service extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        String firebaseAddressLat = "Users/"+LandingPageActivity.getUserID()+"/Loc";
+
+        writeGPSLat= Generic.database.getReference(firebaseAddressLat+"/Lat");
+        writeGPSLong= Generic.database.getReference(firebaseAddressLat+"/Long");
+
+
 
 
 
@@ -54,8 +63,8 @@ public class GPS_Service extends Service {
                 locationBackground.putExtra("Latitude",location.getLatitude());
                 locationBackground.putExtra("Longitude",location.getLongitude());
                 sendBroadcast(locationBackground);
-
-
+                writeGPSLat.setValue(location.getLatitude());
+                writeGPSLong.setValue(location.getLongitude());
 
             }
 
