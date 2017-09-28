@@ -103,12 +103,12 @@ public class GPS_Service extends Service {
         //if location manager is gps provider
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2500, 0, locationListener);
         }
         //else check if network provider is network provider
         else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
         {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2500, 0, locationListener);
         }
 
 

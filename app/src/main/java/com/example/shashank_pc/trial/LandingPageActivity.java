@@ -110,12 +110,9 @@ public class LandingPageActivity extends AppCompatActivity {
         }
 
 
-
-
-
  /*
  Receive and listen to the location from GPS_Service
-  */
+
         if(locationBroadcastReceiver==null)
         {
 
@@ -138,7 +135,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
         }
         registerReceiver(locationBroadcastReceiver,new IntentFilter("location_update"));
-
+*/
     }
 
     @Override
@@ -147,10 +144,7 @@ public class LandingPageActivity extends AppCompatActivity {
         Stop broadcast receiver and GPS Service once app is closed
          */
         super.onDestroy();
-        if(locationBroadcastReceiver!=null)
-        {
-            unregisterReceiver(locationBroadcastReceiver);
-        }
+
         Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);
         stopService(gpsIntent);
         wakeLock.release();
