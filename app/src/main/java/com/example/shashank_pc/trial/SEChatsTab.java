@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -31,7 +32,7 @@ public class SEChatsTab  extends Fragment {
         View rootView = inflater.inflate(R.layout.single_entity_chats, container, false);
 
 
-        getActivity().getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_background));
+
 
         mChatList= (ListView) rootView.findViewById(R.id.chat_list);
 
@@ -64,4 +65,15 @@ public class SEChatsTab  extends Fragment {
         return rootView;
     }
 
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if(menuVisible)
+        {
+            Toast.makeText(getContext(),"Visible",Toast.LENGTH_SHORT).show();
+            getActivity().getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_background));
+        }
+
+    }
 }
