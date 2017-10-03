@@ -30,6 +30,9 @@ public class SEChatsTab  extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.single_entity_chats, container, false);
 
+
+        getActivity().getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_background));
+
         mChatList= (ListView) rootView.findViewById(R.id.chat_list);
 
         mSendButton= (Button) rootView.findViewById(R.id.chat_send_button);

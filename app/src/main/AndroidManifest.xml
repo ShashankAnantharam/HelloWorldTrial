@@ -40,6 +40,7 @@
         <activity
             android:name=".SingleEntityActivity"
             android:label="@string/title_activity_single_entity"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!--
