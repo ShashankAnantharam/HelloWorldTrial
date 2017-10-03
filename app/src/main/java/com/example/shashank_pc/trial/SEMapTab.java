@@ -591,4 +591,20 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         if(mType=='C')
             getContext().unregisterReceiver(contactBroadcastReceiver);
     }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+
+            super.setMenuVisibility(menuVisible);
+        try {
+            if (menuVisible) {
+                getActivity().getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.map_background));
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+
+    }
 }

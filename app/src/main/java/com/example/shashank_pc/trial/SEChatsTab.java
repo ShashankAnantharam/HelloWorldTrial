@@ -69,10 +69,14 @@ public class SEChatsTab  extends Fragment {
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
-        if(menuVisible)
+        try {
+            if (menuVisible) {
+                getActivity().getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_background));
+            }
+        }
+        catch (Exception e)
         {
-            Toast.makeText(getContext(),"Visible",Toast.LENGTH_SHORT).show();
-            getActivity().getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.chat_background));
+
         }
 
     }
