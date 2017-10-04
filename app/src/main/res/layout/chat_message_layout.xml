@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="2.5dip"
             android:paddingLeft="10dip"
+            android:paddingRight="10dip"
             android:id="@+id/single_chat_text"
             android:textColor="@android:color/primary_text_light"
             />

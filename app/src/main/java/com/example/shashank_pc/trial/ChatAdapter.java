@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +81,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         chatText.setText(mMessage);
         creator.setText(mCreator);
 
-        chatLayout.setBackgroundResource(mPosition? R.drawable.single_chat_drawable_left : R.drawable.single_chat_drawable_right);
+        chatLayout.setBackgroundResource(mPosition? R.drawable.single_chat_drawable_left : R.drawable.single_chat_drawable_right_main);
 
         LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
