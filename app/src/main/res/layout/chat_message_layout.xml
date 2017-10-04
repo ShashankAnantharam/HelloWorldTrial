@@ -32,6 +32,7 @@
             android:id="@+id/message_creator"
             android:layout_below="@id/single_chat_text"
             android:paddingLeft="10dip"
+            android:paddingRight="10dip"
             android:layout_margin="5dip"
             android:layout_marginBottom="3dp"/>
 
