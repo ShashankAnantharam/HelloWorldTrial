@@ -57,6 +57,8 @@ public class SingleContactActivity extends AppCompatActivity {
 
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -216,6 +218,7 @@ public class SingleContactActivity extends AppCompatActivity {
                 case 1:
                     //     if(mSEChatsTab==null)
                     mSEChatsTab= new SEChatsTab();
+                    mSEChatsTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
                     return mSEChatsTab;
 
                 default:

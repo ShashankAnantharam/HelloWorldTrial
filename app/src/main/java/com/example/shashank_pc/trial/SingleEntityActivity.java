@@ -62,6 +62,8 @@ public class SingleEntityActivity extends AppCompatActivity {
 
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -245,6 +247,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                 case 1:
                //     if(mSEChatsTab==null)
                     mSEChatsTab= new SEChatsTab();
+                    mSEChatsTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
                     return mSEChatsTab;
                 case 2:
                 //    if(mSEMembersTab==null)

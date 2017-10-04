@@ -21,10 +21,29 @@ import android.widget.Toast;
 
 public class SEChatsTab  extends Fragment {
 
+    private String mUserID;
+    private String mUserName;
+    private String mEntityName;
+    private String mEntityID;
+    private char mType;
+
+
+
     private ListView mChatList;
     private Button mSendButton;
     private EditText mChatText;
     private ChatAdapter chatAdapter;
+
+
+    public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
+    {
+        mUserID= userID;
+        mUserName=userName;
+        mEntityName=entityName;
+        mEntityID=entityID;
+        mType=type;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +76,8 @@ public class SEChatsTab  extends Fragment {
                 ChatMessage nCM= new ChatMessage(false, mChatText.getText().toString(), "Me");
                 chatAdapter.add(nCM);
                 mChatText.setText("");
+
+
 
             }
         });
