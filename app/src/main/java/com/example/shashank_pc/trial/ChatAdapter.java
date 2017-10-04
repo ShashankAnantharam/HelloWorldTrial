@@ -81,7 +81,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         chatText.setText(mMessage);
         creator.setText(mCreator);
 
-        chatLayout.setBackgroundResource(mPosition? R.drawable.single_chat_drawable_left : R.drawable.single_chat_drawable_right_main);
+        chatLayout.setBackgroundResource(mPosition? R.drawable.single_chat_drawable_left_main : R.drawable.single_chat_drawable_right_main);
 
         LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
