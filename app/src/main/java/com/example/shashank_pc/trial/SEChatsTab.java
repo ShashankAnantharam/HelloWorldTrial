@@ -13,6 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import static com.example.shashank_pc.trial.Generic.database;
@@ -41,6 +44,7 @@ public class SEChatsTab  extends Fragment {
 
     private DatabaseReference newComment;
     private String chatMessageAddress;
+    private DatabaseReference commentListener;
 
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
@@ -50,6 +54,51 @@ public class SEChatsTab  extends Fragment {
         mEntityName=entityName;
         mEntityID=entityID;
         mType=type;
+    }
+
+    public void initCommentListener()
+    {
+        commentListener = database.getReference("ChtMsgs/" + mEntityID);
+
+        commentListener.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                String chatText = (String)dataSnapshot.child("Msg").getValue();
+                String creator = (String) dataSnapshot.child("Creator").getValue();
+                boolean isNotMyMessage = true;
+                if(creator.equals(mUserID)) {
+                    creator = "Me";
+                    isNotMyMessage = false;
+                }
+
+
+                ChatMessage nCM= new ChatMessage(isNotMyMessage, chatText, creator);
+                chatAdapter.add(nCM);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -69,6 +118,9 @@ public class SEChatsTab  extends Fragment {
 
         chatAdapter = new ChatAdapter(getContext(), R.layout.chat_message_layout);
         mChatList.setAdapter(chatAdapter);
+
+        if(mType=='G' || mType=='E')
+            initCommentListener();
 
 
 
