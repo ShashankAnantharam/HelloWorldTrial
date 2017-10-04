@@ -18,6 +18,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.example.shashank_pc.trial.Generic.database;
 
 /**
@@ -152,13 +155,23 @@ public class SEChatsTab  extends Fragment {
 
                 if(mType=='E' || mType=='G')
                 {
-                    newComment = database.getReference(chatMessageAddress).push();
+
                     Long tsLong = System.currentTimeMillis()/1000;
                     String ts = tsLong.toString();
 
-                    newComment.child("TS").setValue(ts);
-                    newComment.child("Creator").setValue(mUserID);
-                    newComment.child("Msg").setValue(chatText);
+                    Map<String,String> firebaseMap= new HashMap<String, String>();
+                    firebaseMap.put("TS",ts);
+                    firebaseMap.put("Creator",mUserID);
+                    firebaseMap.put("Msg",chatText);
+
+                    database.getReference(chatMessageAddress).push().setValue(firebaseMap);
+
+
+
+
+//                    newComment.child("TS").setValue(ts);
+//                    newComment.child("Creator").setValue(mUserID);
+//                    newComment.child("Msg").setValue(chatText);
                 }
 
             }
