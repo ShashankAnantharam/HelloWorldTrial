@@ -13,6 +13,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+
+import static com.example.shashank_pc.trial.Generic.database;
+
 /**
  * Created by shashank-pc on 8/26/2017.
  */
@@ -33,6 +37,10 @@ public class SEChatsTab  extends Fragment {
     private Button mSendButton;
     private EditText mChatText;
     private ChatAdapter chatAdapter;
+
+
+    private DatabaseReference newComment;
+    private String chatMessageAddress;
 
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
@@ -62,6 +70,19 @@ public class SEChatsTab  extends Fragment {
         chatAdapter = new ChatAdapter(getContext(), R.layout.chat_message_layout);
         mChatList.setAdapter(chatAdapter);
 
+
+
+
+
+        if(mType=='E' || mType=='G')
+        {
+            // Event and group, get the reference
+
+            chatMessageAddress = "ChtMsgs/" + mEntityID ;
+
+        }
+
+
         chatAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
@@ -73,11 +94,22 @@ public class SEChatsTab  extends Fragment {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChatMessage nCM= new ChatMessage(false, mChatText.getText().toString(), "Me");
-                chatAdapter.add(nCM);
+                String chatText = mChatText.getText().toString();
                 mChatText.setText("");
+                ChatMessage nCM= new ChatMessage(false, chatText, "Me");
+                chatAdapter.add(nCM);
 
 
+                if(mType=='E' || mType=='G')
+                {
+                    newComment = database.getReference(chatMessageAddress).push();
+                    Long tsLong = System.currentTimeMillis()/1000;
+                    String ts = tsLong.toString();
+
+                    newComment.child("TS").setValue(ts);
+                    newComment.child("Creator").setValue(mUserID);
+                    newComment.child("Msg").setValue(chatText);
+                }
 
             }
         });
