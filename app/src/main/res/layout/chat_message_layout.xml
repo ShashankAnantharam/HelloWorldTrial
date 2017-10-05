@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,14 +17,14 @@
         >
 
         <TextView
+            android:id="@+id/single_chat_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2.5dip"
+            android:fontFamily="serif"
             android:paddingLeft="10dip"
             android:paddingRight="10dip"
-            android:id="@+id/single_chat_text"
-            android:textColor="@android:color/primary_text_light"
-            />
+            android:textColor="@android:color/black" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,6 +32,8 @@
             android:text="Sender"
             android:id="@+id/message_creator"
             android:layout_below="@id/single_chat_text"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
             android:paddingLeft="10dip"
             android:paddingRight="10dip"
             android:layout_margin="5dip"
