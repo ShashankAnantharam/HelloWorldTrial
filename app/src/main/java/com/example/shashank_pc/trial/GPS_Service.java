@@ -22,6 +22,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by shashank-pc on 9/12/2017.
  */
@@ -30,8 +33,7 @@ public class GPS_Service extends Service {
 
     private LocationListener locationListener;
     private LocationManager locationManager;
-    private DatabaseReference writeGPSLat;
-    private DatabaseReference writeGPSLong;
+    private DatabaseReference writeGPS;
 
 
     @Nullable
@@ -45,8 +47,7 @@ public class GPS_Service extends Service {
         super.onCreate();
         String firebaseAddressLat = "Users/"+LandingPageActivity.getUserID()+"/Loc";
 
-        writeGPSLat= Generic.database.getReference(firebaseAddressLat+"/Lat");
-        writeGPSLong= Generic.database.getReference(firebaseAddressLat+"/Long");
+        writeGPS= Generic.database.getReference(firebaseAddressLat);
 
 
 
@@ -63,8 +64,10 @@ public class GPS_Service extends Service {
                 locationBackground.putExtra("Latitude",location.getLatitude());
                 locationBackground.putExtra("Longitude",location.getLongitude());
                 sendBroadcast(locationBackground);
-                writeGPSLat.setValue(location.getLatitude());
-                writeGPSLong.setValue(location.getLongitude());
+                Map<String, Double> gpsWrite= new HashMap<>();
+                gpsWrite.put("Lat",location.getLatitude());
+                gpsWrite.put("Long",location.getLongitude());
+                writeGPS.setValue(gpsWrite);
 
             }
 

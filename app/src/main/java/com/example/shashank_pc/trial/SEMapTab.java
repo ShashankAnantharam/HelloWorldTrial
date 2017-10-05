@@ -118,10 +118,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     double temp= snapshot.getValue(Double.class);
                     if(i==0) {
                         latitude = temp;
+ //                       Toast.makeText(getContext(),Double.toString(temp),Toast.LENGTH_SHORT).show();
                     }
                     else if(i==1)
                     {
                         longtitude=temp;
+ //                       Toast.makeText(getContext(),Double.toString(temp),Toast.LENGTH_SHORT).show();
                     }
                     i++;
 
