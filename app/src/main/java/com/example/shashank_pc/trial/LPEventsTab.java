@@ -171,13 +171,13 @@ public class LPEventsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean("E0000000001",false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllEvents.add(temp);
-  /*      temp = new Event("Family Function","This event is held to commemorate the 7th TTTTTTTTT."
+        temp = new Event("Family Function","This event is held to commemorate the 7th TTTTTTTTT."
         ,"E0000000002");
         mBroadcastLocationFlag=preferences.getBoolean("E0000000002",false);
         temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mAllEvents.add(temp);
 
-*/
+
 
         return mAllEvents;
     }

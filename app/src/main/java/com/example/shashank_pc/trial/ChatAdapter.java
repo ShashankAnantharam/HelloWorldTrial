@@ -25,10 +25,7 @@ import java.util.List;
 public class ChatAdapter extends ArrayAdapter<ChatMessage> {
 
     private List<ChatMessage> mChatList = new ArrayList<>();
-    private TextView chatText;
-    private TextView creator;
-    private RelativeLayout chatLayout;
-    private LinearLayout chatMainLayout;
+
     Context mContext;
 
     public ChatAdapter(Context context, int resource)
@@ -54,19 +51,35 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         return mChatList.get(position);
     }
 
+
+    private class ViewHolder{
+
+        private TextView chatText;
+        private TextView creator;
+        private RelativeLayout chatLayout;
+        private LinearLayout chatMainLayout;
+
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
+        ViewHolder holder = null;
+
+        LayoutInflater inflator= (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        holder = new ViewHolder();
+
         if(convertView==null)
         {
-            LayoutInflater inflator= (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             convertView= inflator.inflate(R.layout.chat_message_layout, parent,false);
         }
 
-        chatText= (TextView) convertView.findViewById(R.id.single_chat_text);
-        creator= (TextView) convertView.findViewById(R.id.message_creator);
-        chatLayout= (RelativeLayout) convertView.findViewById(R.id.single_chat_layout_id);
+        holder.chatText= (TextView) convertView.findViewById(R.id.single_chat_text);
+        holder.creator= (TextView) convertView.findViewById(R.id.message_creator);
+        holder.chatLayout= (RelativeLayout) convertView.findViewById(R.id.single_chat_layout_id);
 
         String mMessage;
         boolean mPosition;
@@ -78,25 +91,25 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         mPosition=mCM.isPosition();
         mCreator=mCM.getCreator();
 
-        chatText.setText(mMessage);
-        creator.setText(mCreator);
+        holder.chatText.setText(mMessage);
+        holder.creator.setText(mCreator);
 
-        chatLayout.setBackgroundResource(mPosition? R.drawable.single_chat_drawable_left_main : R.drawable.single_chat_drawable_right_main);
+        holder.chatLayout.setBackgroundResource(mPosition? R.drawable.single_chat_drawable_left_main : R.drawable.single_chat_drawable_right_main);
 
         LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
 
-        RelativeLayout.LayoutParams params_chatMessage= (RelativeLayout.LayoutParams) chatText.getLayoutParams();
-        RelativeLayout.LayoutParams params_chatCreator= (RelativeLayout.LayoutParams) creator.getLayoutParams();
+        RelativeLayout.LayoutParams params_chatMessage= (RelativeLayout.LayoutParams) holder.chatText.getLayoutParams();
+        RelativeLayout.LayoutParams params_chatCreator= (RelativeLayout.LayoutParams) holder.creator.getLayoutParams();
 
-        chatMainLayout= (LinearLayout) convertView.findViewById(R.id.single_chat_main_layout_id);
+        holder.chatMainLayout= (LinearLayout) convertView.findViewById(R.id.single_chat_main_layout_id);
 
         if(mPosition==true)
         {
             //Set chat at left side
 //            chatLayout.setGravity(Gravity.LEFT);
-            chatMainLayout.setGravity(Gravity.LEFT);
+            holder.chatMainLayout.setGravity(Gravity.LEFT);
 //            params_chatMessage.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
 //            creator.setGravity(Gravity.LEFT);
@@ -106,14 +119,14 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         {
             //Set chat at right side
  //           chatLayout.setGravity(Gravity.RIGHT);
-            chatMainLayout.setGravity(Gravity.RIGHT);
+            holder.chatMainLayout.setGravity(Gravity.RIGHT);
 //           params_chatMessage.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 //           params_chatCreator.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 //            creator.setGravity(Gravity.RIGHT);
 
         }
 
-        chatLayout.setLayoutParams(params);
+        holder.chatLayout.setLayoutParams(params);
 
         return convertView;
     }
