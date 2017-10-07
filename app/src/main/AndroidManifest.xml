@@ -41,7 +41,8 @@
             android:name=".SingleEntityActivity"
             android:label="@string/title_activity_single_entity"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|orientation"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
