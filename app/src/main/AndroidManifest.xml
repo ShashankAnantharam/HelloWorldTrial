@@ -29,7 +29,8 @@
         <activity
             android:name=".LandingPageActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,7 +43,7 @@
             android:label="@string/title_activity_single_entity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="keyboardHidden|orientation"/>
+            android:screenOrientation="portrait"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -61,7 +62,8 @@
         <activity
             android:name=".SingleContactActivity"
             android:label="@string/title_activity_single_contacts"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity android:name=".GroupCreateActivity"
             android:label="Create Group"></activity>
     </application>
