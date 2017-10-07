@@ -75,11 +75,18 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         {
 
             convertView= inflator.inflate(R.layout.chat_message_layout, parent,false);
+            holder.chatText= (TextView) convertView.findViewById(R.id.single_chat_text);
+            holder.creator= (TextView) convertView.findViewById(R.id.message_creator);
+            holder.chatLayout= (RelativeLayout) convertView.findViewById(R.id.single_chat_layout_id);
+
+            convertView.setTag(holder);
+        }
+        else
+        {
+            holder=(ViewHolder) convertView.getTag();
         }
 
-        holder.chatText= (TextView) convertView.findViewById(R.id.single_chat_text);
-        holder.creator= (TextView) convertView.findViewById(R.id.message_creator);
-        holder.chatLayout= (RelativeLayout) convertView.findViewById(R.id.single_chat_layout_id);
+
 
         String mMessage;
         boolean mPosition;
