@@ -17,10 +17,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+
+import static android.os.Build.ID;
+import static com.example.shashank_pc.trial.Generic.firestore;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -41,6 +50,13 @@ public class LPContactsTab extends Fragment {
 
     SharedPreferences preferences;
 
+    private boolean hasInitContacts;
+    private DocumentReference firestoneUserRef;
+    private String fContactName;
+    private String fContactDesc;
+
+
+    //TODO Change position of this map
     public static HashMap<String,Integer> ContactListMap;
 
     public void refresh()
@@ -49,6 +65,19 @@ public class LPContactsTab extends Fragment {
             arrayAdapter.notifyDataSetChanged();
         }
 
+    }
+
+
+    public void addContact(User user)
+    {
+        /*
+        Add group
+         */
+        boolean mBroadcastLocationFlag;
+        mBroadcastLocationFlag=preferences.getBoolean(user.getNumber(),false);
+        user.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        mContacts.add(user);
+        refresh();
     }
 
     public void updateListAtPosition(int position)
@@ -120,6 +149,8 @@ public class LPContactsTab extends Fragment {
 
         super.onViewCreated(rootView, savedInstanceState);
 
+        ContactListMap = new HashMap<>();
+
         //Initialize Listview
 
         listView = (ListView) rootView.findViewById(R.id.section_list_contact);
@@ -127,7 +158,7 @@ public class LPContactsTab extends Fragment {
 
         //Get the contacts from the database
         if (mContacts == null)
-            mContacts = getAllUsers();
+            mContacts = new ArrayList<>();
 
 
         //Populate listview with contacts
@@ -169,94 +200,42 @@ public class LPContactsTab extends Fragment {
             });
 
 
+        if(hasInitContacts==false) {
+            // If contact not yet initialized (Initialize groups)
+            initUsers();
+        }
 
 
     }
 
-    public List<User> getAllUsers()
+    public void initUsers()
     {
-        //TODO Change function in order to get contacts from Database
-        /*
-        Function to get All contacts from the Database. HardCoded now
-         */
-        if(ContactListMap==null)
-            ContactListMap = new HashMap<>();
-        boolean mBroadcastLocationFlag;
+        hasInitContacts=true;
 
-        List <User> mAllContacts = new ArrayList<>();
+        firestore = FirebaseFirestore.getInstance();
 
-        if(mUserID=="")
-            return mAllContacts;
+        firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("contacts");
 
-        int i=0;
-        String name,number;
+        firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
 
+                Map<String,Object> userMap= new HashMap<>();
+                userMap = documentSnapshot.getData();
 
-
-        name="Shashank";
-        number="9701420818";
-        User temp = new User(name,number);
-        mBroadcastLocationFlag=preferences.getBoolean(number,false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllContacts.add(temp);
-        ContactListMap.put(number,i);
-        i++;
-
-        name="Bharath Kota";
-        number="9177787179";
-        temp = new User(name,number);
-        mBroadcastLocationFlag=preferences.getBoolean(number,false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllContacts.add(temp);
-        ContactListMap.put(number,i);
-        i++;
-
-        name="Mehtab Ahmed";
-        number="9177787327";
-        temp = new User(name,number);
-        mBroadcastLocationFlag=preferences.getBoolean(number,false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllContacts.add(temp);
-        ContactListMap.put(number,i);
-        i++;
+                for(Map.Entry<String,Object> entry : userMap.entrySet())
+                {
+                    Map<String,String> fContactDetails = (Map<String,String>) entry.getValue();
+                    String fContactNumber= fContactDetails.get("ID");
+                    String fContactName= fContactDetails.get("name");
+                    User user = new User(fContactName,fContactNumber);
+                    addContact(user);
 
 
-        name="Phani";
-        number="9494426683";
-        temp = new User(name,number);
-        mBroadcastLocationFlag=preferences.getBoolean(number,false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllContacts.add(temp);
-        ContactListMap.put(number,i);
-        i++;
+                }
 
-/*
-        name="Mom";
-        number="9848120818";
-        temp = new User(name,number);
-        mBroadcastLocationFlag=preferences.getBoolean(number,false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllContacts.add(temp);
-        ContactListMap.put(number,i);
-        i++;
+            }
+        });
 
-        name="Dad";
-        number="9949774464";
-        temp = new User(name,number);
-        mBroadcastLocationFlag=preferences.getBoolean(number,false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllContacts.add(temp);
-        ContactListMap.put(number,i);
-        i++;
-
-*/
-
-//               temp = new User("Abhinav", "9000377713");
-//        mAllContacts.add(temp);
- //       temp = new User("Vishal", "9989182838");
- //       mAllContacts.add(temp);
-
-
-        return mAllContacts;
     }
 }

@@ -31,25 +31,10 @@ public class SEMembersTab  extends LPContactsTab{
         mType=type;
     }
 
+
     @Override
-    public List<User> getAllUsers() {
-        List <User> mAllMembers = new ArrayList<>();
-        User temp;
+    public void initUsers()
+    {
 
- // For debugging       Toast.makeText(getContext(),mContactID,Toast.LENGTH_SHORT).show();
-
-        if(mType=='U')
-        {
-            temp= new User(mContactName, mContactID);
-            mAllMembers.add(temp);
-            return mAllMembers;
-        }
-
-
-        temp = new User(mUserName, mUserID);    //TODO parameterize name
-        temp.initBroadcastLocationFlag(false);
-        mAllMembers.add(temp);
- 
-        return mAllMembers;
     }
 }
