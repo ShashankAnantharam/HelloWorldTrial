@@ -390,6 +390,10 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void initUserActivities()
     {
+        /*
+        Get the events, groups and contacts of user from Firestore
+         */
+
         firestore = FirebaseFirestore.getInstance();
 
         firestoneUserRef = firestore.collection("users").document(mUserID);
@@ -440,7 +444,38 @@ public class LandingPageActivity extends AppCompatActivity {
                     }
                     else if(entry.getKey().equals("groups"))
                     {
+/*                        List<String> fGroups = (List) entry.getValue();
 
+                        for(final String fGroupID: fGroups)
+                        {
+                            fEntityName="";
+                            fEntityDesc="";
+//                            Toast.makeText(getApplicationContext(),fEventID,Toast.LENGTH_SHORT).show();
+
+                            DocumentReference fireStoreEventRef= firestore.collection("events").document(fGroupID);
+                            fireStoreEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                    Map<String,Object> groupMap= new HashMap<>();
+                                    groupMap = documentSnapshot.getData();
+
+                                    for(Map.Entry<String,Object> entry:groupMap.entrySet())
+                                    {
+                                        if(entry.getKey().equals("name"))
+                                            fEntityName=(String)entry.getValue();
+                                        else if(entry.getKey().equals("desc"))
+                                            fEntityDesc=(String) entry.getValue();
+                                    }
+
+                                    Event event= new Event(fEntityName,fEntityDesc,fGroupID);
+                                    mEventLPTab.addEvent(event);
+
+
+                                }
+                            });
+                        }
+*/
                     }
                     else if(entry.getKey().equals("contacts"))
                     {

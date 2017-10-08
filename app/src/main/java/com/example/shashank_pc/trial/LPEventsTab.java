@@ -51,6 +51,9 @@ public class LPEventsTab extends Fragment {
 
     public void addEvent(Event event)
     {
+        /*
+        Add event
+         */
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(event.getID(),false);
         event.initBroadcastLocationFlag(mBroadcastLocationFlag);
@@ -114,7 +117,7 @@ public class LPEventsTab extends Fragment {
 
         //Get the Events from the database
         if(mEvents==null)
-            mEvents=getAllEvents();
+            mEvents=new ArrayList<>();
 
         //Populate listview with Events
         arrayAdapter= new LPListItemAdapter<Event>(getContext(),
@@ -159,36 +162,5 @@ public class LPEventsTab extends Fragment {
 
     }
 
-    public List<Event> getAllEvents()
-    {
-        //TODO Change function in order to get Events from Database
-        /*
-        Function to get All events from the Database. HardCoded now
-         */
 
-
-
-        List <Event> mAllEvents = new ArrayList<>();
-
-        if(mUserID=="")
-            return mAllEvents;
-
-        Event temp;
-        boolean mBroadcastLocationFlag;
-
-        temp = new Event("Political gathering","This meeting is organized to protest unfair taxes on the middle class of the country."
-        ,"E0000000001");
-        mBroadcastLocationFlag=preferences.getBoolean("E0000000001",false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllEvents.add(temp);
-        temp = new Event("Family Function","This event is held to commemorate the 7th TTTTTTTTT."
-        ,"E0000000002");
-        mBroadcastLocationFlag=preferences.getBoolean("E0000000002",false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllEvents.add(temp);
-
-
-
-        return mAllEvents;
-    }
 }

@@ -25,7 +25,7 @@ import java.util.Vector;
 public class LPGroupsTab extends Fragment {
 
     //List is used because it is faster than Vector because it is asynchronous
-    List<Group> mGroups;
+    private List<Group> mGroups;
 
     private View rootView;
 
@@ -44,6 +44,18 @@ public class LPGroupsTab extends Fragment {
             arrayAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    public void addGroup(Group group)
+    {
+        /*
+        Add group
+         */
+        boolean mBroadcastLocationFlag;
+        mBroadcastLocationFlag=preferences.getBoolean(group.getID(),false);
+        group.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        mGroups.add(group);
+        refresh();
     }
 
     public void passUserDetails(String userID, String userName)
