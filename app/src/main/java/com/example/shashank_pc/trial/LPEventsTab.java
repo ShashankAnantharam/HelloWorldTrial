@@ -49,8 +49,11 @@ public class LPEventsTab extends Fragment {
 
     }
 
-    private void addEvent(Event event)
+    public void addEvent(Event event)
     {
+        boolean mBroadcastLocationFlag;
+        mBroadcastLocationFlag=preferences.getBoolean(event.getID(),false);
+        event.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mEvents.add(event);
         refresh();
     }

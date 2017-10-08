@@ -386,22 +386,8 @@ public class LandingPageActivity extends AppCompatActivity {
     }
 
 
-
-    private boolean initUserDetails()
+    public void initUserActivities()
     {
-
-        SharedPreferences userDetails = getSharedPreferences("UserDetails",Context.MODE_PRIVATE);
-
-
-        if(userDetails.getString("UserID","")=="")
-            return false;
-
-        mUserID = userDetails.getString("UserID","");
-        mUserName=userDetails.getString("UserName","");
-
-        Toast.makeText(getApplicationContext(),"Welcome "+mUserName+" "+mUserID+" "+userDetails.getString("Password",""),
-                Toast.LENGTH_SHORT).show();
-
         firestore = FirebaseFirestore.getInstance();
 
         firestoneUserRef = firestore.collection("users").document(mUserID);
@@ -442,7 +428,7 @@ public class LandingPageActivity extends AppCompatActivity {
                                     }
 
                                     Event event= new Event(fEntityName,fEntityDesc,fEventID);
-                                    
+                  //                  mEventLPTab.addEvent(event);
 
 
                                 }
@@ -463,6 +449,24 @@ public class LandingPageActivity extends AppCompatActivity {
 
             }
         });
+
+
+    }
+
+    private boolean initUserDetails()
+    {
+
+        SharedPreferences userDetails = getSharedPreferences("UserDetails",Context.MODE_PRIVATE);
+
+
+        if(userDetails.getString("UserID","")=="")
+            return false;
+
+        mUserID = userDetails.getString("UserID","");
+        mUserName=userDetails.getString("UserName","");
+
+        Toast.makeText(getApplicationContext(),"Welcome "+mUserName+" "+mUserID+" "+userDetails.getString("Password",""),
+                Toast.LENGTH_SHORT).show();
 
 
 
