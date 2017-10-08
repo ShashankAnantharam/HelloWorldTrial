@@ -14,9 +14,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+
+import static com.example.shashank_pc.trial.Generic.firestore;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -35,6 +44,12 @@ public class LPGroupsTab extends Fragment {
     private LPListItemAdapter<Group> arrayAdapter;
 
     SharedPreferences preferences;
+
+    private DocumentReference firestoneUserRef;
+    private String fGroupName;
+    private String fGroupDesc;
+    private boolean hasInitGroups;
+
 
 
 
@@ -107,7 +122,7 @@ public class LPGroupsTab extends Fragment {
 
         //Get the Groups from the database
         if(mGroups==null)
-            mGroups=getAllGroups();
+            mGroups=new ArrayList<>();
 
         //Populate listview with Groups
         arrayAdapter= new LPListItemAdapter<Group>(getContext(),
@@ -148,35 +163,73 @@ public class LPGroupsTab extends Fragment {
             }
         });
 
+        if(hasInitGroups==false) {
+            // If group notyet initialized (Initialize groups)
+            initGroups();
+        }
 
     }
-
-    public List<Group> getAllGroups()
+    
+    public void initGroups()
     {
+        hasInitGroups=true;
 
-        //TODO Change function in order to get Groups from Database
-        /*
-        Function to get All groups from the Database. HardCoded now
-         */
+        firestore = FirebaseFirestore.getInstance();
 
-        List <Group> mAllGroups = new ArrayList<>();
+        firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("groups");
 
-        if(mUserID=="")
-            return mAllGroups;
+        firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                Map<String,Object> userMap= new HashMap<>();
+                userMap = documentSnapshot.getData();
+
+                for(Map.Entry<String,Object> entry : userMap.entrySet())
+                {
+                    if(entry.getKey().equals("list"))
+                    {
+                        List<String> fGroups = (List) entry.getValue();
+
+                        for(final String fGroupID: fGroups)
+                        {
+                            fGroupName="";
+                            fGroupDesc="";
+//                            Toast.makeText(getApplicationContext(),fGroupID,Toast.LENGTH_SHORT).show();
+
+                            DocumentReference fireStoreGroupRef= firestore.collection("groups").document(fGroupID);
+                            fireStoreGroupRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                    Map<String,Object> groupMap= new HashMap<>();
+                                    groupMap = documentSnapshot.getData();
+
+                                    for(Map.Entry<String,Object> entry:groupMap.entrySet())
+                                    {
+                                        if(entry.getKey().equals("name"))
+                                            fGroupName=(String)entry.getValue();
+                                        else if(entry.getKey().equals("desc"))
+                                            fGroupDesc=(String) entry.getValue();
+                                    }
+
+                                    Group group= new Group(fGroupName,fGroupDesc,fGroupID);
+                                    addGroup(group);
 
 
+                                }
+                            });
+                        }
 
-        Group temp;
-        boolean mBroadcastLocationFlag;
-        temp = new Group("Founders","We are the founders of the app","G00000000002");
-        mBroadcastLocationFlag=preferences.getBoolean("G00000000002",false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllGroups.add(temp);
-/*        temp = new Group("Family","Plot No 7, Road No 49", "G00000000001");
-        mBroadcastLocationFlag=preferences.getBoolean("G00000000001",false);
-        temp.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        mAllGroups.add(temp);
-*/
-        return mAllGroups;
+                    }
+
+                }
+
+            }
+        });
+
+
     }
+
+
 }

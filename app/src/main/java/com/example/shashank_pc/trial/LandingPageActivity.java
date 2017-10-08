@@ -283,8 +283,7 @@ public class LandingPageActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        initUserActivities();
+        
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -388,107 +387,7 @@ public class LandingPageActivity extends AppCompatActivity {
     }
 
 
-    public void initUserActivities()
-    {
-        /*
-        Get the events, groups and contacts of user from Firestore
-         */
 
-/*        firestore = FirebaseFirestore.getInstance();
-
-        firestoneUserRef = firestore.collection("users").document(mUserID);
-
-        firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                Map<String,Object> userMap= new HashMap<>();
-                userMap = documentSnapshot.getData();
-
-                for(Map.Entry<String,Object> entry : userMap.entrySet())
-                {
-                    if(entry.getKey().equals("events"))
-                    {
-                        List<String> fEvents = (List) entry.getValue();
-
-                        for(final String fEventID: fEvents)
-                        {
-                            fEntityName="";
-                            fEntityDesc="";
-//                            Toast.makeText(getApplicationContext(),fEventID,Toast.LENGTH_SHORT).show();
-
-                            DocumentReference fireStoreEventRef= firestore.collection("events").document(fEventID);
-                            fireStoreEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                                    Map<String,Object> eventMap= new HashMap<>();
-                                    eventMap = documentSnapshot.getData();
-
-                                    for(Map.Entry<String,Object> entry:eventMap.entrySet())
-                                    {
-                                        if(entry.getKey().equals("name"))
-                                            fEntityName=(String)entry.getValue();
-                                        else if(entry.getKey().equals("desc"))
-                                            fEntityDesc=(String) entry.getValue();
-                                    }
-
-                                    Event event= new Event(fEntityName,fEntityDesc,fEventID);
-                                    mEventLPTab.addEvent(event);
-
-
-                                }
-                            });
-                        }
-
-                    }
-                    else if(entry.getKey().equals("groups"))
-                    {
-                        List<String> fGroups = (List) entry.getValue();
-
-                        for(final String fGroupID: fGroups)
-                        {
-                            fEntityName="";
-                            fEntityDesc="";
-//                            Toast.makeText(getApplicationContext(),fEventID,Toast.LENGTH_SHORT).show();
-
-                            DocumentReference fireStoreEventRef= firestore.collection("events").document(fGroupID);
-                            fireStoreEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                                    Map<String,Object> groupMap= new HashMap<>();
-                                    groupMap = documentSnapshot.getData();
-
-                                    for(Map.Entry<String,Object> entry:groupMap.entrySet())
-                                    {
-                                        if(entry.getKey().equals("name"))
-                                            fEntityName=(String)entry.getValue();
-                                        else if(entry.getKey().equals("desc"))
-                                            fEntityDesc=(String) entry.getValue();
-                                    }
-
-                                    Event event= new Event(fEntityName,fEntityDesc,fGroupID);
-                                    mEventLPTab.addEvent(event);
-
-
-                                }
-                            });
-                        }
-
-                    }
-                    else if(entry.getKey().equals("contacts"))
-                    {
-
-                    }
-
-                }
-
-            }
-        });
-
-*/
-    }
 
     private boolean initUserDetails()
     {

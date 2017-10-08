@@ -173,7 +173,7 @@ public class LPEventsTab extends Fragment {
 
 
         if(hasInitEvents==false) {
-            // If no events present (Check for events)
+            // If event notyet initialized (Initialize events)
             initEvents();
         }
     }
