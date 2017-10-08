@@ -61,6 +61,7 @@ public class LPContactsTab extends Fragment {
 
     public void refresh()
     {
+
         if(arrayAdapter!=null) {
             arrayAdapter.notifyDataSetChanged();
         }
@@ -136,6 +137,8 @@ public class LPContactsTab extends Fragment {
         }
 
         preferences = getContext().getSharedPreferences("LPLists", Context.MODE_PRIVATE);
+        if(ContactListMap==null)
+           ContactListMap = new HashMap<>();
         return rootView;
     }
 
@@ -150,7 +153,7 @@ public class LPContactsTab extends Fragment {
 
         super.onViewCreated(rootView, savedInstanceState);
 
-        ContactListMap = new HashMap<>();
+
 
         //Initialize Listview
 
