@@ -319,7 +319,7 @@ public class LandingPageActivity extends AppCompatActivity {
         contactNodeChildListener=contactNodeRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-               // Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
                 if(isBroadcastingLocation.containsKey(dataSnapshot.getKey()))
                 {
                     isBroadcastingLocation.remove(dataSnapshot.getKey());

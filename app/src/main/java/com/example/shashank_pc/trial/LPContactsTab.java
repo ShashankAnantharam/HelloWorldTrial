@@ -77,6 +77,7 @@ public class LPContactsTab extends Fragment {
         mBroadcastLocationFlag=preferences.getBoolean(user.getNumber(),false);
         user.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mContacts.add(user);
+        ContactListMap.put(user.getNumber(),mContacts.size()-1);
         refresh();
     }
 
