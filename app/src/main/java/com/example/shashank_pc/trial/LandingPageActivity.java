@@ -283,6 +283,8 @@ public class LandingPageActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        initUserActivities();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -428,7 +430,7 @@ public class LandingPageActivity extends AppCompatActivity {
                                     }
 
                                     Event event= new Event(fEntityName,fEntityDesc,fEventID);
-                  //                  mEventLPTab.addEvent(event);
+                                    mEventLPTab.addEvent(event);
 
 
                                 }
