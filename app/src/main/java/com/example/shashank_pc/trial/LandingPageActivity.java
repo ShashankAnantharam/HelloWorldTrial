@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -31,13 +32,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.security.AccessController.getContext;
 
@@ -72,6 +80,9 @@ public class LandingPageActivity extends AppCompatActivity {
     private LPContactsTab mContactLPTab;
 
 
+    FirebaseFirestore firestore;
+    DocumentReference firestoneRef;
+
 
     private BroadcastReceiver locationBroadcastReceiver;
 
@@ -84,13 +95,15 @@ public class LandingPageActivity extends AppCompatActivity {
     public static HashMap<String,Boolean> isBroadcastingLocation;
 
 
-    private DatabaseReference writeGPSLat;
-    private DatabaseReference writeGPSLong;
+
 
     public static String getUserID()
     {
         return mUserID;
     }
+
+
+
 
 
     @Override
@@ -246,8 +259,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
         Generic.database = FirebaseDatabase.getInstance();
 
-        writeGPSLat= Generic.database.getReference("Users/"+mUserID+"/Loc/Lat");
-        writeGPSLong= Generic.database.getReference("Users/"+mUserID+"/Loc/Long");
+
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");
@@ -386,6 +398,43 @@ public class LandingPageActivity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(),"Welcome "+mUserName+" "+mUserID+" "+userDetails.getString("Password",""),
                 Toast.LENGTH_SHORT).show();
+
+        firestore = FirebaseFirestore.getInstance();
+
+        firestoneRef = firestore.collection("users").document(mUserID);
+
+        firestoneRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                Map<String,Object> userMap= new HashMap<>();
+                userMap = documentSnapshot.getData();
+
+                for(Map.Entry<String,Object> entry : userMap.entrySet())
+                {
+                    if(entry.getKey().equals("events"))
+                    {
+                        Toast.makeText(getApplicationContext(),"Events",Toast.LENGTH_SHORT).show();
+
+                    }
+                    else if(entry.getKey().equals("groups"))
+                    {
+
+                    }
+                    else if(entry.getKey().equals("contacts"))
+                    {
+
+                    }
+
+                }
+
+            }
+        });
+
+
+
+
+
         return true;
     }
 
