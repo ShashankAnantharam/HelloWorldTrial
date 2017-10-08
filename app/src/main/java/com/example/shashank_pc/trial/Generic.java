@@ -2,6 +2,7 @@ package com.example.shashank_pc.trial;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -16,6 +17,7 @@ public class Generic {
     protected boolean mBroadcastLocation;
 
     public static FirebaseDatabase database;
+    public static FirebaseFirestore firestore;
 
 
     public Generic(String name, String description)

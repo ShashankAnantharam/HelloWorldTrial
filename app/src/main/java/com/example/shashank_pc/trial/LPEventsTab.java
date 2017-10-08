@@ -14,11 +14,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import static android.R.attr.x;
+import static com.example.shashank_pc.trial.Generic.firestore;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -38,6 +46,11 @@ public class LPEventsTab extends Fragment {
     private LPListItemAdapter<Event> arrayAdapter;
 
     SharedPreferences preferences;
+
+    private DocumentReference firestoneUserRef;
+    private String fEventName;
+    private String fEventDesc;
+    private boolean hasInitEvents;
 
 
 
@@ -158,6 +171,70 @@ public class LPEventsTab extends Fragment {
             }
         });
 
+
+        if(hasInitEvents==false) {
+            // If no events present (Check for events)
+            initEvents();
+        }
+    }
+
+    public void initEvents()
+    {
+        hasInitEvents=true;
+
+        firestore = FirebaseFirestore.getInstance();
+
+        firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("events");
+
+        firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                Map<String,Object> userMap= new HashMap<>();
+                userMap = documentSnapshot.getData();
+
+                for(Map.Entry<String,Object> entry : userMap.entrySet())
+                {
+                    if(entry.getKey().equals("list"))
+                    {
+                        List<String> fEvents = (List) entry.getValue();
+
+                        for(final String fEventID: fEvents)
+                        {
+                            fEventName="";
+                            fEventDesc="";
+//                            Toast.makeText(getApplicationContext(),fEventID,Toast.LENGTH_SHORT).show();
+
+                            DocumentReference fireStoreEventRef= firestore.collection("events").document(fEventID);
+                            fireStoreEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                    Map<String,Object> eventMap= new HashMap<>();
+                                    eventMap = documentSnapshot.getData();
+
+                                    for(Map.Entry<String,Object> entry:eventMap.entrySet())
+                                    {
+                                        if(entry.getKey().equals("name"))
+                                            fEventName=(String)entry.getValue();
+                                        else if(entry.getKey().equals("desc"))
+                                            fEventDesc=(String) entry.getValue();
+                                    }
+
+                                    Event event= new Event(fEventName,fEventDesc,fEventID);
+                                    addEvent(event);
+
+
+                                }
+                            });
+                        }
+
+                    }
+
+                }
+
+            }
+        });
 
 
     }

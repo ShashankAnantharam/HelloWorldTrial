@@ -394,7 +394,7 @@ public class LandingPageActivity extends AppCompatActivity {
         Get the events, groups and contacts of user from Firestore
          */
 
-        firestore = FirebaseFirestore.getInstance();
+/*        firestore = FirebaseFirestore.getInstance();
 
         firestoneUserRef = firestore.collection("users").document(mUserID);
 
@@ -444,7 +444,7 @@ public class LandingPageActivity extends AppCompatActivity {
                     }
                     else if(entry.getKey().equals("groups"))
                     {
-/*                        List<String> fGroups = (List) entry.getValue();
+                        List<String> fGroups = (List) entry.getValue();
 
                         for(final String fGroupID: fGroups)
                         {
@@ -475,7 +475,7 @@ public class LandingPageActivity extends AppCompatActivity {
                                 }
                             });
                         }
-*/
+
                     }
                     else if(entry.getKey().equals("contacts"))
                     {
@@ -487,7 +487,7 @@ public class LandingPageActivity extends AppCompatActivity {
             }
         });
 
-
+*/
     }
 
     private boolean initUserDetails()
