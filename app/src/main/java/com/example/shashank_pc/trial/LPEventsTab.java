@@ -28,7 +28,7 @@ public class LPEventsTab extends Fragment {
 
 
     //List is used because it is faster than Vector because it is asynchronous
-    List<Event> mEvents;
+    private List<Event> mEvents;
 
     private View rootView;
 
@@ -40,12 +40,19 @@ public class LPEventsTab extends Fragment {
     SharedPreferences preferences;
 
 
+
     public void refresh()
     {
         if(arrayAdapter!=null) {
             arrayAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    private void addEvent(Event event)
+    {
+        mEvents.add(event);
+        refresh();
     }
 
     public void passUserDetails(String userID, String userName)

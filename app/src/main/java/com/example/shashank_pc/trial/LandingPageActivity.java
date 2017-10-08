@@ -45,6 +45,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.security.AccessController.getContext;
@@ -81,7 +82,9 @@ public class LandingPageActivity extends AppCompatActivity {
 
 
     FirebaseFirestore firestore;
-    DocumentReference firestoneRef;
+    DocumentReference firestoneUserRef;
+    private String fEntityName;
+    private String fEntityDesc;
 
 
     private BroadcastReceiver locationBroadcastReceiver;
@@ -401,9 +404,9 @@ public class LandingPageActivity extends AppCompatActivity {
 
         firestore = FirebaseFirestore.getInstance();
 
-        firestoneRef = firestore.collection("users").document(mUserID);
+        firestoneUserRef = firestore.collection("users").document(mUserID);
 
-        firestoneRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
@@ -414,7 +417,37 @@ public class LandingPageActivity extends AppCompatActivity {
                 {
                     if(entry.getKey().equals("events"))
                     {
-                        Toast.makeText(getApplicationContext(),"Events",Toast.LENGTH_SHORT).show();
+                        List<String> fEvents = (List) entry.getValue();
+
+                        for(final String fEventID: fEvents)
+                        {
+                            fEntityName="";
+                            fEntityDesc="";
+//                            Toast.makeText(getApplicationContext(),fEventID,Toast.LENGTH_SHORT).show();
+
+                            DocumentReference fireStoreEventRef= firestore.collection("events").document(fEventID);
+                            fireStoreEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                    Map<String,Object> eventMap= new HashMap<>();
+                                    eventMap = documentSnapshot.getData();
+
+                                    for(Map.Entry<String,Object> entry:eventMap.entrySet())
+                                    {
+                                        if(entry.getKey().equals("name"))
+                                            fEntityName=(String)entry.getValue();
+                                        else if(entry.getKey().equals("desc"))
+                                            fEntityDesc=(String) entry.getValue();
+                                    }
+
+                                    Event event= new Event(fEntityName,fEntityDesc,fEventID);
+                                    
+
+
+                                }
+                            });
+                        }
 
                     }
                     else if(entry.getKey().equals("groups"))
