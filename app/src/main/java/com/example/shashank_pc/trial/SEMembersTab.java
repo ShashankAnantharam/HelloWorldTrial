@@ -69,6 +69,7 @@ public class SEMembersTab  extends LPContactsTab{
         mType=type;
     }
 
+    
 
     @Override
     public void initUsers()
@@ -118,11 +119,6 @@ public class SEMembersTab  extends LPContactsTab{
                                 }
                             }
                         });
-
-
-
-
-
 
 
     }

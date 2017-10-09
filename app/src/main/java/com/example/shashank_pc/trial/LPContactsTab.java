@@ -142,6 +142,11 @@ public class LPContactsTab extends Fragment {
         return rootView;
     }
 
+    public void initArrayAdapter()
+    {
+        arrayAdapter = new LPContactListItemAdapter<>(getContext(), mContacts, mUserID);
+    }
+
     @Override
     public void onViewCreated(View rootView, Bundle savedInstanceState)
     {
@@ -166,7 +171,10 @@ public class LPContactsTab extends Fragment {
 
 
         //Populate listview with contacts
-        arrayAdapter = new LPContactListItemAdapter<>(getContext(), mContacts, mUserID);
+
+        initArrayAdapter();
+
+
         listView.setAdapter(arrayAdapter);
 
 
