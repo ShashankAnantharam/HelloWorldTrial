@@ -65,6 +65,7 @@ public class SingleEntityActivity extends AppCompatActivity {
     private Group mGroup;
     private User mContact;
 
+    public static SEMembersTab mMembersTab=null;
     public static HashMap<String,Boolean> isMemberBroadcastingLocation;
 
     private String type;
@@ -273,6 +274,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
                     mSEMembersTab= new SEMembersTab();
                     mSEMembersTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
+                    mMembersTab=mSEMembersTab;
                     return mSEMembersTab;
                 default:
                     return null;

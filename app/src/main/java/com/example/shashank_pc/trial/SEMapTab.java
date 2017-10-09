@@ -49,6 +49,7 @@ import java.util.List;
 
 import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.isMemberBroadcastingLocation;
+import static com.example.shashank_pc.trial.SingleEntityActivity.mMembersTab;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -264,6 +265,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 isMemberBroadcastingLocation.put(dataSnapshot.getKey(),true);
+                if(mMembersTab!=null)
+                    mMembersTab.refresh();
 
                 //TODO CODE HERE
                 if(mMembersHashMap==null) {
@@ -415,6 +418,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
                 isMemberBroadcastingLocation.put(dataSnapshot.getKey(),false);
+                if(mMembersTab!=null)
+                    mMembersTab.refresh();
 
                     String tName = dataSnapshot.getKey();        //Get ID
 
