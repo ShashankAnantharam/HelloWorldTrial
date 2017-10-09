@@ -38,7 +38,7 @@ import static com.example.shashank_pc.trial.Generic.firestore;
 public class LPContactsTab extends Fragment {
 
     //List is used because it is faster than Vector because it is asynchronous
-    List<User> mContacts;
+    protected List<User> mContacts;
 
     private View rootView;
 
@@ -50,7 +50,7 @@ public class LPContactsTab extends Fragment {
 
     SharedPreferences preferences;
 
-    private boolean hasInitContacts;
+    protected boolean hasInitContacts;
     private DocumentReference firestoneUserRef;
     private String fContactName;
     private String fContactDesc;
