@@ -44,6 +44,7 @@ public class SEMembersTab  extends LPContactsTab{
     private long curr_doc_number=0;
     private String type="";
     public static HashMap<String,Integer> MemberListMap;
+    private DocumentReference MemberRef;
 
     
     private DocumentReference mMemberDocNumber;
@@ -86,60 +87,40 @@ public class SEMembersTab  extends LPContactsTab{
 
         isExistFlag=true;
 
-        mMemberDocNumber=firestore.collection(type).document(mEntityID).
-                collection("members").document("Length");
 
-        mMemberDocNumber.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if(e==null)
-                {
 
-                    total_doc_number = (Long) documentSnapshot.getData().get("length");
-//                    Toast.makeText(getContext(), Long.toString(total_doc_number),Toast.LENGTH_SHORT).show();
-
-                    while(curr_doc_number<total_doc_number)
-                    {
-                        curr_doc_number++;
-                        Toast.makeText(getContext(),Long.toString(curr_doc_number),Toast.LENGTH_SHORT).show();
-
-                        DocumentReference MemberRef = firestore.collection(type).document(mEntityID).
+                        MemberRef = firestore.collection(type).document(mEntityID).
                                       collection("members").
-                                      document("members_" + Long.toString(curr_doc_number));
+                                      document("members");
 
                         MemberRef.
                                 addSnapshotListener(new EventListener<DocumentSnapshot>() {
                             @Override
                             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                                Map<String,Object> userMap= new HashMap<>();
-                                userMap = documentSnapshot.getData();
-                                for(Map.Entry<String,Object> entry : userMap.entrySet())
-                                {
-                                    if(entry.getKey().equals("list"))
-                                    {
-                                        List<String> members =(List) entry.getValue();
-                                        for(String member: members)
-                                        {
-                                            if(!MemberListMap.containsKey(member))
-                                            {
-                                                //New member
-                                                User user = new User(member, member);
 
-                                                addContact(user);
+                                if (e == null) {
+                                    Map<String, Object> userMap = new HashMap<>();
+                                    userMap = documentSnapshot.getData();
+                                    for (Map.Entry<String, Object> entry : userMap.entrySet()) {
+                                        if (entry.getKey().equals("list")) {
+                                            List<String> members = (List) entry.getValue();
+                                            for (String member : members) {
+                                                if (!MemberListMap.containsKey(member)) {
+                                                    //New member
+                                                    User user = new User(member, member);
+
+                                                    addContact(user);
+                                                }
                                             }
-                                        }
 
+                                        }
                                     }
                                 }
                             }
                         });
 
 
-                    }
 
-                }
-            }
-        });
 
 
 
