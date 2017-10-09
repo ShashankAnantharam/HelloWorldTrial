@@ -46,9 +46,20 @@ public class SEMembersTab  extends LPContactsTab{
     public static HashMap<String,Integer> MemberListMap;
     private DocumentReference MemberRef;
 
+    private SEMemberListItemAdapter<User> arrayAdapter;
+
     
     private DocumentReference mMemberDocNumber;
 
+    @Override
+    public void refresh()
+    {
+
+        if(arrayAdapter!=null) {
+            arrayAdapter.notifyDataSetChanged();
+        }
+
+    }
 
     @Override
     public void addContact(User user)
@@ -69,6 +80,12 @@ public class SEMembersTab  extends LPContactsTab{
         mType=type;
     }
 
+    @Override
+    public void initArrayAdapter()
+    {
+        arrayAdapter = new SEMemberListItemAdapter<>(getContext(), mContacts, mUserID);
+        listView.setAdapter(arrayAdapter);
+    }
     
 
     @Override

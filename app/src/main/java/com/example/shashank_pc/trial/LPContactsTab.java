@@ -46,7 +46,7 @@ public class LPContactsTab extends Fragment {
     protected String mUserName;
 
     private LPContactListItemAdapter<User> arrayAdapter;
-    private ListView listView;
+    protected ListView listView;
 
     SharedPreferences preferences;
 
@@ -95,8 +95,7 @@ public class LPContactsTab extends Fragment {
                 return;
 
             //TODO Pragmatic solution. Make better
-            if(arrayAdapter!=null)
-                arrayAdapter.notifyDataSetChanged();
+            refresh();
 
 //            Toast.makeText(getContext(),"Updated View",Toast.LENGTH_SHORT).show();
         }
@@ -145,6 +144,7 @@ public class LPContactsTab extends Fragment {
     public void initArrayAdapter()
     {
         arrayAdapter = new LPContactListItemAdapter<>(getContext(), mContacts, mUserID);
+        listView.setAdapter(arrayAdapter);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class LPContactsTab extends Fragment {
         initArrayAdapter();
 
 
-        listView.setAdapter(arrayAdapter);
+
 
 
 
