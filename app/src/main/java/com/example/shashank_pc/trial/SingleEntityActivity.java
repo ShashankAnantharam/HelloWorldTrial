@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.util.HashMap;
+
 import static java.security.AccessController.getContext;
 
 public class SingleEntityActivity extends AppCompatActivity {
@@ -60,7 +62,7 @@ public class SingleEntityActivity extends AppCompatActivity {
     private Group mGroup;
     private User mContact;
 
-
+    public static HashMap<String,Boolean> isBroadcastingLocation;
 
 
 
