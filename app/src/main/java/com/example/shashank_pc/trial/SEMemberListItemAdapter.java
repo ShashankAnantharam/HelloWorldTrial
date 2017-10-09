@@ -15,19 +15,19 @@ import android.widget.Toast;
 import java.util.List;
 
 
-import static com.example.shashank_pc.trial.SingleEntityActivity.isBroadcastingLocation;
+import static com.example.shashank_pc.trial.SingleEntityActivity.isMemberBroadcastingLocation;
 
 /**
  * Created by shashank-pc on 10/9/2017.
  */
 
-public class LPMemberListItemAdapter<T> extends BaseAdapter {
+public class SEMemberListItemAdapter<T> extends BaseAdapter {
 
     Context context;
     List<T> rowItems;
     String userID;
 
-    public LPMemberListItemAdapter(Context context, List<T> rowItems, String userID)
+    public SEMemberListItemAdapter(Context context, List<T> rowItems, String userID)
     {
         this.context=context;
         this.rowItems=rowItems;
@@ -105,8 +105,8 @@ public class LPMemberListItemAdapter<T> extends BaseAdapter {
             main_text=((User) rowItem).getName();
             subtitle=((User) rowItem).getLastChatMessage();
 
-            if(isBroadcastingLocation.containsKey(((User) rowItem).getNumber()) &&
-                    isBroadcastingLocation.get(((User) rowItem).getNumber())==true)
+            if(isMemberBroadcastingLocation.containsKey(((User) rowItem).getNumber()) &&
+                    isMemberBroadcastingLocation.get(((User) rowItem).getNumber())==true)
             {
                 isMemberBroadcastingLocationFlag=true;
             }
