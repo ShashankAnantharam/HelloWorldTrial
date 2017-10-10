@@ -23,6 +23,37 @@ public class GenericFunctions {
         return ans;
     }
 
+
+    public static boolean compareUserIDs(String u1, String u2)
+    {
+        //If u1>u2, then true
+
+        if(u2.length()>u1.length())
+            return false;
+        else if(u2.length()<u1.length())
+            return true;
+
+        for(int i=0;i<u1.length();i++)
+        {
+            if(u1.charAt(i)>u2.charAt(i))
+                return true;
+            else if(u1.charAt(i)<u2.charAt(i))
+                return false;
+        }
+
+        return false;
+
+    }
+
+    public static String getContactChatID(String u1, String u2)
+    {
+        //Smaller userIDs first
+        if(compareUserIDs(u1,u2))
+            return ("C"+u2+"_"+u1);
+        else
+            return ("C"+u1+ "_"+u2);
+    }
+
     public static boolean validatePhone(String phone) //function to validate phone number (Bharath Kota)
     {
         if (phone.length()==10){    // Assume Indian Phone Number

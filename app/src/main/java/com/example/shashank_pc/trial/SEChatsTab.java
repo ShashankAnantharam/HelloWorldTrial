@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.database;
+import static com.example.shashank_pc.trial.GenericFunctions.getContactChatID;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -61,7 +62,10 @@ public class SEChatsTab  extends Fragment {
 
     public void initCommentListener()
     {
-        commentListener = database.getReference("ChtMsgs/" + mEntityID);
+        if(mType=='E' || mType=='G')
+            commentListener = database.getReference("ChtMsgs/" + mEntityID);
+        else if(mType=='U')
+            commentListener=database.getReference("ChtMsgs/"+getContactChatID(mUserID,mEntityID));
 
         commentListener.addChildEventListener(new ChildEventListener() {
             @Override
@@ -122,8 +126,8 @@ public class SEChatsTab  extends Fragment {
         chatAdapter = new ChatAdapter(getContext(), R.layout.chat_message_layout);
         mChatList.setAdapter(chatAdapter);
 
-        if(mType=='G' || mType=='E')
-            initCommentListener();
+
+        initCommentListener();
 
 
 
@@ -135,6 +139,11 @@ public class SEChatsTab  extends Fragment {
 
             chatMessageAddress = "ChtMsgs/" + mEntityID ;
 
+        }
+        else if(mType=='U')
+        {
+            //User
+            chatMessageAddress = "ChtMsgs/"+getContactChatID(mUserID,mEntityID);
         }
 
 
@@ -153,7 +162,7 @@ public class SEChatsTab  extends Fragment {
                 mChatText.setText("");
 
 
-                if(mType=='E' || mType=='G')
+                if(mType=='E' || mType=='G' || mType=='U')
                 {
 
                     Long tsLong = System.currentTimeMillis()/1000;
