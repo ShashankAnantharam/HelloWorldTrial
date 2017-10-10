@@ -49,9 +49,9 @@ public class GenericFunctions {
     {
         //Smaller userIDs first
         if(compareUserIDs(u1,u2))
-            return ("C"+u2+"_"+u1);
+            return ("C"+u2+" "+u1);
         else
-            return ("C"+u1+ "_"+u2);
+            return ("C"+u1+ " "+u2);
     }
 
     public static boolean validatePhone(String phone) //function to validate phone number (Bharath Kota)
