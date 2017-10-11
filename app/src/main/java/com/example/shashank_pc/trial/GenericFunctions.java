@@ -39,6 +39,25 @@ public class GenericFunctions {
 
     }
 
+    public static String encodeNumber(String number)
+    {
+        String encodedNum="";
+
+        for(int i=number.length()-1;i>=0;i=i-2) {
+            String tmp="";
+
+            if (i - 1 != -1) {
+                tmp += number.charAt(i - 1);
+            }
+            tmp+= number.charAt(i);
+
+            encodedNum=mEncoding.charAt(Integer.parseInt(tmp))+encodedNum;
+
+        }
+        return encodedNum;
+    }
+
+
 
 
     public static String getSubtitle(String text)
@@ -82,9 +101,9 @@ public class GenericFunctions {
     {
         //Smaller userIDs first
         if(compareUserIDs(u1,u2))
-            return ("C"+u2+" "+u1);
+            return ("C"+encodeNumber(u2)+"_"+encodeNumber(u1));
         else
-            return ("C"+u1+ " "+u2);
+            return ("C"+encodeNumber(u1)+ "_"+encodeNumber(u2));
     }
 
     public static boolean validatePhone(String phone) //function to validate phone number (Bharath Kota)

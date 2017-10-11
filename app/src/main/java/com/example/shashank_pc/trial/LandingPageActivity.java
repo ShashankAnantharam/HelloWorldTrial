@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.PowerManager;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -48,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shashank_pc.trial.GenericFunctions.encodeNumber;
 import static com.example.shashank_pc.trial.GenericFunctions.initEncoding;
 import static com.example.shashank_pc.trial.GenericFunctions.mEncoding;
 import static java.security.AccessController.getContext;
@@ -264,10 +266,9 @@ public class LandingPageActivity extends AppCompatActivity {
 
         initEncoding();
 
-
-
         Generic.database = FirebaseDatabase.getInstance();
 
+        DatabaseReference tempref = Generic.database.getReference("trial");
 
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
