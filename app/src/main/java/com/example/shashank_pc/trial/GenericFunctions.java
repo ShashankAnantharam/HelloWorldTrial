@@ -1,5 +1,7 @@
 package com.example.shashank_pc.trial;
 
+import android.widget.Toast;
+
 import static com.example.shashank_pc.trial.R.id.password;
 
 /**
@@ -7,6 +9,37 @@ import static com.example.shashank_pc.trial.R.id.password;
  */
 
 public class GenericFunctions {
+
+    public static String mEncoding = "";
+    public static void initEncoding()
+    {
+        mEncoding="";
+        char c[] = new char[100];
+        for(int i=0;i<10;i++) {
+            c[i] += i+48;
+            mEncoding+=c[i];
+        }
+
+        for(int i=10;i<36;i++) {
+            c[i] += 65 + (i - 10);
+            mEncoding+=c[i];
+        }
+
+        for(int i=36;i<62;i++) {
+            c[i] += 97 + (i - 36);
+            mEncoding+=c[i];
+        }
+
+        char tmp[] = {33,37,38,42,43,45,60,61,62,63,64,94,124,126,161,162,163,164,165,166,167,169,170,172,174,176,181,182,186,191,198,215,222,223,230,247,248,254};
+
+        for(int i=0;i<38;i++) {
+            c[62 + i] = tmp[i];
+            mEncoding+=c[62+i];
+        }
+
+    }
+
+
 
     public static String getSubtitle(String text)
     {

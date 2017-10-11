@@ -48,6 +48,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shashank_pc.trial.GenericFunctions.initEncoding;
+import static com.example.shashank_pc.trial.GenericFunctions.mEncoding;
 import static java.security.AccessController.getContext;
 
 public class LandingPageActivity extends AppCompatActivity {
@@ -259,6 +261,10 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void loadLayout()
     {
+
+        initEncoding();
+
+
 
         Generic.database = FirebaseDatabase.getInstance();
 
