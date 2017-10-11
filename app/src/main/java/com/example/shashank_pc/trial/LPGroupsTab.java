@@ -17,7 +17,9 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,9 +180,9 @@ public class LPGroupsTab extends Fragment {
 
         firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("groups");
 
-        firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        firestoneUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
 
                 Map<String,Object> userMap= new HashMap<>();
                 userMap = documentSnapshot.getData();
@@ -198,9 +200,10 @@ public class LPGroupsTab extends Fragment {
 //                            Toast.makeText(getApplicationContext(),fGroupID,Toast.LENGTH_SHORT).show();
 
                             DocumentReference fireStoreGroupRef= firestore.collection("groups").document(fGroupID);
-                            fireStoreGroupRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+                            fireStoreGroupRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                 @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
 
                                     Map<String,Object> groupMap= new HashMap<>();
                                     groupMap = documentSnapshot.getData();
@@ -219,14 +222,17 @@ public class LPGroupsTab extends Fragment {
 
                                 }
                             });
+
+
                         }
 
                     }
 
                 }
-
             }
         });
+
+        
 
 
     }
