@@ -17,7 +17,9 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -186,9 +188,9 @@ public class LPEventsTab extends Fragment {
 
         firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("events");
 
-        firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        firestoneUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
 
                 Map<String,Object> userMap= new HashMap<>();
                 userMap = documentSnapshot.getData();
@@ -206,10 +208,10 @@ public class LPEventsTab extends Fragment {
 //                            Toast.makeText(getApplicationContext(),fEventID,Toast.LENGTH_SHORT).show();
 
                             DocumentReference fireStoreEventRef= firestore.collection("events").document(fEventID);
-                            fireStoreEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
 
+                            fireStoreEventRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                                     Map<String,Object> eventMap= new HashMap<>();
                                     eventMap = documentSnapshot.getData();
 
@@ -224,17 +226,20 @@ public class LPEventsTab extends Fragment {
                                     Event event= new Event(fEventName,fEventDesc,fEventID);
                                     addEvent(event);
 
-
                                 }
                             });
+
+
                         }
 
                     }
 
                 }
 
+
             }
         });
+
 
 
     }

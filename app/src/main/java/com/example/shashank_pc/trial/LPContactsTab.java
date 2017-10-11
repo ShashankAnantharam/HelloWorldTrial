@@ -20,7 +20,9 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -228,23 +230,33 @@ public class LPContactsTab extends Fragment {
 
         firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("contacts");
 
+        firestoneUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if(e==null)
+                {
+                    Map<String,Object> userMap= new HashMap<>();
+                    userMap = documentSnapshot.getData();
+
+                    for(Map.Entry<String,Object> entry : userMap.entrySet())
+                    {
+                        Map<String,String> fContactDetails = (Map<String,String>) entry.getValue();
+                        String fContactNumber= fContactDetails.get("ID");
+                        String fContactName= fContactDetails.get("name");
+                        User user = new User(fContactName,fContactNumber);
+                        addContact(user);
+
+
+                    }
+
+                }
+            }
+        });
+
         firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                Map<String,Object> userMap= new HashMap<>();
-                userMap = documentSnapshot.getData();
-
-                for(Map.Entry<String,Object> entry : userMap.entrySet())
-                {
-                    Map<String,String> fContactDetails = (Map<String,String>) entry.getValue();
-                    String fContactNumber= fContactDetails.get("ID");
-                    String fContactName= fContactDetails.get("name");
-                    User user = new User(fContactName,fContactNumber);
-                    addContact(user);
-
-
-                }
 
             }
         });
