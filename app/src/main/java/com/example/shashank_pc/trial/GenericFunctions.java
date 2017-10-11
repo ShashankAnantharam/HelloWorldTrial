@@ -52,7 +52,10 @@ public class GenericFunctions {
         String number="";
         for(int i=0;i<encodedNumber.length();i++)
         {
-            number+= Integer.toString(mDecoding.get(encodedNumber.charAt(i)));
+            String new_number= Integer.toString(mDecoding.get(encodedNumber.charAt(i)));
+            if(new_number.length()==1)
+                new_number="0"+new_number;
+            number+=new_number;
         }
         return number;
     }

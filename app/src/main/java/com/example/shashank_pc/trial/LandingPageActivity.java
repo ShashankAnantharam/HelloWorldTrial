@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shashank_pc.trial.GenericFunctions.decodeNumber;
 import static com.example.shashank_pc.trial.GenericFunctions.encodeNumber;
 import static com.example.shashank_pc.trial.GenericFunctions.initEncoding;
 import static com.example.shashank_pc.trial.GenericFunctions.mEncoding;
@@ -267,9 +268,7 @@ public class LandingPageActivity extends AppCompatActivity {
         initEncoding();
 
         Generic.database = FirebaseDatabase.getInstance();
-
-        DatabaseReference tempref = Generic.database.getReference("trial");
-
+        
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");
