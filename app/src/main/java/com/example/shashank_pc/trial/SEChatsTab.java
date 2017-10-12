@@ -67,10 +67,10 @@ public class SEChatsTab  extends Fragment {
         mType=type;
     }
 
-    public void updateChatFlag(final String ref)
+    public void updateChatFlag(final DatabaseReference ref)
     {
-        Toast.makeText(getContext(),ref,Toast.LENGTH_SHORT).show();
-        DatabaseReference updateRef = database.getReference(ref+"/views");
+
+        DatabaseReference updateRef = ref.child("views");
         long total = 0;
         if(mType=='U')
         {
@@ -85,16 +85,18 @@ public class SEChatsTab  extends Fragment {
                 Long total = mutableData.getValue(Long.class);
                 if(total==null)
                 {
+                    //If there are no views, add this download as one view
                     mutableData.setValue(1);
                 }
                 else if(total<total-1)
                 {
+                    //If the views are lesser than total, then increment the current views
                     mutableData.setValue(total+1);
                 }
                 else
                 {
-                    DatabaseReference tRef= database.getReference(ref);
-                    tRef.removeValue();
+                    //If the download is the last one, delete the chat message from Firebase
+                    ref.removeValue();
                 }
 
 
@@ -172,7 +174,7 @@ public class SEChatsTab  extends Fragment {
                     chatAdapter.add(nCM);
 
                     //Update read status using transactions
-
+                    updateChatFlag(dataSnapshot.getRef());
 
                 }
             }
@@ -212,6 +214,7 @@ public class SEChatsTab  extends Fragment {
         commentListener.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
 
                 String chatText = (String)dataSnapshot.child("Msg").getValue();
                 String creator = (String) dataSnapshot.child("Creator").getValue();
@@ -307,7 +310,7 @@ public class SEChatsTab  extends Fragment {
                 mChatText.setText("");
 
 
-                if(mType=='E' || mType=='G')
+                if(mType=='E' || mType=='G' || mType=='U')
                 {
 
                     Long tsLong = System.currentTimeMillis()/1000;
@@ -327,12 +330,7 @@ public class SEChatsTab  extends Fragment {
 //                    newComment.child("Creator").setValue(mUserID);
 //                    newComment.child("Msg").setValue(chatText);
                 }
-                else if(mType=='U')
-                {
-                    //Testing
-                    String tempRef = "ChtMsgs/C÷1g8I_ømC8I/-KwBKWOCc4xQLcrw_ziG";
-                    updateChatFlag(tempRef);
-                }
+
 
             }
         });
