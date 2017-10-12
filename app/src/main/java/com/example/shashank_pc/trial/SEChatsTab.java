@@ -121,6 +121,8 @@ public class SEChatsTab  extends Fragment {
             String key = preferences.getString(Integer.toString(i),"");
             if(key!="")
             {
+                //Message already present in local
+
                 String mTS = preferences.getString((key+ "_TS"),"");
                 String chatText = preferences.getString((key+ "_msg"),"");
                 String creator = preferences.getString((key+"_creator"),"");
@@ -303,7 +305,7 @@ public class SEChatsTab  extends Fragment {
                 mChatText.setText("");
 
 
-                if(mType=='E' || mType=='G' || mType=='U')
+                if(mType=='E' || mType=='G')
                 {
 
                     Long tsLong = System.currentTimeMillis()/1000;
@@ -322,6 +324,12 @@ public class SEChatsTab  extends Fragment {
 //                    newComment.child("TS").setValue(ts);
 //                    newComment.child("Creator").setValue(mUserID);
 //                    newComment.child("Msg").setValue(chatText);
+                }
+                else if(mType=='U')
+                {
+                    //Testing
+                    String tempRef = "ChtMsgs/C÷1g8I_ømC8I/-KwBKWOCc4xQLcrw_ziG";
+                    updateChatFlag(tempRef);
                 }
 
             }
