@@ -1,9 +1,12 @@
 package com.example.shashank_pc.trial;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v4.media.MediaMetadataCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +53,8 @@ public class SEChatsTab  extends Fragment {
     private String chatMessageAddress;
     private DatabaseReference commentListener;
 
+    long length;
+
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
     {
@@ -60,12 +65,102 @@ public class SEChatsTab  extends Fragment {
         mType=type;
     }
 
+    public void initContactCommentListener()
+    {
+        final SharedPreferences preferences = getContext().getSharedPreferences(getContactChatID(mUserID,mEntityID),
+                Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = preferences.edit();
+
+        length = preferences.getLong("length",0);
+
+        for(int i=1;i<=length;i++)
+        {
+            String key = preferences.getString(Integer.toString(i),"");
+            if(key!="")
+            {
+                String mTS = preferences.getString((key+ "_TS"),"");
+                String chatText = preferences.getString((key+ "_msg"),"");
+                String creator = preferences.getString((key+"_creator"),"");
+                boolean isNotMyMessage = preferences.getBoolean((key+ "_isNotMyMsg"),false);
+                ChatMessage nCM= new ChatMessage(isNotMyMessage, chatText, creator);
+                chatAdapter.add(nCM);
+                Toast.makeText(getContext(),"Read_Data",Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        commentListener=database.getReference("ChtMsgs/"+getContactChatID(mUserID,mEntityID));
+        commentListener.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String key = dataSnapshot.getKey();
+
+                if(preferences.getString((key+"_TS"),"x")=="x")
+                {
+                    //Data Not already there. Add it to Local Storage
+
+                    length++;
+                    editor.putLong("length",length);  //Change length of local chat array
+                    editor.putString(Long.toString(length),key); //Set index to key
+
+
+                    //Get data from Firebase
+                    String chatText = (String)dataSnapshot.child("Msg").getValue();
+                    String creator = (String) dataSnapshot.child("Creator").getValue();
+                    String tS= (String) dataSnapshot.child("TS").getValue();
+                    boolean isNotMyMessage = true;
+                    if(creator.equals(mUserID)) {
+                        creator = "Me";
+                        isNotMyMessage = false;
+                    }
+
+                    //Put the details of chat in shared preference
+                    editor.putString((key+"_creator"),creator);
+                    editor.putString((key+ "_msg"),chatText);
+                    editor.putString((key+ "_TS"),tS);
+                    editor.putBoolean((key+ "_isNotMyMsg"),isNotMyMessage);
+
+                    //Add chat to adapter
+                    ChatMessage nCM= new ChatMessage(isNotMyMessage, chatText, creator);
+                    chatAdapter.add(nCM);
+
+                    //Update read status using transactions
+                    
+
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
     public void initCommentListener()
     {
         if(mType=='E' || mType=='G')
             commentListener = database.getReference("ChtMsgs/" + mEntityID);
-        else if(mType=='U')
-            commentListener=database.getReference("ChtMsgs/"+getContactChatID(mUserID,mEntityID));
+  //      else if(mType=='U')
+  //          commentListener=database.getReference("ChtMsgs/"+getContactChatID(mUserID,mEntityID));
 
         commentListener.addChildEventListener(new ChildEventListener() {
             @Override
@@ -127,7 +222,10 @@ public class SEChatsTab  extends Fragment {
         mChatList.setAdapter(chatAdapter);
 
 
-        initCommentListener();
+        if(mType=='E' || mType=='G')
+            initCommentListener();
+        else if(mType=='U')
+            initContactCommentListener();
 
 
 
