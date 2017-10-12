@@ -82,7 +82,6 @@ public class SEChatsTab  extends Fragment {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
 
-                Toast.makeText(getContext(),"here",Toast.LENGTH_SHORT).show();
                 Long total = mutableData.getValue(Long.class);
                 if(total==null)
                 {
@@ -96,7 +95,6 @@ public class SEChatsTab  extends Fragment {
                 {
                     DatabaseReference tRef= database.getReference(ref);
                     tRef.removeValue();
-                    return null;
                 }
 
 
