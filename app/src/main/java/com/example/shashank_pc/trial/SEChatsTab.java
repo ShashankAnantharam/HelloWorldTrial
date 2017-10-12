@@ -69,6 +69,7 @@ public class SEChatsTab  extends Fragment {
 
     public void updateChatFlag(final String ref)
     {
+        Toast.makeText(getContext(),ref,Toast.LENGTH_SHORT).show();
         DatabaseReference updateRef = database.getReference(ref+"/views");
         long total = 0;
         if(mType=='U')
@@ -76,16 +77,18 @@ public class SEChatsTab  extends Fragment {
             total=2;
         }
 
+
         updateRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
 
+                Toast.makeText(getContext(),"here",Toast.LENGTH_SHORT).show();
                 Long total = mutableData.getValue(Long.class);
                 if(total==null)
                 {
                     mutableData.setValue(1);
                 }
-                else if(total<length-1)
+                else if(total<total-1)
                 {
                     mutableData.setValue(total+1);
                 }
@@ -97,12 +100,13 @@ public class SEChatsTab  extends Fragment {
                 }
 
 
-                return null;
+                return Transaction.success(mutableData);
             }
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
+                if(databaseError!=null)
+                    Toast.makeText(getContext(),databaseError.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }
