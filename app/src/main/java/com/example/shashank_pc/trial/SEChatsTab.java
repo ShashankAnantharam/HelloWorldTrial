@@ -123,7 +123,7 @@ public class SEChatsTab  extends Fragment {
         for(int i=1;i<=length;i++)
         {
             String key = preferences.getString(Integer.toString(i),"");
-            if(key!="")
+            if(!key.equals(""))
             {
                 //Message already present in local
 
@@ -133,7 +133,6 @@ public class SEChatsTab  extends Fragment {
                 boolean isNotMyMessage = preferences.getBoolean((key+ "_isNotMyMsg"),false);
                 ChatMessage nCM= new ChatMessage(isNotMyMessage, chatText, creator);
                 chatAdapter.add(nCM);
-                Toast.makeText(getContext(),"Read_Data",Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -144,7 +143,7 @@ public class SEChatsTab  extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String key = dataSnapshot.getKey();
 
-                if(preferences.getString((key+"_TS"),"x")=="x")
+                if(preferences.getString((key+"_TS"),"x").equals("x"))
                 {
                     //Data Not already there. Add it to Local Storage
 
@@ -168,6 +167,7 @@ public class SEChatsTab  extends Fragment {
                     editor.putString((key+ "_msg"),chatText);
                     editor.putString((key+ "_TS"),tS);
                     editor.putBoolean((key+ "_isNotMyMsg"),isNotMyMessage);
+                    editor.commit();
 
                     //Add chat to adapter
                     ChatMessage nCM= new ChatMessage(isNotMyMessage, chatText, creator);
@@ -275,7 +275,7 @@ public class SEChatsTab  extends Fragment {
         if(mType=='E' || mType=='G')
             initCommentListener();
         else if(mType=='U') {
-    //        initContactCommentListener();
+            initContactCommentListener();
         }
 
 
