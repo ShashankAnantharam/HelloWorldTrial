@@ -20,6 +20,8 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +66,47 @@ public class SEChatsTab  extends Fragment {
         mEntityID=entityID;
         mType=type;
     }
+
+    public void updateChatFlag(final String ref)
+    {
+        DatabaseReference updateRef = database.getReference(ref+"/views");
+        long total = 0;
+        if(mType=='U')
+        {
+            total=2;
+        }
+
+        updateRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+
+                Long total = mutableData.getValue(Long.class);
+                if(total==null)
+                {
+                    mutableData.setValue(1);
+                }
+                else if(total<length-1)
+                {
+                    mutableData.setValue(total+1);
+                }
+                else
+                {
+                    DatabaseReference tRef= database.getReference(ref);
+                    tRef.removeValue();
+                    return null;
+                }
+
+
+                return null;
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+            }
+        });
+    }
+
 
     public void initContactCommentListener()
     {
@@ -125,7 +168,7 @@ public class SEChatsTab  extends Fragment {
                     chatAdapter.add(nCM);
 
                     //Update read status using transactions
-                    
+
 
                 }
             }
@@ -224,9 +267,9 @@ public class SEChatsTab  extends Fragment {
 
         if(mType=='E' || mType=='G')
             initCommentListener();
-        else if(mType=='U')
-            initContactCommentListener();
-
+        else if(mType=='U') {
+    //        initContactCommentListener();
+        }
 
 
 
