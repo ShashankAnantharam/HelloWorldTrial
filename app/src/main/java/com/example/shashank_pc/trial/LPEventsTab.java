@@ -274,7 +274,7 @@ public class LPEventsTab extends Fragment {
                                     );
                                     SharedPreferences.Editor edit = preferences.edit();
                                     edit.putLong("TotalMembers",totalMembers);
-                                    Toast.makeText(getContext(),Long.toString(totalMembers),Toast.LENGTH_SHORT).show();
+                       
                                     edit.commit();
                                 }
 
