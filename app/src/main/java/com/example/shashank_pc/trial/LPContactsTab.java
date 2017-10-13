@@ -32,6 +32,7 @@ import java.util.Vector;
 
 import static android.os.Build.ID;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -81,6 +82,19 @@ public class LPContactsTab extends Fragment {
         user.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mContacts.add(user);
         ContactListMap.put(user.getNumber(),mContacts.size()-1);
+        refresh();
+    }
+
+    public int getTotalContacts()
+    {
+        return mContacts.size();
+    }
+
+    public void replaceContact(int index, User contact)
+    {
+        contact.initBroadcastLocationFlag(mContacts.get(index).getBroadcastLocationFlag());
+        mContacts.remove(index);
+        mContacts.add(index,contact);
         refresh();
     }
 
@@ -243,8 +257,15 @@ public class LPContactsTab extends Fragment {
                         Map<String,String> fContactDetails = (Map<String,String>) entry.getValue();
                         String fContactNumber= fContactDetails.get("ID");
                         String fContactName= fContactDetails.get("name");
-                        User user = new User(fContactName,fContactNumber);
-                        addContact(user);
+
+                        if(!allEntities.containsKey(fContactNumber))
+                        {
+                            User user = new User(fContactName,fContactNumber);
+                            allEntities.put(fContactNumber,getTotalContacts());
+                            addContact(user);
+
+                        }
+
 
 
                     }
@@ -253,13 +274,6 @@ public class LPContactsTab extends Fragment {
             }
         });
 
-        firestoneUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-
-            }
-        });
 
     }
 }

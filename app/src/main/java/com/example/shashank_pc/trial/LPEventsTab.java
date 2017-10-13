@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import static android.R.attr.x;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -76,6 +77,18 @@ public class LPEventsTab extends Fragment {
         refresh();
     }
 
+    public int getTotalEvents()
+    {
+        return mEvents.size();
+    }
+
+    public void replaceEvent(int index, Event event)
+    {
+        event.initBroadcastLocationFlag(mEvents.get(index).getBroadcastLocationFlag());
+        mEvents.remove(index);
+        mEvents.add(index,event);
+        refresh();
+    }
     public void passUserDetails(String userID, String userName)
     {
         mUserID=userID;
@@ -207,6 +220,8 @@ public class LPEventsTab extends Fragment {
                             fEventDesc="";
 //                            Toast.makeText(getApplicationContext(),fEventID,Toast.LENGTH_SHORT).show();
 
+                            if(!allEntities.containsKey(fEventID)) {
+
                             DocumentReference fireStoreEventRef= firestore.collection("events").document(fEventID);
 
                             fireStoreEventRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -223,12 +238,24 @@ public class LPEventsTab extends Fragment {
                                             fEventDesc=(String) entry.getValue();
                                     }
 
-                                    Event event= new Event(fEventName,fEventDesc,fEventID);
-                                    addEvent(event);
+
+
+                                        Event event = new Event(fEventName, fEventDesc, fEventID);
+                                       if(!allEntities.containsKey(fEventID)) {
+                                           //First time event has come
+                                           allEntities.put(fEventID,getTotalEvents());
+                                           addEvent(event);
+                                       }
+                                       else
+                                       {
+                                           //Event details changed. Replace and Refresh event
+                                           replaceEvent(allEntities.get(fEventID),event);
+                                       }
+
 
                                 }
                             });
-
+                            }
 
                         }
 

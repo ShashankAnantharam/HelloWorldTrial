@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -74,6 +75,21 @@ public class LPGroupsTab extends Fragment {
         mGroups.add(group);
         refresh();
     }
+
+    public int getTotalGroups()
+    {
+        return mGroups.size();
+    }
+
+    public void replaceGroup(int index, Group group)
+    {
+        group.initBroadcastLocationFlag(mGroups.get(index).getBroadcastLocationFlag());
+        mGroups.remove(index);
+        mGroups.add(index,group);
+        refresh();
+
+    }
+
 
     public void passUserDetails(String userID, String userName)
     {
@@ -199,6 +215,8 @@ public class LPGroupsTab extends Fragment {
                             fGroupDesc="";
 //                            Toast.makeText(getApplicationContext(),fGroupID,Toast.LENGTH_SHORT).show();
 
+                            if(!allEntities.containsKey(fGroupID)) {
+
                             DocumentReference fireStoreGroupRef= firestore.collection("groups").document(fGroupID);
 
                             fireStoreGroupRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -216,12 +234,25 @@ public class LPGroupsTab extends Fragment {
                                             fGroupDesc=(String) entry.getValue();
                                     }
 
-                                    Group group= new Group(fGroupName,fGroupDesc,fGroupID);
-                                    addGroup(group);
+
+                                        Group group = new Group(fGroupName, fGroupDesc, fGroupID);
+
+                                    if(!allEntities.containsKey(fGroupID)) {
+                                        //First time group added
+                                        allEntities.put(fGroupID, getTotalGroups());
+                                        addGroup(group);
+                                    }
+                                    else
+                                    {
+                                        //group details changed, just replace and refresh group list
+                                        replaceGroup(allEntities.get(fGroupID),group);
+                                    }
 
 
                                 }
                             });
+
+                            }
 
 
                         }

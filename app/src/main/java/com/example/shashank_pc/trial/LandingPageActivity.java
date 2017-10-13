@@ -102,6 +102,8 @@ public class LandingPageActivity extends AppCompatActivity {
     private Intent contactListner;
     public static HashMap<String,Boolean> isBroadcastingLocation;
 
+    public static Map<String,Integer> allEntities;
+
 
 
 
@@ -424,6 +426,7 @@ public class LandingPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_landing_page);
         locationBroadcastReceiver=null;
 
+        allEntities = new HashMap<>();
 
 
         regFlag=initUserDetails();
