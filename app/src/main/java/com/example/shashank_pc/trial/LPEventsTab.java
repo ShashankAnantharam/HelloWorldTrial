@@ -15,6 +15,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -28,6 +32,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import static android.R.attr.x;
+import static android.content.Context.CONTEXT_IGNORE_SECURITY;
+import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 
@@ -256,6 +262,27 @@ public class LPEventsTab extends Fragment {
                                 }
                             });
                             }
+
+                            //TODO Move this later on to Service
+                            DatabaseReference fireStoreEventMemLength= database.getReference("MemLen/"+fEventID);
+                            fireStoreEventMemLength.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    long totalMembers = dataSnapshot.getValue(Long.class);
+                                    SharedPreferences preferences  = getContext().getSharedPreferences(
+                                            fEventID,Context.MODE_PRIVATE
+                                    );
+                                    SharedPreferences.Editor edit = preferences.edit();
+                                    edit.putLong("TotalMembers",totalMembers);
+                                    Toast.makeText(getContext(),Long.toString(totalMembers),Toast.LENGTH_SHORT).show();
+                                    edit.commit();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
                         }
 
