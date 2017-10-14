@@ -407,7 +407,8 @@ public class SEChatsTab  extends Fragment {
     {
         super.onDestroy();
         commentListener.removeEventListener(singleCommentListener);
-        fireStoreMemberLength.removeEventListener(firestoreMemLengthVal);
+        if(mType=='E' || mType=='G')
+            fireStoreMemberLength.removeEventListener(firestoreMemLengthVal);
 
     }
 }
