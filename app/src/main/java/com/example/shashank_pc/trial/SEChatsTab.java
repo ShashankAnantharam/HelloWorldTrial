@@ -58,6 +58,7 @@ public class SEChatsTab  extends Fragment {
     private String prefID;
 
     long length;
+    long total;
 
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
@@ -73,7 +74,7 @@ public class SEChatsTab  extends Fragment {
     {
 
         DatabaseReference updateRef = ref.child("views");
-        long total = 0;
+        total = 0;
         if(mType=='U')
         {
             total=2;
@@ -89,13 +90,13 @@ public class SEChatsTab  extends Fragment {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
 
-                Long total = mutableData.getValue(Long.class);
-                if(total==null)
+                Long views = mutableData.getValue(Long.class);
+                if(views==null)
                 {
                     //If there are no views, add this download as one view
                     mutableData.setValue(1);
                 }
-                else if(total<total-1)
+                else if(views<total-1)
                 {
                     //If the views are lesser than total, then increment the current views
                     mutableData.setValue(total+1);
