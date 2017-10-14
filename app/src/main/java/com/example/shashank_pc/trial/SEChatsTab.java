@@ -90,16 +90,12 @@ public class SEChatsTab  extends Fragment {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
 
-                Long views = mutableData.getValue(Long.class);
-                if(views==null)
-                {
-                    //If there are no views, add this download as one view
-                    mutableData.setValue(1);
-                }
-                else if(views<total-1)
+                long views = Long.parseLong(mutableData.getValue(String.class));
+
+                if(views<total-1)
                 {
                     //If the views are lesser than total, then increment the current views
-                    mutableData.setValue(total+1);
+                    mutableData.setValue(Long.toString(views+1));
                 }
                 else
                 {
@@ -199,7 +195,7 @@ public class SEChatsTab  extends Fragment {
                     length++;
                     editor.putLong("length",length);  //Change length of local chat array
                     editor.putString(Long.toString(length),key); //Set index to key
-
+                    
 
                     //Get data from Firebase
                     String chatText = (String)dataSnapshot.child("Msg").getValue();
@@ -367,6 +363,7 @@ public class SEChatsTab  extends Fragment {
                     firebaseMap.put("TS",ts);
                     firebaseMap.put("Creator",mUserID);
                     firebaseMap.put("Msg",chatText);
+                    firebaseMap.put("views",Integer.toString(0));
 
                     database.getReference(chatMessageAddress).push().setValue(firebaseMap);
 
