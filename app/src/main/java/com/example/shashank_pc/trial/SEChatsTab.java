@@ -55,6 +55,9 @@ public class SEChatsTab  extends Fragment {
     private DatabaseReference newComment;
     private String chatMessageAddress;
     private DatabaseReference commentListener;
+    private ChildEventListener singleCommentListener;
+    private  DatabaseReference fireStoreMemberLength;
+    private ValueEventListener firestoreMemLengthVal;
     private String prefID;
 
     long length;
@@ -90,7 +93,7 @@ public class SEChatsTab  extends Fragment {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
 
-                long views = Long.parseLong(mutableData.getValue(String.class));
+                Long views = Long.parseLong(mutableData.getValue(String.class));
 
                 if(views<total-1)
                 {
@@ -132,8 +135,8 @@ public class SEChatsTab  extends Fragment {
             //Get length of current total members who will see chat message
 
             //TODO Move this later on to Service
-            DatabaseReference fireStoreEventMemLength= database.getReference("MemLen/"+prefID);
-            fireStoreEventMemLength.addValueEventListener(new ValueEventListener() {
+            fireStoreMemberLength= database.getReference("MemLen/"+prefID);
+            firestoreMemLengthVal= fireStoreMemberLength.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     long totalMembers = dataSnapshot.getValue(Long.class);
@@ -183,7 +186,7 @@ public class SEChatsTab  extends Fragment {
 
 
         commentListener=database.getReference("ChtMsgs/"+prefID);
-        commentListener.addChildEventListener(new ChildEventListener() {
+        singleCommentListener = commentListener.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String key = dataSnapshot.getKey();
@@ -195,7 +198,7 @@ public class SEChatsTab  extends Fragment {
                     length++;
                     editor.putLong("length",length);  //Change length of local chat array
                     editor.putString(Long.toString(length),key); //Set index to key
-                    
+
 
                     //Get data from Firebase
                     String chatText = (String)dataSnapshot.child("Msg").getValue();
@@ -396,6 +399,15 @@ public class SEChatsTab  extends Fragment {
         {
 
         }
+
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        commentListener.removeEventListener(singleCommentListener);
+        fireStoreMemberLength.removeEventListener(firestoreMemLengthVal);
 
     }
 }
