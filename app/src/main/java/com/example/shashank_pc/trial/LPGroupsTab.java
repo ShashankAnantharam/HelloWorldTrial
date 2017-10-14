@@ -259,26 +259,7 @@ public class LPGroupsTab extends Fragment {
 
                             }
 
-                            //TODO Move this later on to Service
-                            DatabaseReference fireStoreGroupMemLength= database.getReference("MemLen/"+fGroupID);
-                            fireStoreGroupMemLength.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    long totalMembers = dataSnapshot.getValue(Long.class);
-                                    SharedPreferences preferences  = getContext().getSharedPreferences(
-                                            fGroupID,Context.MODE_PRIVATE
-                                    );
-                                    SharedPreferences.Editor edit = preferences.edit();
-                                    edit.putLong("TotalMembers",totalMembers);
 
-                                    edit.commit();
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
 
 
                         }

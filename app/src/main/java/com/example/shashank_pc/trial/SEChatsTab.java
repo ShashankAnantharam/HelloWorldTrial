@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +55,7 @@ public class SEChatsTab  extends Fragment {
     private DatabaseReference newComment;
     private String chatMessageAddress;
     private DatabaseReference commentListener;
+    private String prefID;
 
     long length;
 
@@ -75,6 +77,11 @@ public class SEChatsTab  extends Fragment {
         if(mType=='U')
         {
             total=2;
+        }
+        else if(mType=='E' || mType=='G')
+        {
+            SharedPreferences preferences = getContext().getSharedPreferences(mEntityID,Context.MODE_PRIVATE);
+            total = preferences.getLong("TotalMembers",100000);
         }
 
 
@@ -112,9 +119,45 @@ public class SEChatsTab  extends Fragment {
     }
 
 
-    public void initContactCommentListener()
+    public void initCommentListener()
     {
-        final SharedPreferences preferences = getContext().getSharedPreferences(getContactChatID(mUserID,mEntityID),
+
+        if(mType=='U')
+        {
+            //Generate contact ID and set as pref ID
+            prefID=getContactChatID(mUserID,mEntityID);
+        }
+        else if(mType=='E' || mType=='G')
+        {
+            //Set Entity ID as pref ID for Events and Groups
+            prefID=mEntityID;
+
+            //Get length of current total members who will see chat message
+
+            //TODO Move this later on to Service
+            DatabaseReference fireStoreEventMemLength= database.getReference("MemLen/"+prefID);
+            fireStoreEventMemLength.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    long totalMembers = dataSnapshot.getValue(Long.class);
+                    SharedPreferences preferences  = getContext().getSharedPreferences(
+                            prefID,Context.MODE_PRIVATE
+                    );
+                    SharedPreferences.Editor edit = preferences.edit();
+                    edit.putLong("TotalMembers",totalMembers);
+
+                    edit.commit();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+        final SharedPreferences preferences = getContext().getSharedPreferences(prefID,
                 Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = preferences.edit();
 
@@ -137,7 +180,12 @@ public class SEChatsTab  extends Fragment {
 
         }
 
-        commentListener=database.getReference("ChtMsgs/"+getContactChatID(mUserID,mEntityID));
+
+
+
+
+
+        commentListener=database.getReference("ChtMsgs/"+prefID);
         commentListener.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -204,7 +252,7 @@ public class SEChatsTab  extends Fragment {
     }
 
 
-    public void initCommentListener()
+  /*  public void initCommentListener()
     {
         if(mType=='E' || mType=='G')
             commentListener = database.getReference("ChtMsgs/" + mEntityID);
@@ -252,7 +300,7 @@ public class SEChatsTab  extends Fragment {
         });
 
     }
-
+*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -272,11 +320,9 @@ public class SEChatsTab  extends Fragment {
         mChatList.setAdapter(chatAdapter);
 
 
-        if(mType=='E' || mType=='G')
-            initCommentListener();
-        else if(mType=='U') {
-            initContactCommentListener();
-        }
+
+        initCommentListener();
+
 
 
 
