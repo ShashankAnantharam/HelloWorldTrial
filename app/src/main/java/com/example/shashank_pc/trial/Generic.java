@@ -68,7 +68,7 @@ public class Generic {
 
         if(BroadcastLocation)
         {
-                ref.child(userID).setValue("");
+                ref.child("Mem").child(userID).setValue("1");
             /*
             If Button is Clicked, then attach UserID string as key, "" as value to the node mID
           Groups
@@ -84,8 +84,7 @@ public class Generic {
         }
         else
         {
-             ref.child(userID).removeValue();
-            /*
+            ref.child("Mem").child(userID).setValue("0");            /*
             If Button is not clicked, then remove child UserID from node
 
             Groups
