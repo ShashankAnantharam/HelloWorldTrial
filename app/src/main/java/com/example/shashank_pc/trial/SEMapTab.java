@@ -244,7 +244,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     void initGEMemberPnMapFirstTime(DataSnapshot dataSnapshot)
     {
-        Toast.makeText(getContext(),"GEMemberInit",Toast.LENGTH_SHORT).show();
+ //       Toast.makeText(getContext(),"GEMemberInit",Toast.LENGTH_SHORT).show();
         //TODO CODE HERE
         if (mMembersHashMap == null) {
                     /*
@@ -370,7 +370,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void membersInit()
     {
-        Toast.makeText(getContext(),"MembersInit",Toast.LENGTH_SHORT).show();
+   //     Toast.makeText(getContext(),"MembersInit",Toast.LENGTH_SHORT).show();
         String FirebaseAddressString = "";
         
 
@@ -395,7 +395,6 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 final String isMemberBroadcastingLocFlag= dataSnapshot.getValue(String.class);
 
-                Toast.makeText(getContext(),dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
                 User user= new User(dataSnapshot.getKey(),dataSnapshot.getKey());
                 if(mMembersTab==null)
                     Members.add(user);
