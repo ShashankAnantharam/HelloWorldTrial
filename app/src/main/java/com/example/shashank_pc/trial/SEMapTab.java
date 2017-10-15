@@ -680,15 +680,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void onDestroy() {
         super.onDestroy();
 
-        if(mType=='C')
+        if(mType=='C') {
             getContext().unregisterReceiver(contactBroadcastReceiver);
+            contactLatLong.removeEventListener(contactLatLongEventListener);
+        }
+        if(mType=='G' || mType=='E') {
+            mMembersList.clear();
+            mMembersHashMap.clear();
+            mMarkersList.clear();
+            memberFlags.removeEventListener(memberFlagsListener);
 
-        mMembersList.clear();
-        mMembersHashMap.clear();
-        mMarkersList.clear();
+        }
 
-        memberFlags.removeEventListener(memberFlagsListener);
-        Toast.makeText(getContext(),"Destroy",Toast.LENGTH_SHORT).show();
 
     }
 
