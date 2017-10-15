@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -93,9 +94,9 @@ public class SEMembersTab  extends LPContactsTab{
     {
         MemberListMap = new HashMap<>();
         hasInitContacts=true;
-        curr_doc_number=0;
 
-        firestore = FirebaseFirestore.getInstance();
+
+
 
 
         if(mType=='E')
@@ -105,9 +106,14 @@ public class SEMembersTab  extends LPContactsTab{
 
         isExistFlag=true;
 
+        //Initialize array using other static array
+            for(User member: Members)
+            {
+                User user = member;
+                addContact(user);
+            }
 
-
-                        MemberRef = firestore.collection(type).document(mEntityID).
+       /*                 MemberRef = firestore.collection(type).document(mEntityID).
                                       collection("members").
                                       document("members");
 
@@ -136,7 +142,7 @@ public class SEMembersTab  extends LPContactsTab{
                                 }
                             }
                         });
-
+    */
 
     }
 }

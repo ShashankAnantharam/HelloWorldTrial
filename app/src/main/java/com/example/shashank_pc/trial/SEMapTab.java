@@ -253,77 +253,75 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
         FirebaseAddressString+=mEntityID;
+        FirebaseAddressString+="/Mem";
 
 
 //        Toast.makeText(getContext(),mType,Toast.LENGTH_SHORT).show();
         memberFlags = Generic.database.getReference(FirebaseAddressString);
 
-
+//Get reference to members
 
         memberFlags.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                isMemberBroadcastingLocation.put(dataSnapshot.getKey(),true);
-                if(mMembersTab!=null)
-                    mMembersTab.refresh();
+                final String isMemberBroadcastingLocFlag= dataSnapshot.getValue(String.class);
 
-                //TODO CODE HERE
-                if(mMembersHashMap==null) {
+                /*
+               //TODO  Add to members array
+                 */
+
+
+                    //Member initialized for first time as a child and is broadcasting location also.
+                    // Then initialize his contact.
+
+                    if(isMemberBroadcastingLocFlag.equals("1")) {
+                        isMemberBroadcastingLocation.put(dataSnapshot.getKey(), true);
+                    }
+                    else
+                        isMemberBroadcastingLocation.put(dataSnapshot.getKey(), false);
+
+                    if (mMembersTab != null)
+                        mMembersTab.refresh();
+
+                    //TODO CODE HERE
+                    if (mMembersHashMap == null) {
                     /*
                     First time initialize hashmap and arraylist
                      */
 
-                    mMembersList = new ArrayList<mMapContact>();
-                    mMarkersList = new ArrayList<Marker>();
-                    mMembersHashMap = new HashMap<String, Integer>();
+                        mMembersList = new ArrayList<mMapContact>();
+                        mMarkersList = new ArrayList<Marker>();
+                        mMembersHashMap = new HashMap<String, Integer>();
 
-                }
+                    }
 
 
-
-                    final String mMemberID=dataSnapshot.getKey();
+                    final String mMemberID = dataSnapshot.getKey();
 
 //TODO Events Null pointer handling when self is added (Already taken care of, but to make code more secure)
 
-                    try{
-                    //    Toast.makeText(getContext(),mMemberID,Toast.LENGTH_SHORT).show();
-                    }
-                    catch (Exception e)
-                    {
+                    try {
+                        //    Toast.makeText(getContext(),mMemberID,Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
 
                     }
 
-                    if(mMembersHashMap.containsKey(mMemberID))
-                    {
+                        if (!mMemberID.equals(mUserID)) {
                         /*
-                        If UserID already exists in Array
+                        Member does not exist and is not user ID
                          */
-                        if(mMembersList.get(mMembersHashMap.get(mMemberID)).flag==false) {
-                            mMembersList.get(mMembersHashMap.get(mMemberID)).flag = true;
-                            mMembersList.get(mMembersHashMap.get(mMemberID)).ref.addValueEventListener(
-
-                                    mMembersList.get(mMembersHashMap.get(mMemberID)).valueEventListener
-                            );
-                            mMarkersList.get(mMembersHashMap.get(mMemberID)).setVisible(true);
-                        }
-
-
-                    }
-                    else if(!mMemberID.equals(mUserID))
-                    {
-
                                                 /*
                         Attach new UserID to group Hashmap
                          */
 
-                        mMembersHashMap.put(mMemberID,mMembersList.size());
+                        mMembersHashMap.put(mMemberID, mMembersList.size());
 
                         /*
                         Attach new marker to GroupMarkers
                          */
 
-                        final Marker tMarker=null;
+                        final Marker tMarker = null;
                         mMarkersList.add(tMarker);
 
 
@@ -333,10 +331,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                         boolean tFlag = true;
 
-                        final String tName=mMemberID;
+                        final String tName = mMemberID;
 
 
-                        DatabaseReference tRef= Generic.database.getReference("Users/"+tName+"/Loc");
+                        DatabaseReference tRef = Generic.database.getReference("Users/" + tName + "/Loc");
 
 //                        Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
 
@@ -344,7 +342,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         Attach a new listener to Group
                          */
 
-                        ValueEventListener tValList= tRef.addValueEventListener(new ValueEventListener() {
+                        ValueEventListener tValList = tRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -352,41 +350,41 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                 /*
                                 Get Latitude and Longitude
                                  */
-                                LatLng contactLatLng=null;
-                                double latitude=10000, longtitude=-10000;
-                                int i=0;
-                                for(DataSnapshot snapshot: dataSnapshot.getChildren())
-                                {
-                                    double temp= snapshot.getValue(Double.class);
-                                    if(i==0) {
+                                LatLng contactLatLng = null;
+                                double latitude = 10000, longtitude = -10000;
+                                int i = 0;
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    double temp = snapshot.getValue(Double.class);
+                                    if (i == 0) {
                                         latitude = temp;
-                                    }
-                                    else if(i==1)
-                                    {
-                                        longtitude=temp;
+                                    } else if (i == 1) {
+                                        longtitude = temp;
                                     }
                                     i++;
 
                                 }
-                                contactLatLng= new LatLng(latitude,longtitude);
+                                contactLatLng = new LatLng(latitude, longtitude);
                                /*
                                Set marker
                                 */
 
 
+                                if (mMap != null) {
 
-                                if(mMap!=null) {
-
-                                    if(mMarkersList.get(mMembersHashMap.get(mMemberID))!=null)       //Not the first time location is initialized
+                                    if (mMarkersList.get(mMembersHashMap.get(mMemberID)) != null)       //Not the first time location is initialized
                                     {
                                         mMarkersList.get(mMembersHashMap.get(mMemberID)).setPosition(contactLatLng);
-                                    }
-                                    else {
+                                    } else {
 
                                         //First time location is initialized
                                         mMarkersList.set(mMembersHashMap.get(mMemberID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
                                                 title(tName).
                                                 icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
+                                        if(!isMemberBroadcastingLocation.get(mMemberID))
+                                        {
+                                            //Is not broadcasting Loc. make GPS invisible
+                                            mMarkersList.get(mMembersHashMap.get(mMemberID)).setVisible(false);
+                                        }
                                     }
 
                                 }
@@ -402,9 +400,17 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             }
                         });
 
-                        mMembersList.add( new mMapContact(tFlag,tRef,tName,tValList));
+                            //It has been assumed till here that location is being broadcasted.
+
+                            if(!isMemberBroadcastingLocation.get(dataSnapshot.getKey()))
+                            {
+                                //Is not broadcasting Loc. remove listener
+                                tRef.removeEventListener(tValList);
+                            }
+                        mMembersList.add(new mMapContact(tFlag, tRef, tName, tValList));
 
                     }
+
 
                 }
 
@@ -412,14 +418,60 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+                String mMemberID = dataSnapshot.getKey();
+                String value= dataSnapshot.getValue(String.class);
+                if(value.equals("1")) {
+                    //Location set to ON
+                    //Refresh Members Tab
+                    isMemberBroadcastingLocation.put(dataSnapshot.getKey(),true);
+                    if(mMembersTab!=null)
+                        mMembersTab.refresh();
+
+                    if (mMembersHashMap.containsKey(mMemberID)) {
+                        /*
+                        If UserID already exists in Array
+                         */
+                        if (mMembersList.get(mMembersHashMap.get(mMemberID)).flag == false) {
+                            mMembersList.get(mMembersHashMap.get(mMemberID)).flag = true;
+                            mMembersList.get(mMembersHashMap.get(mMemberID)).ref.addValueEventListener(
+
+                                    mMembersList.get(mMembersHashMap.get(mMemberID)).valueEventListener
+                            );
+                            mMarkersList.get(mMembersHashMap.get(mMemberID)).setVisible(true);
+                        }
+
+
+                    }
+                }
+                else if(value.equals("0"))
+                {
+                    //Location set to OFF
+
+                    isMemberBroadcastingLocation.put(dataSnapshot.getKey(),false);
+
+                    if(mMembersTab!=null)
+                        mMembersTab.refresh();
+
+                    if(mMembersHashMap.containsKey(mMemberID)) {
+
+                        int index = mMembersHashMap.get(mMemberID);        //Get Group Member index in array
+
+                        mMembersList.get(index).flag = false;
+
+                        mMembersList.get(index).ref.removeEventListener(
+                                mMembersList.get(index).valueEventListener
+                        );
+
+                        mMarkersList.get(index).setVisible(false);
+                    }
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+/*
                 isMemberBroadcastingLocation.put(dataSnapshot.getKey(),false);
-                if(mMembersTab!=null)
-                    mMembersTab.refresh();
+
 
                     String tName = dataSnapshot.getKey();        //Get ID
 
@@ -435,7 +487,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     mMarkersList.get(index).setVisible(false);
                 }
-
+*/
 
             }
 

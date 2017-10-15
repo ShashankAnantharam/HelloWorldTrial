@@ -28,7 +28,9 @@ import android.widget.Toast;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static java.security.AccessController.getContext;
 
@@ -67,6 +69,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
     public static SEMembersTab mMembersTab=null;
     public static HashMap<String,Boolean> isMemberBroadcastingLocation;
+    public static List<User> Members;
 
     private String type;
 
@@ -79,6 +82,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
 
         isMemberBroadcastingLocation= new HashMap<>();
+        Members = new ArrayList<>();
 
         Intent caller = getIntent();
         mEntityName= caller.getStringExtra("Name");
