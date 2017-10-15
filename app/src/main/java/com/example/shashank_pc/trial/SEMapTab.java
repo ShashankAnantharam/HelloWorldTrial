@@ -682,6 +682,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         if(mType=='C')
             getContext().unregisterReceiver(contactBroadcastReceiver);
 
+        mMembersList.clear();
+        mMembersHashMap.clear();
+
     }
 
     @Override
