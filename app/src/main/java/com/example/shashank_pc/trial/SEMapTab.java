@@ -89,6 +89,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private List<Marker> mMarkersList=null;
     private HashMap<String,Integer> mMembersHashMap=null;
     private DatabaseReference memberFlags;
+    private ChildEventListener memberFlagsListener;
 
 
 
@@ -389,7 +390,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 //Get reference to members
 
-        memberFlags.addChildEventListener(new ChildEventListener() {
+        memberFlagsListener=memberFlags.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -684,6 +685,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
         mMembersList.clear();
         mMembersHashMap.clear();
+        mMarkersList.clear();
+
+        memberFlags.removeEventListener(memberFlagsListener);
+        Toast.makeText(getContext(),"Destroy",Toast.LENGTH_SHORT).show();
 
     }
 
