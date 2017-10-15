@@ -402,6 +402,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     if(isMemberBroadcastingLocFlag.equals("1")) {
                         isMemberBroadcastingLocation.put(dataSnapshot.getKey(), true);
+                        initGEMemberPnMapFirstTime(dataSnapshot);
                     }
                     else
                         isMemberBroadcastingLocation.put(dataSnapshot.getKey(), false);
@@ -409,7 +410,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     if (mMembersTab != null)
                         mMembersTab.refresh();
 
-                    initGEMemberPnMapFirstTime(dataSnapshot);
+
                 }
 
 
@@ -421,11 +422,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 if(value.equals("1")) {
                     //Location set to ON
                     //Refresh Members Tab
+
                     isMemberBroadcastingLocation.put(dataSnapshot.getKey(),true);
                     if(mMembersTab!=null)
                         mMembersTab.refresh();
 
-                    if (mMembersHashMap.containsKey(mMemberID)) {
+                    if (mMembersHashMap!=null && mMembersHashMap.containsKey(mMemberID)) {
                         /*
                         If UserID already exists in Array
                          */
@@ -442,6 +444,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
                     }
+                    else
+                    {
+                        initGEMemberPnMapFirstTime(dataSnapshot);
+                    }
+
                 }
                 else if(value.equals("0"))
                 {
