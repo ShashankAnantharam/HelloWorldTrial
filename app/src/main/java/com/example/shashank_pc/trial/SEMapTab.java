@@ -751,12 +751,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         Marker marker=null;
                         placesMarkers.add(marker);
                         index= placesMarkers.size()-1;
-                        Toast.makeText(getContext(),name,Toast.LENGTH_SHORT).show();
+
                         placesMarkers.set(index,mMap.addMarker(new MarkerOptions().position(placeLatLng).
                                 title(name).
                                 icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
+                        if(type.equals("home"))
+                        {
+                            placesMarkers.get(index).setIcon(
+                                    BitmapDescriptorFactory.fromResource(R.drawable.place_home)
+                            );
 
-                        Toast.makeText(getContext(),Double.toString(lat),Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                     else
                     {
