@@ -241,6 +241,131 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         public mMapContact(){}
     }
 
+    void initGEMemberPnMapFirstTime(DataSnapshot dataSnapshot)
+    {
+        //TODO CODE HERE
+        if (mMembersHashMap == null) {
+                    /*
+                    First time initialize hashmap and arraylist
+                     */
+
+            mMembersList = new ArrayList<mMapContact>();
+            mMarkersList = new ArrayList<Marker>();
+            mMembersHashMap = new HashMap<String, Integer>();
+
+        }
+
+
+        final String mMemberID = dataSnapshot.getKey();
+
+//TODO Events Null pointer handling when self is added (Already taken care of, but to make code more secure)
+
+        try {
+            //    Toast.makeText(getContext(),mMemberID,Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+
+        }
+
+        if (!mMemberID.equals(mUserID)) {
+                        /*
+                        Member does not exist and is not user ID
+                         */
+                                                /*
+                        Attach new UserID to group Hashmap
+                         */
+
+            mMembersHashMap.put(mMemberID, mMembersList.size());
+
+                        /*
+                        Attach new marker to GroupMarkers
+                         */
+
+            final Marker tMarker = null;
+            mMarkersList.add(tMarker);
+
+
+                        /*
+                        New Map Contact
+                         */
+
+            boolean tFlag = true;
+
+            final String tName = mMemberID;
+
+
+            DatabaseReference tRef = Generic.database.getReference("Users/" + tName + "/Loc");
+
+//                        Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
+
+                        /*
+                        Attach a new listener to Group
+                         */
+
+            ValueEventListener tValList = tRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    //    Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
+                                /*
+                                Get Latitude and Longitude
+                                 */
+                    LatLng contactLatLng = null;
+                    double latitude = 10000, longtitude = -10000;
+                    int i = 0;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        double temp = snapshot.getValue(Double.class);
+                        if (i == 0) {
+                            latitude = temp;
+                        } else if (i == 1) {
+                            longtitude = temp;
+                        }
+                        i++;
+
+                    }
+                    contactLatLng = new LatLng(latitude, longtitude);
+                               /*
+                               Set marker
+                                */
+
+
+                    if (mMap != null) {
+
+                        if (mMarkersList.get(mMembersHashMap.get(mMemberID)) != null)       //Not the first time location is initialized
+                        {
+                            mMarkersList.get(mMembersHashMap.get(mMemberID)).setPosition(contactLatLng);
+                        } else {
+
+                            //First time location is initialized
+                            mMarkersList.set(mMembersHashMap.get(mMemberID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
+                                    title(tName).
+                                    icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
+
+                        }
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                    Toast.makeText(getContext(), "Database Error", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+            //It has been assumed till here that location is being broadcasted.
+
+
+            mMembersList.add(new mMapContact(tFlag, tRef, tName, tValList));
+
+
+        }
+
+
+    }
+
     private void membersInit()
     {
         String FirebaseAddressString = "";
@@ -284,127 +409,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     if (mMembersTab != null)
                         mMembersTab.refresh();
 
-                    //TODO CODE HERE
-                    if (mMembersHashMap == null) {
-                    /*
-                    First time initialize hashmap and arraylist
-                     */
-
-                        mMembersList = new ArrayList<mMapContact>();
-                        mMarkersList = new ArrayList<Marker>();
-                        mMembersHashMap = new HashMap<String, Integer>();
-
-                    }
-
-
-                    final String mMemberID = dataSnapshot.getKey();
-
-//TODO Events Null pointer handling when self is added (Already taken care of, but to make code more secure)
-
-                    try {
-                        //    Toast.makeText(getContext(),mMemberID,Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-
-                    }
-
-                        if (!mMemberID.equals(mUserID)) {
-                        /*
-                        Member does not exist and is not user ID
-                         */
-                                                /*
-                        Attach new UserID to group Hashmap
-                         */
-
-                        mMembersHashMap.put(mMemberID, mMembersList.size());
-
-                        /*
-                        Attach new marker to GroupMarkers
-                         */
-
-                        final Marker tMarker = null;
-                        mMarkersList.add(tMarker);
-
-
-                        /*
-                        New Map Contact
-                         */
-
-                        boolean tFlag = true;
-
-                        final String tName = mMemberID;
-
-
-                        DatabaseReference tRef = Generic.database.getReference("Users/" + tName + "/Loc");
-
-//                        Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
-
-                        /*
-                        Attach a new listener to Group
-                         */
-
-                        ValueEventListener tValList = tRef.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                //    Toast.makeText(getContext(),tName,Toast.LENGTH_SHORT).show();
-                                /*
-                                Get Latitude and Longitude
-                                 */
-                                LatLng contactLatLng = null;
-                                double latitude = 10000, longtitude = -10000;
-                                int i = 0;
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    double temp = snapshot.getValue(Double.class);
-                                    if (i == 0) {
-                                        latitude = temp;
-                                    } else if (i == 1) {
-                                        longtitude = temp;
-                                    }
-                                    i++;
-
-                                }
-                                contactLatLng = new LatLng(latitude, longtitude);
-                               /*
-                               Set marker
-                                */
-
-
-                                if (mMap != null) {
-
-                                    if (mMarkersList.get(mMembersHashMap.get(mMemberID)) != null)       //Not the first time location is initialized
-                                    {
-                                        mMarkersList.get(mMembersHashMap.get(mMemberID)).setPosition(contactLatLng);
-                                    } else {
-
-                                        //First time location is initialized
-                                        mMarkersList.set(mMembersHashMap.get(mMemberID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
-                                                title(tName).
-                                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
-
-                                    }
-
-                                }
-
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                                Toast.makeText(getContext(), "Database Error", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-
-                            //It has been assumed till here that location is being broadcasted.
-
-
-                        mMembersList.add(new mMapContact(tFlag, tRef, tName, tValList));
-
-
-                    }
-
-
+                    initGEMemberPnMapFirstTime(dataSnapshot);
                 }
 
 
@@ -425,7 +430,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         If UserID already exists in Array
                          */
                         if (mMembersList.get(mMembersHashMap.get(mMemberID)).flag == false) {
-                            
+
 
                             mMembersList.get(mMembersHashMap.get(mMemberID)).flag = true;
                             mMembersList.get(mMembersHashMap.get(mMemberID)).ref.addValueEventListener(
