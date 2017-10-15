@@ -48,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
+import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
 import static com.example.shashank_pc.trial.SingleEntityActivity.isMemberBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.mMembersTab;
 
@@ -391,6 +392,16 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 final String isMemberBroadcastingLocFlag= dataSnapshot.getValue(String.class);
+
+                User user= new User(dataSnapshot.getKey(),dataSnapshot.getKey());
+                if(mMembersTab==null)
+                    Members.add(user);
+                else
+                {
+                    mMembersTab.addContact(user);
+                }
+
+
 
                 /*
                //TODO  Add to members array
