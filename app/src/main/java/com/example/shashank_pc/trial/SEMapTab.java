@@ -755,13 +755,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         placesMarkers.set(index,mMap.addMarker(new MarkerOptions().position(placeLatLng).
                                 title(name).
                                 icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
-                        if(type.equals("home"))
-                        {
-                            placesMarkers.get(index).setIcon(
-                                    BitmapDescriptorFactory.fromResource(R.drawable.place_home)
-                            );
 
-                        }
 
                     }
                     else
@@ -770,7 +764,21 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         index = placesMap.get(entry.getKey());
                         placesMarkers.get(index).setPosition(placeLatLng);
                         placesMarkers.get(index).setTitle(name);
-//                            placesMarkers.get(index).setIcon();
+
+
+
+                    }
+                    if(type.equals("home"))
+                    {
+                        placesMarkers.get(index).setIcon(
+                                BitmapDescriptorFactory.fromResource(R.drawable.place_home)
+                        );
+                    }
+                    else if(type.equals("date"))
+                    {
+                        placesMarkers.get(index).setIcon(
+                                BitmapDescriptorFactory.fromResource(R.drawable.place_dating)
+                        );
                     }
 
                 }
