@@ -74,6 +74,13 @@ public class SingleEntityActivity extends AppCompatActivity {
     private String type;
 
 
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        mMembersTab=null;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,6 +252,10 @@ public class SingleEntityActivity extends AppCompatActivity {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
+
+
+
 
         @Override
         public Fragment getItem(int position) {

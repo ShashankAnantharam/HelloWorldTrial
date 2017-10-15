@@ -75,7 +75,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private String mEntityName;
     private String mEntityID;
     private char mType;
-
+    private boolean mapFlag;
 
 
     private BroadcastReceiver contactBroadcastReceiver;
@@ -244,6 +244,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     void initGEMemberPnMapFirstTime(DataSnapshot dataSnapshot)
     {
+        Toast.makeText(getContext(),"GEMemberInit",Toast.LENGTH_SHORT).show();
         //TODO CODE HERE
         if (mMembersHashMap == null) {
                     /*
@@ -369,6 +370,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void membersInit()
     {
+        Toast.makeText(getContext(),"MembersInit",Toast.LENGTH_SHORT).show();
         String FirebaseAddressString = "";
         
 
@@ -393,6 +395,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 final String isMemberBroadcastingLocFlag= dataSnapshot.getValue(String.class);
 
+                Toast.makeText(getContext(),dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
                 User user= new User(dataSnapshot.getKey(),dataSnapshot.getKey());
                 if(mMembersTab==null)
                     Members.add(user);
@@ -531,6 +534,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         if (rootView != null) {
             ViewGroup parent = (ViewGroup) rootView.getParent();
             if (parent != null)
@@ -548,7 +552,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        boolean mapFlag=false;
+
+        mapFlag=false;
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
 
@@ -651,6 +656,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
         if(mapFlag) {
+            //First time map opened. Init members of entity
             if (mType == 'U')
                 mContactInit();
             else if (mType == 'G' || mType == 'E')
@@ -676,6 +682,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
         if(mType=='C')
             getContext().unregisterReceiver(contactBroadcastReceiver);
+
     }
 
     @Override
