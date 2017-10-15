@@ -380,11 +380,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                         mMarkersList.set(mMembersHashMap.get(mMemberID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
                                                 title(tName).
                                                 icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
-                                        if(!isMemberBroadcastingLocation.get(mMemberID))
-                                        {
-                                            //Is not broadcasting Loc. make GPS invisible
-                                            mMarkersList.get(mMembersHashMap.get(mMemberID)).setVisible(false);
-                                        }
+
                                     }
 
                                 }
@@ -402,12 +398,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                             //It has been assumed till here that location is being broadcasted.
 
-                            if(!isMemberBroadcastingLocation.get(dataSnapshot.getKey()))
-                            {
-                                //Is not broadcasting Loc. remove listener
-                                tRef.removeEventListener(tValList);
-                            }
+
                         mMembersList.add(new mMapContact(tFlag, tRef, tName, tValList));
+
 
                     }
 
@@ -432,6 +425,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         If UserID already exists in Array
                          */
                         if (mMembersList.get(mMembersHashMap.get(mMemberID)).flag == false) {
+                            
+
                             mMembersList.get(mMembersHashMap.get(mMemberID)).flag = true;
                             mMembersList.get(mMembersHashMap.get(mMemberID)).ref.addValueEventListener(
 
