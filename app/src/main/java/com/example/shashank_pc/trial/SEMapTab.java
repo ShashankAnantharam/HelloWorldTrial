@@ -40,13 +40,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
 import static com.example.shashank_pc.trial.SingleEntityActivity.isMemberBroadcastingLocation;
@@ -90,6 +95,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private HashMap<String,Integer> mMembersHashMap=null;
     private DatabaseReference memberFlags;
     private ChildEventListener memberFlagsListener;
+
+    private List<Marker> placesMarkers;
+    private DocumentReference placesRef;
+    private Map<String, Integer> placesMap;
+
 
 
 
@@ -659,13 +669,110 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             //First time map opened. Init members of entity
             if (mType == 'U')
                 mContactInit();
-            else if (mType == 'G' || mType == 'E')
+            else if (mType == 'G' || mType == 'E') {
                 membersInit();
+            }
+
+            if(mType=='G')
+            {
+                placesInit();
+            }
         }
 
 
 
     }
+
+    public void placesInit()
+    {
+        placesMap = new HashMap<>();
+        placesMarkers= new ArrayList<>();
+
+        String type="";
+        if(mType=='E')
+            type="events";
+        else if(mType=='G')
+            type="groups";
+
+        placesRef = firestore.collection(type).document(mEntityID).collection("places").document("places");
+
+        placesRef.addSnapshotListener(new com.google.firebase.firestore.EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+
+                Map<String,Object> userMap= new HashMap<>();
+                userMap = documentSnapshot.getData();
+
+                for(Map.Entry<String,Object> entry : userMap.entrySet())
+                {
+                    //Iterate over all the places
+
+                    Map<String,String> placeDetails= new HashMap<String, String>();
+                    placeDetails = (Map<String,String>) entry.getValue();
+                    double lat=0.0, lon=0.0;
+                    String name="",type="";
+
+                    for(Map.Entry<String,String> placeAttributeEntry : placeDetails.entrySet())
+                    {
+                        //Initialize place
+                        String value,key;
+                        key = placeAttributeEntry.getKey();
+                        value=placeAttributeEntry.getValue();
+
+                        // Get attributes of place
+
+                        if(key.equals("lat"))
+                        {
+                              lat=Double.parseDouble(value);
+                        }
+                        else if(key.equals("long"))
+                        {
+                            lon=Double.parseDouble(value);
+                        }
+                        else if(key.equals("name"))
+                        {
+                            name=value;
+                        }
+                        else if(key.equals("type"))
+                        {
+                            type=value;
+                        }
+
+                    }
+
+                    LatLng placeLatLng= new LatLng(lat,lon);
+
+                    int index;
+                    if(!placesMap.containsKey(entry.getKey()))
+                    {
+                        //Place not already present
+
+                        placesMap.put(entry.getKey(),placesMarkers.size());
+                        Marker marker=null;
+                        placesMarkers.add(marker);
+                        index= placesMarkers.size()-1;
+                        Toast.makeText(getContext(),name,Toast.LENGTH_SHORT).show();
+                        placesMarkers.set(index,mMap.addMarker(new MarkerOptions().position(placeLatLng).
+                                title(name).
+                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
+
+                        Toast.makeText(getContext(),Double.toString(lat),Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        //Place already present.
+                        index = placesMap.get(entry.getKey());
+                        placesMarkers.get(index).setPosition(placeLatLng);
+                        placesMarkers.get(index).setTitle(name);
+//                            placesMarkers.get(index).setIcon();
+                    }
+
+                }
+
+            }
+        });
+    }
+
 
 
     @Override
@@ -694,6 +801,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 mMarkersList.clear();
             if(memberFlags!=null)
                 memberFlags.removeEventListener(memberFlagsListener);
+            if(placesRef!=null)
+                placesRef=null;
+            if(placesMarkers!=null)
+                placesMarkers.clear();
 
         }
 
