@@ -682,13 +682,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
         if(mType=='C') {
             getContext().unregisterReceiver(contactBroadcastReceiver);
-            contactLatLong.removeEventListener(contactLatLongEventListener);
+            if(contactLatLong!=null)
+                contactLatLong.removeEventListener(contactLatLongEventListener);
         }
         if(mType=='G' || mType=='E') {
-            mMembersList.clear();
-            mMembersHashMap.clear();
-            mMarkersList.clear();
-            memberFlags.removeEventListener(memberFlagsListener);
+            if(mMembersList!=null)
+               mMembersList.clear();
+            if(mMembersHashMap!=null)
+                mMembersHashMap.clear();
+            if(mMarkersList!=null)
+                mMarkersList.clear();
+            if(memberFlags!=null)
+                memberFlags.removeEventListener(memberFlagsListener);
 
         }
 
