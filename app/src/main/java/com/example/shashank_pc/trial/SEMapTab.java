@@ -548,6 +548,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        boolean mapFlag=false;
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
 
@@ -558,6 +559,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             mMapFrag = (MapFragment) fragment.findFragmentById(R.id.map);
 
             mMapFrag.getMapAsync(this);
+            mapFlag=true;
 
 
         }
@@ -647,11 +649,13 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
 
-        if(mType=='U')
-            mContactInit();
-        else if(mType=='G' || mType=='E')
-            membersInit();
 
+        if(mapFlag) {
+            if (mType == 'U')
+                mContactInit();
+            else if (mType == 'G' || mType == 'E')
+                membersInit();
+        }
 
 
 

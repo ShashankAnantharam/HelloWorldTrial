@@ -254,18 +254,19 @@ public class SingleEntityActivity extends AppCompatActivity {
             switch(position)
             {
                 case 0:
-               //     if(mSEMapTab==null)
-                    mSEMapTab= new SEMapTab();
-                    mSEMapTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
-                    return mSEMapTab;
+                    if(mSEMapTab==null) {
+                        mSEMapTab = new SEMapTab();
+                        mSEMapTab.passUserDetails(mUserID, mUserName, mEntityName, mEntityID, mType);
+                        return mSEMapTab;
+                    }
                 case 1:
-               //     if(mSEChatsTab==null)
-                    mSEChatsTab= new SEChatsTab();
-                    mSEChatsTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
-                    return mSEChatsTab;
+                    if(mSEChatsTab==null) {
+                        mSEChatsTab = new SEChatsTab();
+                        mSEChatsTab.passUserDetails(mUserID, mUserName, mEntityName, mEntityID, mType);
+                        return mSEChatsTab;
+                    }
                 case 2:
-                //    if(mSEMembersTab==null)
-
+                    if(mSEMembersTab==null) {
                     /*
                     This is where testing code starts
 
@@ -276,10 +277,11 @@ public class SingleEntityActivity extends AppCompatActivity {
                     This is where testing code ends
                      */
 
-                    mSEMembersTab= new SEMembersTab();
-                    mSEMembersTab.passUserDetails(mUserID,mUserName,mEntityName,mEntityID,mType);
-                    mMembersTab=mSEMembersTab;
-                    return mSEMembersTab;
+                        mSEMembersTab = new SEMembersTab();
+                        mSEMembersTab.passUserDetails(mUserID, mUserName, mEntityName, mEntityID, mType);
+                        mMembersTab = mSEMembersTab;
+                        return mSEMembersTab;
+                    }
                 default:
                     return null;
             }
