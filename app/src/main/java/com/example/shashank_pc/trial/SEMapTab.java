@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -51,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
@@ -683,6 +686,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     }
 
+
+
     public void placesInit()
     {
         placesMap = new HashMap<>();
@@ -787,6 +792,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         );
                     }
 
+                    //Testing
+                    addGeoData(entry.getKey(),lat,lon);
+
                 }
 
             }
@@ -794,6 +802,22 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     }
 
 
+    private void addGeoData(String key, double lat, double lon)
+    {
+        /*
+        Testing GeoFire by adding data
+         */
+        String type="";
+        if(mType=='E')
+            type="Events/";
+        else if(mType=='G')
+            type="Groups/";
+
+        DatabaseReference placeRef= database.getReference(type+mEntityID+"/places");
+        GeoFire geoFire= new GeoFire(placeRef);
+        geoFire.setLocation(key,new GeoLocation(lat,lon));
+
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap)
