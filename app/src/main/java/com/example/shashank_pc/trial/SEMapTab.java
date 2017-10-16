@@ -859,7 +859,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 try {
-                    Toast.makeText(getContext(), key, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), key+"added", Toast.LENGTH_SHORT).show();
                 }
                 catch (Exception e)
                 {
@@ -875,13 +875,21 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
+                try {
+                    Toast.makeText(getContext(), key+"removed", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e)
+                {
 
+                }
+
+                count--;
             }
 
             @Override
             public void onGeoQueryReady() {
 
-                if (count < 2 && R < 25) {
+        /*        if (count < 2 && R < 25) {
                     R += 1;
                     placesQuery.setRadius(R);
                     try {
@@ -897,6 +905,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     placesQuery.setRadius(R);
 
                 }
+                */
             }
 
             @Override
