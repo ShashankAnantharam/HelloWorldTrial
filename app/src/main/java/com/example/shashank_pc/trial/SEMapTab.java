@@ -850,7 +850,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         DatabaseReference placeRef= database.getReference(type+mEntityID+"/places");
         GeoFire geoFire= new GeoFire(placeRef);
 
-        double R=6.0;
+        double R=1.0;
         placesQuery = geoFire.queryAtLocation(new GeoLocation(Lat,Long),R);
         placesQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
