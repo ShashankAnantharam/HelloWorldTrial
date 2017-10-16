@@ -780,6 +780,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                 BitmapDescriptorFactory.fromResource(R.drawable.place_dating)
                         );
                     }
+                    else if(type.equals("education"))
+                    {
+                        placesMarkers.get(index).setIcon(
+                                BitmapDescriptorFactory.fromResource(R.drawable.place_education)
+                        );
+                    }
 
                 }
 
