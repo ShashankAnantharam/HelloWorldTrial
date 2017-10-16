@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -52,6 +54,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.Generic.firestore;
@@ -102,6 +105,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private List<Marker> placesMarkers;
     private DocumentReference placesRef;
     private Map<String, Integer> placesMap;
+    private GeoQuery placesQuery;
 
 
 
@@ -621,6 +625,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 }
 
+                if(mType=='G')
+                {
+                    //Testing
+
+                    if(placesQuery==null)
+                        getNearbyPlaces(Latitude,Longitude);
+                    else
+                    {
+                        placesQuery.setCenter(new GeoLocation(Latitude,Longitude));
+                    }
+                }
+
             }
 
             @Override
@@ -679,6 +695,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             if(mType=='G')
             {
                 placesInit();
+
             }
         }
 
@@ -819,6 +836,58 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     }
 
+    public void getNearbyPlaces(double Lat, double Long)
+    {
+        /*
+        Function to Test Geoquery
+         */
+        String type="";
+        if(mType=='E')
+            type="Events/";
+        else if(mType=='G')
+            type="Groups/";
+
+        DatabaseReference placeRef= database.getReference(type+mEntityID+"/places");
+        GeoFire geoFire= new GeoFire(placeRef);
+
+        double R=6.0;
+        placesQuery = geoFire.queryAtLocation(new GeoLocation(Lat,Long),R);
+        placesQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                try {
+                    Toast.makeText(getContext(), key, Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -850,6 +919,13 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             if(placesMarkers!=null)
                 placesMarkers.clear();
 
+
+        }
+
+        if(placesQuery!=null)
+        {
+            placesQuery.removeAllListeners();
+            placesQuery=null;
         }
 
 
