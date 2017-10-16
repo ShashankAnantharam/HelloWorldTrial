@@ -847,12 +847,15 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         else if(mType=='G')
             type="Groups/";
 
-        DatabaseReference placeRef= database.getReference(type+mEntityID+"/places");
-        GeoFire geoFire= new GeoFire(placeRef);
+        final DatabaseReference placeRef= database.getReference(type+mEntityID+"/places");
+        final GeoFire geoFire= new GeoFire(placeRef);
 
         double R=1.0;
         placesQuery = geoFire.queryAtLocation(new GeoLocation(Lat,Long),R);
         placesQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+
+            double R=1.0;
+            int count=0;
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 try {
@@ -862,6 +865,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 {
 
                 }
+                count++;
             }
 
             @Override
@@ -877,6 +881,22 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onGeoQueryReady() {
 
+                if (count < 2 && R < 25) {
+                    R += 1;
+                    placesQuery.setRadius(R);
+                    try {
+                        Toast.makeText(getContext(),Double.toString(R),Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                } else if (count > 20) {
+
+                    R-=1;
+                    placesQuery.setRadius(R);
+
+                }
             }
 
             @Override
