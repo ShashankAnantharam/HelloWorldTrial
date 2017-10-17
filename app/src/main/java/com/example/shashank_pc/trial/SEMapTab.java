@@ -863,7 +863,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 }
                 catch (Exception e)
                 {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
                 }
                 count++;
             }
@@ -876,7 +876,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 }
                 catch (Exception e)
                 {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
                 }
 
                 count--;
