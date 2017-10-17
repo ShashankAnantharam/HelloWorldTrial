@@ -850,7 +850,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         final DatabaseReference placeRef= database.getReference(type+mEntityID+"/places");
         final GeoFire geoFire= new GeoFire(placeRef);
 
-        double R=1.0;
+        double R=0.05;
         placesQuery = geoFire.queryAtLocation(new GeoLocation(Lat,Long),R);
         placesQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
 
@@ -863,7 +863,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 }
                 catch (Exception e)
                 {
-
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 count++;
             }
@@ -871,19 +871,21 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onKeyExited(String key) {
 
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
                 try {
                     Toast.makeText(getContext(), key+"removed", Toast.LENGTH_SHORT).show();
                 }
                 catch (Exception e)
                 {
-
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 count--;
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
             }
 
             @Override
