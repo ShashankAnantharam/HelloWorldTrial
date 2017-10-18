@@ -35,6 +35,7 @@ import static android.R.attr.x;
 import static android.content.Context.CONTEXT_IGNORE_SECURITY;
 import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
 import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 
 /**
@@ -79,6 +80,7 @@ public class LPEventsTab extends Fragment {
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(event.getID(),false);
         event.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        allButtons.put(event.getID(),mBroadcastLocationFlag);
         mEvents.add(event);
         refresh();
     }

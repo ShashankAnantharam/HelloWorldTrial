@@ -33,6 +33,7 @@ import java.util.Vector;
 
 import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
 import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 
 /**
@@ -77,6 +78,7 @@ public class LPGroupsTab extends Fragment {
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(group.getID(),false);
         group.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        allButtons.put(group.getID(),mBroadcastLocationFlag);
         mGroups.add(group);
         refresh();
     }

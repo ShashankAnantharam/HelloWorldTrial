@@ -104,6 +104,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public static Map<String,Integer> allEntities;
 
+    public static Map<String,Boolean> allButtons;
 
 
 
@@ -427,6 +428,7 @@ public class LandingPageActivity extends AppCompatActivity {
         locationBroadcastReceiver=null;
 
         allEntities = new HashMap<>();
+        allButtons = new HashMap<>();
 
 
         regFlag=initUserDetails();

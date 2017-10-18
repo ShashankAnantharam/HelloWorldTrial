@@ -4,6 +4,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
+
 /**
  * Created by shashank-pc on 8/22/2017.
  */
@@ -66,9 +68,13 @@ public class Generic {
 
         DatabaseReference ref = database.getReference(address); //go to that reference location
 
+        allButtons.put(mID,BroadcastLocation); 
+
         if(BroadcastLocation)
         {
                 ref.child("Mem").child(userID).setValue("1");
+
+
             /*
             If Button is Clicked, then attach UserID string as key, "" as value to the node mID
           Groups
