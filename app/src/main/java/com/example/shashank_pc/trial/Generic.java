@@ -68,7 +68,7 @@ public class Generic {
 
         DatabaseReference ref = database.getReference(address); //go to that reference location
 
-        allButtons.put(mID,BroadcastLocation); 
+        allButtons.put(mID,BroadcastLocation);
 
         if(BroadcastLocation)
         {

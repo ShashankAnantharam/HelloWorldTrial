@@ -13,12 +13,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,7 +28,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+
+import static com.example.shashank_pc.trial.Generic.database;
+import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
 
 /**
  * Created by shashank-pc on 9/12/2017.
@@ -64,7 +70,7 @@ public class GPS_Service extends Service {
 
         String firebaseAddressLat = "Users/"+LandingPageActivity.getUserID()+"/Loc";
 
-        writeGPS= Generic.database.getReference(firebaseAddressLat);
+        writeGPS= database.getReference(firebaseAddressLat);
 
 
 
@@ -73,6 +79,32 @@ public class GPS_Service extends Service {
 
         //create locationListener
         locationListener= new LocationListener() {
+
+            private void writeToGroupsEvents(Location location)
+            {
+                //Write to the references
+                for(Map.Entry<String,Boolean> entry: allButtons.entrySet())
+                {
+                    String writeRef= "Loc/"+entry.getKey()+"/"+LandingPageActivity.getUserID();
+                    DatabaseReference reference = database.getReference(writeRef);
+                    if(!entry.getValue())
+                    {
+                        //Delete location if value is false
+                        reference.removeValue();
+                    }
+                    else
+                    {
+                        //Update location if value true
+                        Map <String,Double> locationMap= new HashMap<>();
+                        locationMap.put("0",location.getLatitude());
+                        locationMap.put("1",location.getLongitude());
+                        reference.setValue(locationMap);
+
+                    }
+                }
+            }
+
+
             @Override
             public void onLocationChanged(Location location) {
 
@@ -85,6 +117,8 @@ public class GPS_Service extends Service {
                 gpsWrite.put("Lat",location.getLatitude());
                 gpsWrite.put("Long",location.getLongitude());
                 writeGPS.setValue(gpsWrite);
+
+                writeToGroupsEvents(location);
 
             }
 
