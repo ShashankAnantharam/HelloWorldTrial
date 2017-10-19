@@ -117,6 +117,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
             //Set chat at left side
 //            chatLayout.setGravity(Gravity.LEFT);
             holder.chatMainLayout.setGravity(Gravity.LEFT);
+            holder.chatText.setPadding(30,0,5,0);
 //            params_chatMessage.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
 //            creator.setGravity(Gravity.LEFT);
@@ -127,6 +128,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
             //Set chat at right side
  //           chatLayout.setGravity(Gravity.RIGHT);
             holder.chatMainLayout.setGravity(Gravity.RIGHT);
+            holder.chatText.setPadding(0,0,50,0);
 //           params_chatMessage.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 //           params_chatCreator.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 //            creator.setGravity(Gravity.RIGHT);
