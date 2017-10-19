@@ -51,6 +51,11 @@ public class User{
 
     }
 
+    public void setName(String name)
+    {
+        mName=name;
+    }
+
     public void initBroadcastLocationFlag(boolean BroadcastLocation){this.mBroadcastLocation=BroadcastLocation;}
 
     public boolean getBroadcastLocationFlag(){return mBroadcastLocation;}

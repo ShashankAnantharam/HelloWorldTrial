@@ -270,6 +270,7 @@ public class LandingPageActivity extends AppCompatActivity {
     {
 
         initEncoding();
+        allContactNames.put(mUserID,"Me");
 
         Generic.database = FirebaseDatabase.getInstance();
         

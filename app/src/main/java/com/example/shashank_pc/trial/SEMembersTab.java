@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
 
 /**
@@ -68,6 +69,11 @@ public class SEMembersTab  extends LPContactsTab{
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(user.getNumber(),false);
         user.initBroadcastLocationFlag(mBroadcastLocationFlag);
+        if(allContactNames.containsKey(user.getNumber()))
+        {
+            //Set Name from Contact List
+            user.setName(allContactNames.get(user.getNumber()));
+        }
         mContacts.add(user);
         MemberListMap.put(user.getNumber(),mContacts.size()-1);
         refresh();
