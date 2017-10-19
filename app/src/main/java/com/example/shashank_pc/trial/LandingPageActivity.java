@@ -105,6 +105,7 @@ public class LandingPageActivity extends AppCompatActivity {
     public static Map<String,Integer> allEntities;
 
     public static Map<String,Boolean> allButtons;
+    public static Map<String,String> allContactNames;
 
 
 
@@ -429,6 +430,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
         allEntities = new HashMap<>();
         allButtons = new HashMap<>();
+        allContactNames = new HashMap<>();
 
 
         regFlag=initUserDetails();

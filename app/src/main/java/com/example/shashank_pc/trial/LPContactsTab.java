@@ -32,6 +32,7 @@ import java.util.Vector;
 
 import static android.os.Build.ID;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 
 /**
@@ -82,6 +83,7 @@ public class LPContactsTab extends Fragment {
         user.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mContacts.add(user);
         ContactListMap.put(user.getNumber(),mContacts.size()-1);
+        allContactNames.put(user.getNumber(),user.getName());
         refresh();
     }
 

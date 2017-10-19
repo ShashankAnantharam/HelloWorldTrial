@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.GenericFunctions.getContactChatID;
+import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -173,6 +174,10 @@ public class SEChatsTab  extends Fragment {
                 String mTS = preferences.getString((key+ "_TS"),"");
                 String chatText = preferences.getString((key+ "_msg"),"");
                 String creator = preferences.getString((key+"_creator"),"");
+                if(allContactNames.containsKey(creator))
+                {
+                    creator=allContactNames.get(creator);
+                }
                 boolean isNotMyMessage = preferences.getBoolean((key+ "_isNotMyMsg"),false);
                 ChatMessage nCM= new ChatMessage(isNotMyMessage, chatText, creator);
                 chatAdapter.add(nCM);
@@ -208,6 +213,10 @@ public class SEChatsTab  extends Fragment {
                     if(creator.equals(mUserID)) {
                         creator = "Me";
                         isNotMyMessage = false;
+                    }
+                    else if(allContactNames.containsKey(creator))
+                    {
+                        creator=allContactNames.get(creator);
                     }
 
                     //Put the details of chat in shared preference
