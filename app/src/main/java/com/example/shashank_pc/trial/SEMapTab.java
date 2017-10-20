@@ -357,8 +357,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         } else {
 
                             //First time location is initialized
+                            String title=tName;
+                            if(allContactNames.containsKey(tName))
+                                title=allContactNames.get(tName);
+
                             mMarkersList.set(mMembersHashMap.get(mMemberID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
-                                    title(allContactNames.get(tName)).
+                                    title(allContactNames.get(title)).
                                     icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
 
                         }
@@ -548,6 +552,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     }
 
+    
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
