@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -107,6 +108,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private DocumentReference placesRef;
     private Map<String, Integer> placesMap;
     private GeoQuery placesQuery;
+
+
+    private Handler memberHandler;
+    private Runnable runnable;
 
 
 
@@ -391,7 +396,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void membersInit()
+    private void membersInit2()
     {
    //     Toast.makeText(getContext(),"MembersInit",Toast.LENGTH_SHORT).show();
         String FirebaseAddressString = "";
@@ -552,7 +557,25 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     }
 
-    
+    private void getMembersCoordinates()
+    {}
+
+
+    private void membersInit()
+    {
+        memberHandler= new Handler();
+        runnable= new Runnable() {
+            @Override
+            public void run() {
+               getMembersCoordinates();
+                Toast.makeText(getContext(),"T",Toast.LENGTH_SHORT).show();
+
+                memberHandler.postDelayed(this,2500);
+            }
+        };
+
+        memberHandler.postDelayed(runnable,2500);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -955,6 +978,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 placesRef=null;
             if(placesMarkers!=null)
                 placesMarkers.clear();
+
+            if(memberHandler!=null) {
+                if(runnable!=null) {
+                    memberHandler.removeCallbacks(runnable);
+                    runnable=null;
+                }
+                memberHandler=null;
+            }
 
 
         }
