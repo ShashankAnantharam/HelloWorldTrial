@@ -90,7 +90,13 @@ public class Generic {
         }
         else
         {
-            ref.child("Mem").child(userID).setValue("0");            /*
+            ref.child("Mem").child(userID).setValue("0");
+
+            String Address2= "Loc/"+mID+"/"+userID;
+            DatabaseReference ref2= database.getReference(Address2);
+
+            ref2.removeValue();
+            /*
             If Button is not clicked, then remove child UserID from node
 
             Groups
