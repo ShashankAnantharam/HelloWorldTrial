@@ -397,7 +397,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void membersInit()
+    private void membersInit2()
     {
    //     Toast.makeText(getContext(),"MembersInit",Toast.LENGTH_SHORT).show();
         String FirebaseAddressString = "";
@@ -593,35 +593,40 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 }
 
-                Iterator<Map.Entry<String, ArrayList<Double>>> it = memberMap.entrySet().iterator();
+                try {
+                    Iterator<Map.Entry<String, ArrayList<Double>>> it = memberMap.entrySet().iterator();
 
-                while(it.hasNext())
-                {
-                    //All new members who were not available before
+                    while (it.hasNext()) {
+                        //All new members who were not available before
 
 
-                    Map.Entry<String, ArrayList<Double>> entry = it.next();
-                    Marker marker=null;
-                    String title=entry.getKey();
-                    if(!title.equals(mUserID)) {
-                        Double latitude = entry.getValue().get(0);
-                        Double longitude = entry.getValue().get(1);
+                        Map.Entry<String, ArrayList<Double>> entry = it.next();
+                        Marker marker = null;
+                        String title = entry.getKey();
+                        if (!title.equals(mUserID)) {
+                            Double latitude = entry.getValue().get(0);
+                            Double longitude = entry.getValue().get(1);
 
-                        if(allContactNames.containsKey(title))
-                            title=allContactNames.get(title);
+                            if (allContactNames.containsKey(title))
+                                title = allContactNames.get(title);
 
-                        if (allContactNames != null && allContactNames.containsKey(title))
-                            title = allContactNames.get(title);
+                            if (allContactNames != null && allContactNames.containsKey(title))
+                                title = allContactNames.get(title);
 
-                        LatLng memberLatLng= new LatLng(latitude,longitude);
+                            LatLng memberLatLng = new LatLng(latitude, longitude);
 
-                        mMarkersMap.put(entry.getKey(),
-                                mMap.addMarker(new MarkerOptions().position(memberLatLng).
-                                        title(allContactNames.get(title)).
-                                        icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)))
-                        );
+                            mMarkersMap.put(entry.getKey(),
+                                    mMap.addMarker(new MarkerOptions().position(memberLatLng).
+                                            title(title).
+                                            icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)))
+                            );
 
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    //If no one is broadcasting, an exception is thrown
                 }
             }
 
@@ -635,7 +640,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     }
 
 
-    private void membersInit2()
+    private void membersInit()
     {
         mMarkersMap = new HashMap<>();
         memberHandler= new Handler();
@@ -1060,6 +1065,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     runnable=null;
                 }
                 memberHandler=null;
+            }
+
+            if(mMarkersMap!=null)
+            {
+                mMarkersMap.clear();
             }
 
 
