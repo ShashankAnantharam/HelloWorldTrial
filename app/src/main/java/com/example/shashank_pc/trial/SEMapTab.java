@@ -58,6 +58,7 @@ import java.util.concurrent.ExecutionException;
 
 import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
 import static com.example.shashank_pc.trial.SingleEntityActivity.isMemberBroadcastingLocation;
@@ -357,7 +358,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                             //First time location is initialized
                             mMarkersList.set(mMembersHashMap.get(mMemberID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
-                                    title(tName).
+                                    title(allContactNames.get(tName)).
                                     icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
 
                         }
