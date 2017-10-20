@@ -112,6 +112,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private Handler memberHandler;
     private Runnable runnable;
+    private Map<String,Marker> mMarkersMap;
 
 
 
@@ -558,17 +559,91 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     }
 
     private void getMembersCoordinates()
-    {}
+    {
+        String membersDatabaseAddress= "Loc/"+mEntityID;
+
+        DatabaseReference reference= database.getReference(membersDatabaseAddress);
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String,ArrayList<Double>> memberMap = (Map) dataSnapshot.getValue();
+
+                for(Map.Entry<String,Marker> entry:mMarkersMap.entrySet())
+                {
+                    String memberID= entry.getKey();
+                    if(dataSnapshot.child(memberID).exists())
+                    {
+                        //Already marker in hashmap and needs to be updated only
+
+                        Double latitude= memberMap.get(memberID).get(0);
+                        Double longitude= memberMap.get(memberID).get(1);
+                        LatLng memberLatLng= new LatLng(latitude,longitude);
+                        entry.getValue().setPosition(memberLatLng);
+                        entry.getValue().setVisible(true);
+
+                    }
+                    else
+                    {
+                        //Marker exist in hashmap but not in datasnapshot. i.e. member stopped broadcasting location
+
+                         entry.getValue().setVisible(false);
+                    }
+                    memberMap.remove(memberID);
+
+                }
+
+                Iterator<Map.Entry<String, ArrayList<Double>>> it = memberMap.entrySet().iterator();
+
+                while(it.hasNext())
+                {
+                    //All new members who were not available before
+
+
+                    Map.Entry<String, ArrayList<Double>> entry = it.next();
+                    Marker marker=null;
+                    String title=entry.getKey();
+                    if(!title.equals(mUserID)) {
+                        Double latitude = entry.getValue().get(0);
+                        Double longitude = entry.getValue().get(1);
+
+                        if(allContactNames.containsKey(title))
+                            title=allContactNames.get(title);
+
+                        if (allContactNames != null && allContactNames.containsKey(title))
+                            title = allContactNames.get(title);
+
+                        LatLng memberLatLng= new LatLng(latitude,longitude);
+
+                        mMarkersMap.put(entry.getKey(),
+                                mMap.addMarker(new MarkerOptions().position(memberLatLng).
+                                        title(allContactNames.get(title)).
+                                        icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)))
+                        );
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 
 
     private void membersInit()
     {
+        mMarkersMap = new HashMap<>();
         memberHandler= new Handler();
         runnable= new Runnable() {
             @Override
             public void run() {
                getMembersCoordinates();
-                Toast.makeText(getContext(),"T",Toast.LENGTH_SHORT).show();
+           //     Toast.makeText(getContext(),"T",Toast.LENGTH_SHORT).show();
 
                 memberHandler.postDelayed(this,2500);
             }
