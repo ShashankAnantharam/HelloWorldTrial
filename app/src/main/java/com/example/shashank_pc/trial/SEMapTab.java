@@ -368,7 +368,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                 title=allContactNames.get(tName);
 
                             mMarkersList.set(mMembersHashMap.get(mMemberID), mMap.addMarker(new MarkerOptions().position(contactLatLng).
-                                    title(allContactNames.get(title)).
+                                    title(title).
                                     icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
 
                         }
@@ -397,7 +397,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void membersInit2()
+    private void membersInit()
     {
    //     Toast.makeText(getContext(),"MembersInit",Toast.LENGTH_SHORT).show();
         String FirebaseAddressString = "";
@@ -635,7 +635,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     }
 
 
-    private void membersInit()
+    private void membersInit2()
     {
         mMarkersMap = new HashMap<>();
         memberHandler= new Handler();
