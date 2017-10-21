@@ -408,7 +408,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void membersInit()
+    private void membersInit2()
     {
    //     Toast.makeText(getContext(),"MembersInit",Toast.LENGTH_SHORT).show();
         String FirebaseAddressString = "";
@@ -651,7 +651,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     }
 
 
-    private void membersInit2()
+    private void membersInit()
     {
         mMarkersMap = new HashMap<>();
         memberHandler= new Handler();
