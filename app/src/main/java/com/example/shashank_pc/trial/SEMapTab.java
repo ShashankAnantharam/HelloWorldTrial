@@ -600,7 +600,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                          entry.getValue().setVisible(false);
                     }
-                    memberMap.remove(memberID);
+                    try {
+                        //TODO Solve Null Pointer Exception
+                        memberMap.remove(memberID);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
 
                 }
 
