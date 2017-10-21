@@ -276,11 +276,21 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     First time initialize hashmap and arraylist
                      */
 
-            mMembersList = new ArrayList<mMapContact>();
-            mMarkersList = new ArrayList<Marker>();
+
             mMembersHashMap = new HashMap<String, Integer>();
 
         }
+
+        if(mMarkersList==null)
+        {
+            mMarkersList = new ArrayList<Marker>();
+        }
+
+        if(mMembersList==null)
+        {
+            mMembersList = new ArrayList<>();
+        }
+
 
 
         final String mMemberID = dataSnapshot.getKey();
@@ -357,7 +367,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                     if (mMap != null) {
 
-                        if (mMarkersList.get(mMembersHashMap.get(mMemberID)) != null)       //Not the first time location is initialized
+                        if (//mMarkersList!=null&& mMembersHashMap!=null &&
+                                mMarkersList.get(mMembersHashMap.get(mMemberID)) != null)       //Not the first time location is initialized
                         {
                             mMarkersList.get(mMembersHashMap.get(mMemberID)).setPosition(contactLatLng);
                         } else {
