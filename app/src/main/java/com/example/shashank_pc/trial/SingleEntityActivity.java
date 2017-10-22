@@ -48,6 +48,7 @@ import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.Generic.storage;
 import static com.example.shashank_pc.trial.GenericFunctions.getCircleBitmap;
 import static com.example.shashank_pc.trial.GenericFunctions.resizeImage;
+import static com.example.shashank_pc.trial.SEMapTab.mMarkersMap;
 import static com.example.shashank_pc.trial.SEMapTab.mlocationMarker;
 import static java.security.AccessController.getContext;
 
@@ -490,6 +491,11 @@ public class SingleEntityActivity extends AppCompatActivity {
                         //Set Profile pic to current location marker
                         mlocationMarker.setAnchor(0.5f,0.5f);
                         mlocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(profilePic));
+                    }
+                    else if(mMarkersMap!=null && mMarkersMap.containsKey(memberID))
+                    {
+                        mlocationMarker.setAnchor(0.5f,0.5f);
+                        mMarkersMap.get(memberID).setIcon(BitmapDescriptorFactory.fromBitmap(profilePic));
                     }
 
 

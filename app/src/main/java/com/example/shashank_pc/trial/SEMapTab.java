@@ -103,8 +103,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private List<mMapContact> mMembersList=null;
     private List<Marker> mMarkersList=null;
     private HashMap<String,Integer> mMembersHashMap=null;
-    private DatabaseReference memberFlags;
-    private ChildEventListener memberFlagsListener;
+
 
     private List<Marker> placesMarkers;
     private DocumentReference placesRef;
@@ -114,7 +113,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private Handler memberHandler;
     private Runnable runnable;
-    private Map<String,Marker> mMarkersMap;
+    public static Map<String,Marker> mMarkersMap;
 
 
 
@@ -349,6 +348,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                             icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)))
                             );
 
+                            if(membersProfilePic.containsKey(entry.getKey()))
+                            {
+                                Bitmap memberProfilePic= membersProfilePic.get(entry.getKey());
+                                mMarkersMap.get(entry.getKey()).setAnchor(0.5f,0.5f);
+                                mMarkersMap.get(entry.getKey()).setIcon(BitmapDescriptorFactory.fromBitmap(
+                                        memberProfilePic));
+                            }
+
                         }
                         else
                         {
@@ -464,6 +471,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         {
                             Bitmap bitmap= membersProfilePic.get(mUserID);
                             mlocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                            mlocationMarker.setAnchor(0.5f,0.5f);
                         }
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
                     }
@@ -790,8 +798,6 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 mMembersHashMap.clear();
             if(mMarkersList!=null)
                 mMarkersList.clear();
-            if(memberFlags!=null)
-                memberFlags.removeEventListener(memberFlagsListener);
             if(placesRef!=null)
                 placesRef=null;
             if(placesMarkers!=null)
