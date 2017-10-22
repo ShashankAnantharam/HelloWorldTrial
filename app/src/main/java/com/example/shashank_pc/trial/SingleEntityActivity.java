@@ -366,12 +366,12 @@ public class SingleEntityActivity extends AppCompatActivity {
                             {
                                 //Traverse along mirrorMembersMap
 
-                                if(firestoreMemberMap.containsKey(memberEntityID.getValue()))
+                                if(firestoreMemberMap.containsKey(memberEntityID.getKey()))
                                 {
                                     //Member was present and is still present in Group/Event
 
                                     //Then remove that person from imported hashmap
-                                    firestoreMemberMap.remove(memberEntityID.getValue());
+                                    firestoreMemberMap.remove(memberEntityID.getKey());
 
 
                                 }
@@ -379,7 +379,6 @@ public class SingleEntityActivity extends AppCompatActivity {
                                 {
                                     //Member was present but is no longer present
                                     String memberID= memberEntityID.getValue();
-                                    User member= new User(memberID,memberID);
                                     if(mMembersTab==null)
                                     {
                                         //Members Tab not yet initialized
@@ -413,8 +412,8 @@ public class SingleEntityActivity extends AppCompatActivity {
 
                                 //Add new member to Mirror Hash Map
 
-                                String key= (String) newMember.getValue();
-                                String memberID= newMember.getKey();
+                                String memberID= (String) newMember.getValue();
+                                String key= newMember.getKey();
                                 mirrorMembersMap.put(key,memberID);
 
 
