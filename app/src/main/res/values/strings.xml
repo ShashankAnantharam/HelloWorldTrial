@@ -19,4 +19,5 @@
         completions."
     </string>
     <string name="title_activity_single_contacts">SingleContactsActivity</string>
+    <string name="title_activity_nearby_events">Map</string>
 </resources>
