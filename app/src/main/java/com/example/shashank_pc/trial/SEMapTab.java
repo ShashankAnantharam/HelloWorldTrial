@@ -282,7 +282,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 for(Map.Entry<String,Marker> entry:mMarkersMap.entrySet())
                 {
                     String memberID= entry.getKey();
-                    if(memberMap.containsKey(memberID))
+                    if(memberMap!=null && memberMap.containsKey(memberID))
                     {
                         //Already marker in hashmap and needs to be updated only
 
@@ -300,7 +300,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                          entry.getValue().setVisible(false);
                     }
-             
+
 
                 }
 
