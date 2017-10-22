@@ -119,7 +119,7 @@ public class SEMembersTab  extends LPContactsTab{
                 addContact(user);
             }
 
-       /*                 MemberRef = firestore.collection(type).document(mEntityID).
+                        MemberRef = firestore.collection(type).document(mEntityID).
                                       collection("members").
                                       document("members");
 
@@ -148,7 +148,7 @@ public class SEMembersTab  extends LPContactsTab{
                                 }
                             }
                         });
-    */
+
 
     }
 }
