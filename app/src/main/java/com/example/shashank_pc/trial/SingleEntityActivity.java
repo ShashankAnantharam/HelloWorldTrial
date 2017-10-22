@@ -99,7 +99,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
         isMemberBroadcastingLocation= new HashMap<>();
         Members = new ArrayList<>();
-        mirrorMembersMap = new HashMap<>();
+        mirrorMembersMap = new HashMap<String,String>();
 
         Intent caller = getIntent();
         mEntityName= caller.getStringExtra("Name");
@@ -356,6 +356,8 @@ public class SingleEntityActivity extends AppCompatActivity {
                             Map<String, Object> firestoreMemberMap = new HashMap<>();
                             firestoreMemberMap = documentSnapshot.getData();
 
+                            List<String> entitiesToBeRemoved = new ArrayList<String>();
+
                             for(Map.Entry<String,String> memberEntityID: mirrorMembersMap.entrySet())
                             {
                                 //Traverse along mirrorMembersMap
@@ -366,6 +368,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
                                     //Then remove that person from imported hashmap
                                     firestoreMemberMap.remove(memberEntityID.getValue());
+
 
                                 }
                                 else
@@ -379,6 +382,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
                                         //Remove member form Members List
                                         Members.remove(Members.indexOf(memberID));
+
                                     }
                                     else
                                     {
@@ -387,7 +391,15 @@ public class SingleEntityActivity extends AppCompatActivity {
                                         //remove member from main Members tab
                                         mMembersTab.removeContact(memberID);
                                     }
+
+                                    //Remove entity from mirror map hashtable
+                                    entitiesToBeRemoved.add(memberEntityID.getKey());
                                 }
+                            }
+
+                            for(String entityKey: entitiesToBeRemoved)
+                            {
+                                mirrorMembersMap.remove(entityKey);
                             }
 
                             for(Map.Entry<String,Object> newMember: firestoreMemberMap.entrySet())
