@@ -34,6 +34,22 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="39dp"
+                    android:layout_height="29dp"
+                    android:id="@+id/see_nearby_activities"
+                    android:background="@drawable/get_near_events"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:focusable="false"
+                    android:layout_alignParentEnd="true"/>
+
+
+            </RelativeLayout>
+
         </android.support.v7.widget.Toolbar>
 
     </android.support.v4.widget.NestedScrollView >
