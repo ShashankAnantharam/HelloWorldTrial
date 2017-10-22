@@ -75,6 +75,8 @@ public class LandingPageActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    private Button viewNearbyEvents;
+
     private boolean regFlag=false;
 
 
@@ -316,6 +318,19 @@ public class LandingPageActivity extends AppCompatActivity {
 
             }
         });
+
+        viewNearbyEvents = (Button) findViewById(R.id.view_nearby_events);
+
+        viewNearbyEvents.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent viewEventsActivity = new Intent();
+                        viewEventsActivity.setClass(getApplicationContext(),NearbyEventsActivity.class);
+                        startActivity(viewEventsActivity);
+                    }
+                }
+        );
 
         startContactListener();
 

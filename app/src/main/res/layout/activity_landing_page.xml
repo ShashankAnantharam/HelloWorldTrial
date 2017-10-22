@@ -41,7 +41,7 @@
                 <Button
                     android:layout_width="39dp"
                     android:layout_height="29dp"
-                    android:id="@+id/see_nearby_activities"
+                    android:id="@+id/view_nearby_events"
                     android:background="@drawable/get_near_events"
                     style="?android:attr/borderlessButtonStyle"
                     android:focusable="false"
