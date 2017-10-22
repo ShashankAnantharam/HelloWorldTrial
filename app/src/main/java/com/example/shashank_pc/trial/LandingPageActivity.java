@@ -44,6 +44,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -273,6 +274,7 @@ public class LandingPageActivity extends AppCompatActivity {
         allContactNames.put(mUserID,"Me");
 
         Generic.database = FirebaseDatabase.getInstance();
+        Generic.storage = FirebaseStorage.getInstance();
         
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);

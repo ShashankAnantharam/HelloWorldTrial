@@ -3,6 +3,7 @@ package com.example.shashank_pc.trial;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
 
@@ -20,6 +21,7 @@ public class Generic {
 
     public static FirebaseDatabase database;
     public static FirebaseFirestore firestore;
+    public static FirebaseStorage storage;
 
 
     public Generic(String name, String description)

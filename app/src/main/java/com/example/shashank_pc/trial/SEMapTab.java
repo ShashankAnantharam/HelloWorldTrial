@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -64,6 +65,7 @@ import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLo
 import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
 import static com.example.shashank_pc.trial.SingleEntityActivity.isMemberBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.mMembersTab;
+import static com.example.shashank_pc.trial.SingleEntityActivity.membersProfilePic;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -78,7 +80,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private Marker mlocationMarker=null;
+    public static Marker mlocationMarker=null;
     private LatLng curr_loc;
 
 
@@ -458,6 +460,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         mlocationMarker = mMap.addMarker(new MarkerOptions().position(latLng).
                         title("Me").
                         icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location)));
+                        if(membersProfilePic.containsKey(mUserID))
+                        {
+                            Bitmap bitmap= membersProfilePic.get(mUserID);
+                            mlocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                        }
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
                     }
 
