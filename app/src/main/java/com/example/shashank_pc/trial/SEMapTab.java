@@ -286,11 +286,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     {
                         //Already marker in hashmap and needs to be updated only
 
-                        Double latitude= memberMap.get(memberID).get(0);
-                        Double longitude= memberMap.get(memberID).get(1);
-                        LatLng memberLatLng= new LatLng(latitude,longitude);
-                        entry.getValue().setPosition(memberLatLng);
-                        entry.getValue().setVisible(true);
+                        if(!memberID.equals(mUserID)) {
+                            Double latitude = memberMap.get(memberID).get(0);
+                            Double longitude = memberMap.get(memberID).get(1);
+                            LatLng memberLatLng = new LatLng(latitude, longitude);
+                            entry.getValue().setPosition(memberLatLng);
+                            entry.getValue().setVisible(true);
+
+                        }
 
                         isMemberBroadcastingLocation.put(memberID,true);
                         mMembersTab.refresh();
@@ -302,7 +305,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     {
                         //Marker exist in hashmap but not in datasnapshot. i.e. member stopped broadcasting location
 
-                         entry.getValue().setVisible(false);
+                        if(!memberID.equals(mUserID))
+                             entry.getValue().setVisible(false);
                         isMemberBroadcastingLocation.put(memberID,false);
                         mMembersTab.refresh();
                     }
@@ -343,6 +347,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                             icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)))
                             );
 
+                        }
+                        else
+                        {
+                            mMarkersMap.put(mUserID,null);
                         }
 
                     }
