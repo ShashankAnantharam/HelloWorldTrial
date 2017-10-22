@@ -45,7 +45,7 @@ public class SEMembersTab  extends LPContactsTab{
     private long total_doc_number;
     private long curr_doc_number=0;
     private String type="";
-    public static HashMap<String,Integer> MemberListMap;
+    public static HashMap<String,Boolean> MemberListMap;
     private DocumentReference MemberRef;
 
     private SEMemberListItemAdapter<User> arrayAdapter;
@@ -75,7 +75,7 @@ public class SEMembersTab  extends LPContactsTab{
             user.setName(allContactNames.get(user.getNumber()));
         }
         mContacts.add(user);
-        MemberListMap.put(user.getNumber(),mContacts.size()-1);
+        MemberListMap.put(user.getNumber(),true);
         refresh();
     }
 
