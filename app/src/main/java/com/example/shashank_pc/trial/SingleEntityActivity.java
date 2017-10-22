@@ -472,7 +472,7 @@ public class SingleEntityActivity extends AppCompatActivity {
             @Override
             public void onSuccess(byte[] bytes) {
 
-                Toast.makeText(getApplicationContext(),"Downloaded",Toast.LENGTH_SHORT).show();
+     //           Toast.makeText(getApplicationContext(),"Downloaded",Toast.LENGTH_SHORT).show();
 
 
                 try
