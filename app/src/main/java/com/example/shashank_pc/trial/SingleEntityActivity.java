@@ -88,6 +88,10 @@ public class SingleEntityActivity extends AppCompatActivity {
         super.onDestroy();
         mMembersTab=null;
         Members.clear();
+        isMemberBroadcastingLocation.clear();
+        mirrorMembersMap.clear();
+        MemberRef=null;
+        //TODO remove MemberRef Listeners
     }
 
 
