@@ -27,11 +27,17 @@ import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.example.shashank_pc.trial.Generic.firestore;
 import static java.security.AccessController.getContext;
 
 public class SingleEntityActivity extends AppCompatActivity {
@@ -69,7 +75,9 @@ public class SingleEntityActivity extends AppCompatActivity {
 
     public static SEMembersTab mMembersTab=null;
     public static HashMap<String,Boolean> isMemberBroadcastingLocation;
-    public static List<User> Members;
+    public static List<String> Members;
+    public static Map<String,String> mirrorMembersMap;
+    private DocumentReference MemberRef;
 
     private String type;
 
@@ -79,6 +87,7 @@ public class SingleEntityActivity extends AppCompatActivity {
     {
         super.onDestroy();
         mMembersTab=null;
+        Members.clear();
     }
 
 
@@ -90,6 +99,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
         isMemberBroadcastingLocation= new HashMap<>();
         Members = new ArrayList<>();
+        mirrorMembersMap = new HashMap<>();
 
         Intent caller = getIntent();
         mEntityName= caller.getStringExtra("Name");
@@ -140,12 +150,17 @@ public class SingleEntityActivity extends AppCompatActivity {
         });
 
 
+        //Get details of Members
+        membersInit();
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar.setTitle(mEntityName);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -317,5 +332,99 @@ public class SingleEntityActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    private void membersInit()
+    {
+        String type="";
+
+        if(mType=='E')
+            type="events";
+        else if(mType=='G')
+            type="groups";
+
+        MemberRef = firestore.collection(type).document(mEntityID).
+                collection("members").
+                document("members");
+
+        MemberRef.
+                addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+
+                        if (e == null) {
+                            Map<String, Object> firestoreMemberMap = new HashMap<>();
+                            firestoreMemberMap = documentSnapshot.getData();
+
+                            for(Map.Entry<String,String> memberEntityID: mirrorMembersMap.entrySet())
+                            {
+                                //Traverse along mirrorMembersMap
+
+                                if(firestoreMemberMap.containsKey(memberEntityID.getValue()))
+                                {
+                                    //Member was present and is still present in Group/Event
+
+                                    //Then remove that person from imported hashmap
+                                    firestoreMemberMap.remove(memberEntityID.getValue());
+
+                                }
+                                else
+                                {
+                                    //Member was present but is no longer present
+                                    String memberID= memberEntityID.getValue();
+                                    User member= new User(memberID,memberID);
+                                    if(mMembersTab==null)
+                                    {
+                                        //Members Tab not yet initialized
+
+                                        //Remove member form Members List
+                                        Members.remove(Members.indexOf(memberID));
+                                    }
+                                    else
+                                    {
+                                        //Members Tab initialized
+
+                                        //remove member from main Members tab
+                                        mMembersTab.removeContact(memberID);
+                                    }
+                                }
+                            }
+
+                            for(Map.Entry<String,Object> newMember: firestoreMemberMap.entrySet())
+                            {
+                                //Iterate across members who are left, i.e. New members
+
+
+                                //Add new member to Mirror Hash Map
+
+                                String key= (String) newMember.getValue();
+                                String memberID= newMember.getKey();
+                                mirrorMembersMap.put(key,memberID);
+
+
+                                if(mMembersTab==null)
+                                {
+                                    //If members tab not yet initialized
+
+                                    //Add member to memberID
+                                    Members.add(memberID);
+
+
+                                }
+                                else
+                                {
+                                    //If members tab has been initialized
+
+                                    //Add member to main MembersArray
+                                    User user = new User(memberID,memberID);
+                                    mMembersTab.addContact(user);
+                                }
+                            }
+
+
+
+                        }
+                    }
+                });
     }
 }

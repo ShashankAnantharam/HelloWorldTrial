@@ -45,7 +45,6 @@ public class SEMembersTab  extends LPContactsTab{
     private long total_doc_number;
     private long curr_doc_number=0;
     private String type="";
-    public static HashMap<String,Boolean> MemberListMap;
     private DocumentReference MemberRef;
 
     private SEMemberListItemAdapter<User> arrayAdapter;
@@ -75,7 +74,25 @@ public class SEMembersTab  extends LPContactsTab{
             user.setName(allContactNames.get(user.getNumber()));
         }
         mContacts.add(user);
-        MemberListMap.put(user.getNumber(),true);
+
+        refresh();
+    }
+
+    public void removeContact(String userID)
+    {
+        //Use linear search to find contact
+
+        int i=0;
+        for(User user: mContacts)
+        {
+            if(user.getNumber().equals(userID))
+            {
+                mContacts.remove(i);
+                break;
+            }
+            i++;
+        }
+
         refresh();
     }
 
@@ -98,7 +115,6 @@ public class SEMembersTab  extends LPContactsTab{
     @Override
     public void initUsers()
     {
-        MemberListMap = new HashMap<>();
         hasInitContacts=true;
 
 
@@ -113,12 +129,14 @@ public class SEMembersTab  extends LPContactsTab{
         isExistFlag=true;
 
         //Initialize array using other static array
-            for(User member: Members)
+            for(String member: Members)
             {
-                User user = member;
+                User user = new User(member,member);
                 addContact(user);
             }
 
+            Members.clear();
+/*
                         MemberRef = firestore.collection(type).document(mEntityID).
                                       collection("members").
                                       document("members");
@@ -148,7 +166,7 @@ public class SEMembersTab  extends LPContactsTab{
                                 }
                             }
                         });
-
+*/
 
     }
 }
