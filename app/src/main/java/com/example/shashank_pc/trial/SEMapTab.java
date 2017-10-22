@@ -291,6 +291,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         LatLng memberLatLng= new LatLng(latitude,longitude);
                         entry.getValue().setPosition(memberLatLng);
                         entry.getValue().setVisible(true);
+
+                        isMemberBroadcastingLocation.put(memberID,true);
+                        mMembersTab.refresh();
+
                         memberMap.remove(memberID);
 
                     }
@@ -299,6 +303,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         //Marker exist in hashmap but not in datasnapshot. i.e. member stopped broadcasting location
 
                          entry.getValue().setVisible(false);
+                        isMemberBroadcastingLocation.put(memberID,false);
+                        mMembersTab.refresh();
                     }
 
 
@@ -314,6 +320,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         Map.Entry<String, ArrayList<Double>> entry = it.next();
                         Marker marker = null;
                         String title = entry.getKey();
+                        isMemberBroadcastingLocation.put(title,true);
+                        mMembersTab.refresh();
+
+              //          Toast.makeText(getContext(),"Changed",Toast.LENGTH_SHORT).show();
+
                         if (!title.equals(mUserID)) {
                             Double latitude = entry.getValue().get(0);
                             Double longitude = entry.getValue().get(1);
@@ -333,6 +344,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             );
 
                         }
+
                     }
                 }
                 catch (Exception e)
