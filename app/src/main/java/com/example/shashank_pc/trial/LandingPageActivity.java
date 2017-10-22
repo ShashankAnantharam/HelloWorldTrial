@@ -277,7 +277,8 @@ public class LandingPageActivity extends AppCompatActivity {
 
         Generic.database = FirebaseDatabase.getInstance();
         Generic.storage = FirebaseStorage.getInstance();
-        
+        Generic.firestore= FirebaseFirestore.getInstance();
+
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");
