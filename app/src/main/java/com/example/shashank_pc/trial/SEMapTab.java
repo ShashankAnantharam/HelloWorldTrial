@@ -323,7 +323,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         if(!memberID.equals(mUserID))
                              entry.getValue().setVisible(false);
                         isMemberBroadcastingLocation.put(memberID,false);
-                        mMembersTab.refresh();
+                        if(mMembersTab!=null)
+                            mMembersTab.refresh();
                     }
 
 
