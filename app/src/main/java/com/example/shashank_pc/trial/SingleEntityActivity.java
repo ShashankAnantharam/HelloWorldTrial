@@ -83,7 +83,9 @@ public class SingleEntityActivity extends AppCompatActivity {
     private Group mGroup;
     private User mContact;
 
+    public static SEMapTab mMapTab=null;
     public static SEMembersTab mMembersTab=null;
+
     public static HashMap<String,Boolean> isMemberBroadcastingLocation;
     public static List<String> Members;
     public static Map<String,String> mirrorMembersMap;
@@ -91,6 +93,10 @@ public class SingleEntityActivity extends AppCompatActivity {
     private DocumentReference MemberRef;
 
     private String type;
+
+    public static Map<String, Place> placesMap;
+    private DocumentReference placesRef;
+
 
 
     @Override
@@ -103,6 +109,11 @@ public class SingleEntityActivity extends AppCompatActivity {
         mirrorMembersMap.clear();
         membersProfilePic.clear();
         MemberRef=null;
+
+        if(placesRef!=null)
+            placesRef=null;
+        if(placesMap!=null)
+            placesMap.clear();
         //TODO remove MemberRef Listeners
     }
 
@@ -169,6 +180,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
         //Get details of Members
         membersInit();
+        getPlacesFromDB();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -300,6 +312,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                     if(mSEMapTab==null) {
                         mSEMapTab = new SEMapTab();
                         mSEMapTab.passUserDetails(mUserID, mUserName, mEntityName, mEntityID, mType);
+                        mMapTab=mSEMapTab;
                         return mSEMapTab;
                     }
                 case 1:
@@ -502,4 +515,107 @@ public class SingleEntityActivity extends AppCompatActivity {
             }
         });
     }
+    public void getPlacesFromDB()
+    {
+        placesMap = new HashMap<>();
+
+        String type="";
+        if(mType=='E')
+            type="events";
+        else if(mType=='G')
+            type="groups";
+
+        placesRef = firestore.collection(type).document(mEntityID).collection("places").document("places");
+
+        placesRef.addSnapshotListener(new com.google.firebase.firestore.EventListener<DocumentSnapshot>() {
+
+            private Map<String, Object> placesFromDB;
+
+            private Place getPlace(String key)
+            {
+                Place place = new Place();
+
+
+                Map<String,String> placeDetails = (Map<String,String>) placesFromDB.get(key);
+
+                place.setName(placeDetails.get("name"));
+                place.setLat(placeDetails.get("lat"));
+                place.setLon(placeDetails.get("lon"));
+                place.setType(placeDetails.get("type"));
+
+
+                return place;
+            }
+
+            private void addPlace(String key)
+            {
+
+                Place place = getPlace(key);
+
+
+
+                //Update value
+                placesMap.put(key,place);
+
+
+                if(mMapTab!=null)
+                    mMapTab.addPlace(key, place);
+
+                //TODO      if(SEPlace!=null){ mPlaceTab.addPlace(key)}
+
+
+
+            }
+
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+
+                placesFromDB = new HashMap<>();
+                placesFromDB = documentSnapshot.getData();
+
+                for(Map.Entry<String,Place> placeEntry: placesMap.entrySet())
+                {
+                    //Iterate over existing places
+
+                    String key = placeEntry.getKey();
+                    if(placesFromDB.containsKey(key))
+                    {
+
+                        //Place there initially and there now. Elements of it may have changed so update
+
+                        //Updating place to new place
+                        placesMap.remove(key);
+                        addPlace(key);
+
+
+
+                    }
+                    else
+                    {
+                        //Place was deleted
+                        placesMap.remove(key);
+
+                    }
+
+                    //Remove entry from downloaded Map
+                    placesFromDB.remove(key);
+                }
+
+                for(Map.Entry<String,Object> newPlace: placesFromDB.entrySet())
+                {
+                    String key= newPlace.getKey();
+                    if(!newPlace.getKey().equals("T"))
+                    {//New Place
+
+                        //Add to PlacesMap
+                        addPlace(key);
+                    }
+
+                }
+            }
+        });
+
+    }
+
+
 }

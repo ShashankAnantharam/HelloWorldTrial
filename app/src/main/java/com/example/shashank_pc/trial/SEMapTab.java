@@ -66,6 +66,7 @@ import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
 import static com.example.shashank_pc.trial.SingleEntityActivity.isMemberBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.mMembersTab;
 import static com.example.shashank_pc.trial.SingleEntityActivity.membersProfilePic;
+import static com.example.shashank_pc.trial.SingleEntityActivity.placesMap;
 
 /**
  * Created by shashank-pc on 8/26/2017.
@@ -106,9 +107,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private HashMap<String,Integer> mMembersHashMap=null;
 
 
-    private List<Marker> placesMarkers;
-    private DocumentReference placesRef;
-    private Map<String, Integer> placesMap;
+    private Map<String,Marker> placesMarkers;
     private GeoQuery placesQuery;
 
 
@@ -436,6 +435,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         mapFlag=false;
         mlocationsetProfilePic=false;
         mMemberSetProfilePicFlag=new HashMap<>();
+        placesMarkers= new HashMap<>();
+
 
 
         if (mMapFrag == null) {
@@ -568,11 +569,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 membersInit();
             }
 
-            if(mType=='G')
-            {
-                placesInit();
 
-            }
         }
 
 
@@ -581,117 +578,59 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
 
-    public void placesInit()
+    private void placesInit()
     {
-        placesMap = new HashMap<>();
-        placesMarkers= new ArrayList<>();
 
-        String type="";
-        if(mType=='E')
-            type="events";
-        else if(mType=='G')
-            type="groups";
+        for(Map.Entry<String,Place> placeEntry: placesMap.entrySet())
+        {
+            addPlace(placeEntry.getKey(),placeEntry.getValue());
+        }
 
-        placesRef = firestore.collection(type).document(mEntityID).collection("places").document("places");
+    }
 
-        placesRef.addSnapshotListener(new com.google.firebase.firestore.EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+    public void addPlace(String key, Place place)
+    {
+        if(mMap!=null) {
+            Double lon, lat;
+            lat = Double.parseDouble(place.getLat());
+            lon = Double.parseDouble(place.getLon());
+            String name = place.getName();
+            String type = place.getType();
+            LatLng placeLatLng = new LatLng(lat, lon);
 
-                Map<String,Object> userMap= new HashMap<>();
-                userMap = documentSnapshot.getData();
+            if (placesMarkers.containsKey(key)) {
+                //Already Marker is present,
 
-                for(Map.Entry<String,Object> entry : userMap.entrySet())
-                {
-                    //Iterate over all the places
-
-                    Map<String,String> placeDetails= new HashMap<String, String>();
-                    placeDetails = (Map<String,String>) entry.getValue();
-                    double lat=0.0, lon=0.0;
-                    String name="",type="";
-
-                    for(Map.Entry<String,String> placeAttributeEntry : placeDetails.entrySet())
-                    {
-                        //Initialize place
-                        String value,key;
-                        key = placeAttributeEntry.getKey();
-                        value=placeAttributeEntry.getValue();
-
-                        // Get attributes of place
-
-                        if(key.equals("lat"))
-                        {
-                              lat=Double.parseDouble(value);
-                        }
-                        else if(key.equals("long"))
-                        {
-                            lon=Double.parseDouble(value);
-                        }
-                        else if(key.equals("name"))
-                        {
-                            name=value;
-                        }
-                        else if(key.equals("type"))
-                        {
-                            type=value;
-                        }
-
-                    }
-
-                    LatLng placeLatLng= new LatLng(lat,lon);
-
-                    int index;
-                    if(!placesMap.containsKey(entry.getKey()))
-                    {
-                        //Place not already present
-
-                        placesMap.put(entry.getKey(),placesMarkers.size());
-                        Marker marker=null;
-                        placesMarkers.add(marker);
-                        index= placesMarkers.size()-1;
-
-                        placesMarkers.set(index,mMap.addMarker(new MarkerOptions().position(placeLatLng).
-                                title(name).
-                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
+                //Just update the marker
+                placesMarkers.get(key).setPosition(placeLatLng);
+                placesMarkers.get(key).setTitle(name);
 
 
-                    }
-                    else
-                    {
-                        //Place already present.
-                        index = placesMap.get(entry.getKey());
-                        placesMarkers.get(index).setPosition(placeLatLng);
-                        placesMarkers.get(index).setTitle(name);
+            } else {
+                //Adding marker first time
 
-
-
-                    }
-                    if(type.equals("home"))
-                    {
-                        placesMarkers.get(index).setIcon(
-                                BitmapDescriptorFactory.fromResource(R.drawable.place_home)
-                        );
-                    }
-                    else if(type.equals("date"))
-                    {
-                        placesMarkers.get(index).setIcon(
-                                BitmapDescriptorFactory.fromResource(R.drawable.place_dating)
-                        );
-                    }
-                    else if(type.equals("education"))
-                    {
-                        placesMarkers.get(index).setIcon(
-                                BitmapDescriptorFactory.fromResource(R.drawable.place_education)
-                        );
-                    }
-
-                    //Testing
-                    addGeoData(entry.getKey(),lat,lon);
-
-                }
-
+                //Create marker with necessary variables
+                placesMarkers.put(key, mMap.addMarker(new MarkerOptions().position(placeLatLng).
+                        title(name).
+                        icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
             }
-        });
+
+            //Set the icon of marker based on type
+
+            if (type.equals("home")) {
+                placesMarkers.get(key).setIcon(
+                        BitmapDescriptorFactory.fromResource(R.drawable.place_home)
+                );
+            } else if (type.equals("date")) {
+                placesMarkers.get(key).setIcon(
+                        BitmapDescriptorFactory.fromResource(R.drawable.place_dating)
+                );
+            } else if (type.equals("education")) {
+                placesMarkers.get(key).setIcon(
+                        BitmapDescriptorFactory.fromResource(R.drawable.place_education)
+                );
+            }
+        }
     }
 
 
@@ -800,6 +739,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     {
         mMap=googleMap;
 
+        if(mType=='G')
+        {
+            //If Map is ready, then Initialize places
+            placesInit();
+
+        }
 
     }
 
@@ -822,8 +767,6 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 mMembersHashMap.clear();
             if(mMarkersList!=null)
                 mMarkersList.clear();
-            if(placesRef!=null)
-                placesRef=null;
             if(placesMarkers!=null)
                 placesMarkers.clear();
 
