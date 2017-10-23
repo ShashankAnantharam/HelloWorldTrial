@@ -80,7 +80,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    public static Marker mlocationMarker=null;
+    private Marker mlocationMarker=null;
+    private Boolean mlocationsetProfilePic;
     private LatLng curr_loc;
 
 
@@ -420,6 +421,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         mapFlag=false;
+        mlocationsetProfilePic=false;
+
+        
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
 
@@ -467,13 +471,16 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         mlocationMarker = mMap.addMarker(new MarkerOptions().position(latLng).
                         title("Me").
                         icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location)));
-                        if(membersProfilePic.containsKey(mUserID))
-                        {
-                            Bitmap bitmap= membersProfilePic.get(mUserID);
-                            mlocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                            mlocationMarker.setAnchor(0.5f,0.5f);
-                        }
+
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+                    }
+
+                    if(membersProfilePic.containsKey(mUserID) && !mlocationsetProfilePic)
+                    {
+                        Bitmap bitmap= membersProfilePic.get(mUserID);
+                        mlocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                        mlocationMarker.setAnchor(0.5f,0.5f);
+                        mlocationsetProfilePic=true;
                     }
 
 
@@ -786,6 +793,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void onDestroy() {
         super.onDestroy();
 
+        mlocationsetProfilePic=false;
+
+
         if(mType=='C') {
             getContext().unregisterReceiver(contactBroadcastReceiver);
             if(contactLatLong!=null)
@@ -817,7 +827,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             }
 
 
+
+
         }
+
+        if(mlocationMarker!=null)
+            mlocationMarker=null;
 
         if(placesQuery!=null)
         {
