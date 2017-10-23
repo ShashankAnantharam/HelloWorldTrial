@@ -110,8 +110,9 @@ public class SingleEntityActivity extends AppCompatActivity {
         membersProfilePic.clear();
         MemberRef=null;
 
-        if(placesRef!=null)
-            placesRef=null;
+        if(placesRef!=null) {
+            placesRef = null;
+        }
         if(placesMap!=null)
             placesMap.clear();
         //TODO remove MemberRef Listeners
@@ -587,70 +588,67 @@ public class SingleEntityActivity extends AppCompatActivity {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
 
-                placesFromDB = documentSnapshot.getData();
+                try {
+                    placesFromDB = documentSnapshot.getData();
 
 
+                    List<String> placesToBeRemoved = new ArrayList<String>();
+                    List<String> placesToBeModified = new ArrayList<String>();
 
-                List<String> placesToBeRemoved = new ArrayList<String>();
-                List<String> placesToBeModified= new ArrayList<String>();
+                    for (Map.Entry<String, Place> placeEntry : placesMap.entrySet()) {
+                        //Iterate over existing places
 
-                for(Map.Entry<String,Place> placeEntry: placesMap.entrySet())
-                {
-                    //Iterate over existing places
+                        String key = placeEntry.getKey();
+                        if (placesFromDB.containsKey(key)) {
 
-                    String key = placeEntry.getKey();
-                    if(placesFromDB.containsKey(key))
-                    {
+                            //Place there initially and there now. Elements of it may have changed so update
 
-                        //Place there initially and there now. Elements of it may have changed so update
-
-                        //Updating place to new place
-                        placesToBeModified.add(key);
+                            //Updating place to new place
+                            placesToBeModified.add(key);
 
 
+                        } else {
+                            //Place was deleted
+                            placesToBeRemoved.add(key);
+                        }
+
+                        //Remove entry from downloaded Map
 
                     }
-                    else
-                    {
-                        //Place was deleted
-                        placesToBeRemoved.add(key);
+
+                    for (String placeID : placesToBeRemoved) {
+                        //Remove all places that were deleted
+
+                        placesMap.remove(placeID);
+                        if (mMapTab != null)
+                            mMapTab.removePlace(placeID);
+                        placesFromDB.remove(placeID);
+
                     }
 
-                    //Remove entry from downloaded Map
-
-                }
-
-                for(String placeID: placesToBeRemoved)
-                {
-                    //Remove all places that were deleted
-
-                    placesMap.remove(placeID);
-                    if(mMapTab!=null)
-                        mMapTab.removePlace(placeID);
-                    placesFromDB.remove(placeID);
-
-                }
-
-                for(String placeID: placesToBeModified)
-                {
-                    addPlace(placeID);
-                    placesFromDB.remove(placeID);
-                }
-
-                for(Map.Entry<String,Object> newPlace: placesFromDB.entrySet())
-                {
-                    String key= newPlace.getKey();
-                    if(!newPlace.getKey().equals("T"))
-                    {//New Place
-
-                        //Add to PlacesMap
-                        addPlace(key);
+                    for (String placeID : placesToBeModified) {
+                        addPlace(placeID);
+                        placesFromDB.remove(placeID);
                     }
 
-                }
+                    for (Map.Entry<String, Object> newPlace : placesFromDB.entrySet()) {
+                        String key = newPlace.getKey();
+                        if (!newPlace.getKey().equals("T")) {//New Place
 
-                placesFromDB.clear();
+                            //Add to PlacesMap
+                            addPlace(key);
+                        }
+
+                    }
+
+                    placesFromDB.clear();
+                }
+                catch (Exception exception)
+                {
+
+                }
             }
+
         });
 
     }
