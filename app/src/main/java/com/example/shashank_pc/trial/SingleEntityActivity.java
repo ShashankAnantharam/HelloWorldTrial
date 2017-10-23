@@ -538,6 +538,12 @@ public class SingleEntityActivity extends AppCompatActivity {
 
                 Map<String,String> placeDetails = (Map<String,String>) placesFromDB.get(key);
 
+                if(placeDetails==null)
+                {
+                    return place;
+                }
+
+
                 place.setName(placeDetails.get("name"));
                 place.setLat(placeDetails.get("lat"));
                 place.setLon(placeDetails.get("lon"));
@@ -550,7 +556,11 @@ public class SingleEntityActivity extends AppCompatActivity {
             private void addPlace(String key)
             {
 
+
+                try {
+
                 Place place = getPlace(key);
+
 
 
 
@@ -558,8 +568,15 @@ public class SingleEntityActivity extends AppCompatActivity {
                 placesMap.put(key,place);
 
 
-                if(mMapTab!=null)
-                    mMapTab.addPlace(key, place);
+
+                    if (mMapTab != null)
+                        mMapTab.addPlace(key, place);
+                }
+                catch (Exception e)
+                {
+
+                }
+
 
                 //TODO      if(SEPlace!=null){ mPlaceTab.addPlace(key)}
 
@@ -571,6 +588,8 @@ public class SingleEntityActivity extends AppCompatActivity {
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
 
                 placesFromDB = documentSnapshot.getData();
+
+
 
                 List<String> placesToBeRemoved = new ArrayList<String>();
                 List<String> placesToBeModified= new ArrayList<String>();
@@ -598,7 +617,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                     }
 
                     //Remove entry from downloaded Map
-                    placesFromDB.remove(key);
+
                 }
 
                 for(String placeID: placesToBeRemoved)
@@ -608,13 +627,14 @@ public class SingleEntityActivity extends AppCompatActivity {
                     placesMap.remove(placeID);
                     if(mMapTab!=null)
                         mMapTab.removePlace(placeID);
+                    placesFromDB.remove(placeID);
 
                 }
 
                 for(String placeID: placesToBeModified)
                 {
-               //     addPlace(placeID);
-                    Toast.makeText(getApplicationContext(),placeID,Toast.LENGTH_SHORT).show();
+                    addPlace(placeID);
+                    placesFromDB.remove(placeID);
                 }
 
                 for(Map.Entry<String,Object> newPlace: placesFromDB.entrySet())
@@ -628,6 +648,8 @@ public class SingleEntityActivity extends AppCompatActivity {
                     }
 
                 }
+
+                placesFromDB.clear();
             }
         });
 
