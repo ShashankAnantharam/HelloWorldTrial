@@ -298,9 +298,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         }
 
                         isMemberBroadcastingLocation.put(memberID,true);
-                        mMembersTab.refresh();
+                        if(mMembersTab!=null)
+                           mMembersTab.refresh();
 
-                        if(membersProfilePic.containsKey(memberID) && mMemberSetProfilePicFlag.containsKey(memberID)
+                        if(membersProfilePic!=null &&
+                                membersProfilePic.containsKey(memberID) && mMemberSetProfilePicFlag.containsKey(memberID)
                                 && !mMemberSetProfilePicFlag.get(memberID))
                         {
                             //First time initialize the memberID marker
@@ -338,9 +340,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         Marker marker = null;
                         String title = entry.getKey();
                         isMemberBroadcastingLocation.put(title,true);
-                        mMembersTab.refresh();
+                        if(mMembersTab!=null)
+                            mMembersTab.refresh();
 
-              //          Toast.makeText(getContext(),"Changed",Toast.LENGTH_SHORT).show();
+    //                    Toast.makeText(getContext(),"Changed",Toast.LENGTH_SHORT).show();
 
                         if (!title.equals(mUserID)) {
                             Double latitude = entry.getValue().get(0);
@@ -360,13 +363,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                             icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)))
                             );
 
-                            if(membersProfilePic.containsKey(entry.getKey()))
+                            if(membersProfilePic!=null && membersProfilePic.containsKey(entry.getKey()))
                             {
+                                Toast.makeText(getContext(),entry.getKey(),Toast.LENGTH_SHORT).show();
                                 Bitmap memberProfilePic= membersProfilePic.get(entry.getKey());
                                 mMarkersMap.get(entry.getKey()).setAnchor(0.5f,0.5f);
                                 mMarkersMap.get(entry.getKey()).setIcon(BitmapDescriptorFactory.fromBitmap(
                                         memberProfilePic));
                                 mMemberSetProfilePicFlag.put(entry.getKey(),true);
+                            }
+                            else
+                            {
+                                mMemberSetProfilePicFlag.put(entry.getKey(),false);
                             }
 
                         }
@@ -401,7 +409,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void run() {
                getMembersCoordinates();
-           //     Toast.makeText(getContext(),"T",Toast.LENGTH_SHORT).show();
+ //               Toast.makeText(getContext(),"T",Toast.LENGTH_SHORT).show();
 
                 memberHandler.postDelayed(this,2500);
             }
@@ -448,8 +456,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
             mMapFrag = (MapFragment) fragment.findFragmentById(R.id.map);
 
-            mMapFrag.getMapAsync(this);
             mapFlag=true;
+            mMapFrag.getMapAsync(this);
+
 
 
         }
@@ -561,16 +570,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
 
-        if(mapFlag) {
-            //First time map opened. Init members of entity
-            if (mType == 'U')
-                mContactInit();
-            else if (mType == 'G' || mType == 'E') {
-                membersInit();
-            }
 
-
-        }
 
 
 
@@ -749,10 +749,25 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     {
         mMap=googleMap;
 
-        if(mType=='G')
-        {
-            //If Map is ready, then Initialize places
-            placesInit();
+
+
+        if(mapFlag) {
+            //First time map opened. Init members of entity
+
+            mapFlag=false;
+            if (mType == 'U')
+                mContactInit();
+            else if (mType == 'G' || mType == 'E') {
+                membersInit();
+            }
+
+            if(mType=='G')
+            {
+                //If Map is ready, then Initialize places
+                placesInit();
+
+            }
+
 
         }
 
