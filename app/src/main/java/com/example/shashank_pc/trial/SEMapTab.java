@@ -633,6 +633,16 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    public void removePlace(String key)
+    {
+        if(placesMarkers.containsKey(key))
+        {
+            placesMarkers.get(key).remove();
+            placesMarkers.remove(key);
+
+        }
+    }
+
 
     private void addGeoData(String key, double lat, double lon)
     {

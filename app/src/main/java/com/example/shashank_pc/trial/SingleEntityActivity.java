@@ -570,8 +570,10 @@ public class SingleEntityActivity extends AppCompatActivity {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
 
-                placesFromDB = new HashMap<>();
                 placesFromDB = documentSnapshot.getData();
+
+                List<String> placesToBeRemoved = new ArrayList<String>();
+                List<String> placesToBeModified= new ArrayList<String>();
 
                 for(Map.Entry<String,Place> placeEntry: placesMap.entrySet())
                 {
@@ -584,8 +586,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                         //Place there initially and there now. Elements of it may have changed so update
 
                         //Updating place to new place
-                        placesMap.remove(key);
-                        addPlace(key);
+                        placesToBeModified.add(key);
 
 
 
@@ -593,12 +594,27 @@ public class SingleEntityActivity extends AppCompatActivity {
                     else
                     {
                         //Place was deleted
-                        placesMap.remove(key);
-
+                        placesToBeRemoved.add(key);
                     }
 
                     //Remove entry from downloaded Map
                     placesFromDB.remove(key);
+                }
+
+                for(String placeID: placesToBeRemoved)
+                {
+                    //Remove all places that were deleted
+
+                    placesMap.remove(placeID);
+                    if(mMapTab!=null)
+                        mMapTab.removePlace(placeID);
+
+                }
+
+                for(String placeID: placesToBeModified)
+                {
+               //     addPlace(placeID);
+                    Toast.makeText(getApplicationContext(),placeID,Toast.LENGTH_SHORT).show();
                 }
 
                 for(Map.Entry<String,Object> newPlace: placesFromDB.entrySet())
