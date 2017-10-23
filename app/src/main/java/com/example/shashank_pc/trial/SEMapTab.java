@@ -718,6 +718,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onGeoQueryReady() {
 
+                placesQuery.removeAllListeners();
+
         /*        if (count < 2 && R < 25) {
                     R += 1;
                     placesQuery.setRadius(R);
