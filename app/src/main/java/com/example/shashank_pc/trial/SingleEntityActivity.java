@@ -48,7 +48,6 @@ import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.Generic.storage;
 import static com.example.shashank_pc.trial.GenericFunctions.getCircleBitmap;
 import static com.example.shashank_pc.trial.GenericFunctions.resizeImage;
-import static com.example.shashank_pc.trial.SEMapTab.mMarkersMap;
 import static java.security.AccessController.getContext;
 
 public class SingleEntityActivity extends AppCompatActivity {

@@ -114,7 +114,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private Handler memberHandler;
     private Runnable runnable;
-    public static Map<String,Marker> mMarkersMap;
+    private Map<String,Marker> mMarkersMap;
+    private Map<String,Boolean> mMemberSetProfilePicFlag;
 
 
 
@@ -300,6 +301,17 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         isMemberBroadcastingLocation.put(memberID,true);
                         mMembersTab.refresh();
 
+                        if(membersProfilePic.containsKey(memberID) && mMemberSetProfilePicFlag.containsKey(memberID)
+                                && !mMemberSetProfilePicFlag.get(memberID))
+                        {
+                            //First time initialize the memberID marker
+
+                            Bitmap memberProfilePic= membersProfilePic.get(entry.getKey());
+                            mMarkersMap.get(entry.getKey()).setAnchor(0.5f,0.5f);
+                            mMarkersMap.get(entry.getKey()).setIcon(BitmapDescriptorFactory.fromBitmap(
+                                    memberProfilePic));
+                        }
+
                         memberMap.remove(memberID);
 
                     }
@@ -355,6 +367,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                 mMarkersMap.get(entry.getKey()).setAnchor(0.5f,0.5f);
                                 mMarkersMap.get(entry.getKey()).setIcon(BitmapDescriptorFactory.fromBitmap(
                                         memberProfilePic));
+                                mMemberSetProfilePicFlag.put(entry.getKey(),true);
                             }
 
                         }
@@ -422,8 +435,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
         mapFlag=false;
         mlocationsetProfilePic=false;
+        mMemberSetProfilePicFlag=new HashMap<>();
 
-        
+
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
 
@@ -812,6 +826,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 placesRef=null;
             if(placesMarkers!=null)
                 placesMarkers.clear();
+
+            if(mMemberSetProfilePicFlag!=null)
+                mMemberSetProfilePicFlag.clear();
 
             if(memberHandler!=null) {
                 if(runnable!=null) {
