@@ -85,6 +85,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
     public static SEMapTab mMapTab=null;
     public static SEMembersTab mMembersTab=null;
+    public static SEPlacesTab mPlacesTab=null;
 
     public static HashMap<String,Boolean> isMemberBroadcastingLocation;
     public static List<String> Members;
@@ -344,6 +345,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                     if(mSEPlacesTab==null)
                     {
                         mSEPlacesTab = new SEPlacesTab();
+                        mPlacesTab= mSEPlacesTab;
                         return mSEPlacesTab;
                     }
                 default:

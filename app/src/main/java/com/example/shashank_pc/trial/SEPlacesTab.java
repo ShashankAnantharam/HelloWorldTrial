@@ -31,6 +31,7 @@ public class SEPlacesTab extends Fragment {
     private List<PlaceWrapperClass> mPlaces;
     private ListView listView;
     private SEPlacesListItemAdapter arrayAdapter;
+    private boolean initFlag;
 
     private class PlaceWrapperClass
     {
@@ -94,6 +95,14 @@ public class SEPlacesTab extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+
+    }
+
 
     @Override
     public void onViewCreated(View rootView, Bundle savedInstanceState)
@@ -122,8 +131,10 @@ public class SEPlacesTab extends Fragment {
         //Populate listview with contacts
 
         initArrayAdapter();
-        if(placesMap!=null)
+        if(placesMap!=null && !initFlag) {
+            initFlag=true;
             initPlaces();
+        }
 
     }
 
