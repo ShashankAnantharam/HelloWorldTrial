@@ -1,5 +1,7 @@
 package com.example.shashank_pc.trial;
 
+import android.content.Intent;
+import android.location.LocationListener;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -32,6 +34,10 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
     private Map<String,Marker> nearbyEvents;
     private CollectionReference firestoreNearbyEvents;
 
+    private LocationListener locationListener;
+    private Double latitude;
+    private Double longitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,33 +48,63 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
         mapFragment.getMapAsync(this);
 
         nearbyEvents= new HashMap<>();
-        getNearbyPlaces();
+
+
     }
 
 
     private void getNearbyPlaces()
     {
         firestoreNearbyEvents= firestore.collection("advertisedEvents");
-        Query query = firestoreNearbyEvents.whereGreaterThan("lat",17.442139);
+        Double lat_low= latitude-0.01;
+        Double lat_high= latitude+0.01;
+        Double long_low= longitude-0.01;
+        Double long_high= longitude+0.01;
+
+        Query query = firestoreNearbyEvents;
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
 
+
                 for(DocumentSnapshot documentSnapshot: documentSnapshots)
                 {
+                    double lat=0, lon=0;
+                    String val="";
+
                     Map <String,Object> map = documentSnapshot.getData();
                     for(Map.Entry<String,Object> entry: map.entrySet())
                     {
+
+
+                        Toast.makeText(getApplicationContext(),"Here",Toast.LENGTH_SHORT).show();
+
                         if(entry.getKey().equals("ID"))
                         {
-                            String val = (String) entry.getValue();
+                            val = (String) entry.getValue();
                             Toast.makeText(getApplicationContext(),val,Toast.LENGTH_SHORT).show();
+
                         }
+                        else if(entry.getKey().equals("lat"))
+                        {
+                            lat = (double) entry.getValue();
+                        }
+                        else if(entry.getKey().equals("long"))
+                        {
+                            lon = (double) entry.getValue();
+                        }
+
+
+
                     }
+                    nearbyEvents.put(val,
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(lat,lon)))
+                    );
                 }
 
             }
         });
+
     }
 
 
@@ -84,6 +120,16 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        Intent getLocationIntent = new Intent("location_update");
+        latitude = getLocationIntent.getDoubleExtra("Latitude",0);
+        longitude = getLocationIntent.getDoubleExtra("Longitude",0);
+
+        LatLng location = new LatLng(latitude, longitude);
+
+     //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,10));
+
+        getNearbyPlaces();
 
 
     }
