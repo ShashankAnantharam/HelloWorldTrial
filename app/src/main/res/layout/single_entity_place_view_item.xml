@@ -3,39 +3,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
-   
-    <ImageView
-        android:id="@+id/is_member_broadcasting_gps"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:contentDescription="desc"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="4dp"
-        style="?android:attr/borderlessButtonStyle"
-        android:focusable="false"
-        android:paddingLeft="4dp"
-        android:paddingRight="10dp"/>
-    
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="23sp"
         android:layout_marginTop="9dp"
-        android:id="@+id/se_member_text"
+        android:id="@+id/se_place_name"
         android:textSize="18sp"
         android:textColor="@android:color/black"
-        android:layout_toRightOf="@id/is_member_broadcasting_gps"
         android:focusable="false" />
 
     <TextView
         android:id="@+id/se_member_subtitle"
         android:layout_width="match_parent"
         android:layout_height="17sp"
-        android:layout_below="@+id/se_member_text"
+        android:layout_below="@+id/se_place_type"
         android:layout_marginTop="7dp"
         android:layout_marginBottom="9dp"
-        android:layout_toRightOf="@id/is_member_broadcasting_gps"
         android:textSize="13sp"
         android:focusable="false" />
-
 
 </RelativeLayout>
