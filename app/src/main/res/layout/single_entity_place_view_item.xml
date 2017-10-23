@@ -19,6 +19,7 @@
         android:layout_height="17sp"
         android:layout_marginTop="7dp"
         android:layout_marginBottom="9dp"
+        android:layout_below="@+id/se_place_name"
         android:textSize="13sp"
         android:focusable="false" />
 
