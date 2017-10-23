@@ -500,7 +500,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
                     }
 
-                    if(membersProfilePic.containsKey(mUserID) && !mlocationsetProfilePic)
+                    if(membersProfilePic!=null &&
+                            membersProfilePic.containsKey(mUserID) && !mlocationsetProfilePic)
                     {
                         Bitmap bitmap= membersProfilePic.get(mUserID);
                         mlocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
