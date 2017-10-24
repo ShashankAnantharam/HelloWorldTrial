@@ -361,6 +361,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                     if(mSEEventsTab==null)
                     {
                         mSEEventsTab= new SEEventsTab();
+                        mSEEventsTab.passUserDetails(mUserID,mUserName);
                         return mSEEventsTab;
                     }
                 default:
