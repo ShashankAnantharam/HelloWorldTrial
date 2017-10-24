@@ -128,7 +128,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
     GeoQuery secondaryEventMembersQuery;
-    Double secondaryEventRadius;
+    Double secondaryEventRadius=0.2;
     Runnable secondaryEventRunnable;
     Handler secondaryEventHandler;
     private Map<String,Marker> secondaryEventMarkerMap;
@@ -343,6 +343,60 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         };
 
         secondaryEventHandler.postDelayed(secondaryEventRunnable,2500);
+    }
+
+    private void getSecondaryEventMembers(String eID)
+    {
+        String membersDatabaseAddress = "Loc/"+eID;
+        double lat=gl_lat;
+        double lon=gl_long;
+
+        DatabaseReference reference = database.getReference(membersDatabaseAddress);
+
+        GeoFire geoFire= new GeoFire(reference);
+
+        secondaryEventMembersQuery = geoFire.queryAtLocation(new GeoLocation(lat,lon), secondaryEventRadius);
+
+        secondaryEventMembersQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            private int count=0;
+
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+                if(count<10)
+                {
+                    if(secondaryEventRadius<2)
+                        secondaryEventRadius+=0.1;
+                }
+                else if(count>15)
+                {
+                    if(secondaryEventRadius>0.1)
+                        secondaryEventRadius-=0.1;
+                }
+                secondaryEventMembersQuery.removeAllListeners();
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void initEventMembers()
