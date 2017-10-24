@@ -28,6 +28,7 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -118,6 +119,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private GeoQuery eventmembersQuery;
     Double radius=0.2;
+    private boolean locationAvailableFlag=false;
+    private Map<String,Boolean> memberPresentFlags;
+    double gl_lat;
+    double gl_long;
+
 
 
 
@@ -273,13 +279,52 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         public mMapContact(){}
     }
 
-    private void getEventMembers(Double lat, final Double lon)
+    private void initEventMembers()
+    {
+        if(mMarkersMap==null)
+            mMarkersMap = new HashMap<>();
+        memberPresentFlags= new HashMap<>();
+        memberHandler=new Handler();
+
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                for(Map.Entry<String,Boolean> isMemberPresentFlag: memberPresentFlags.entrySet())
+                {
+                    if(!isMemberPresentFlag.getValue())
+                    {
+                        //Member not present. Remove marker
+                        mMarkersMap.get(isMemberPresentFlag.getKey()).remove();
+                        mMarkersMap.remove(isMemberPresentFlag.getKey());
+                    }
+                    else
+                    {
+                        //Member present. Set marker to false
+                        isMemberPresentFlag.setValue(false);
+                    }
+                }
+
+                getEventMembers();
+                Toast.makeText(getContext(),Double.toString(radius),Toast.LENGTH_SHORT).show();
+                memberHandler.postDelayed(this,2500);
+            }
+        } ;
+
+        memberHandler.postDelayed(runnable,2500);
+
+    }
+
+    private void getEventMembers()
     {
         String membersDatabaseAddress = "Loc/"+mEntityID;
+        double lat=gl_lat;
+        double lon=gl_long;
 
         DatabaseReference reference = database.getReference(membersDatabaseAddress);
 
         GeoFire geoFire= new GeoFire(reference);
+
+
 
         eventmembersQuery = geoFire.queryAtLocation(new GeoLocation(lat,lon),radius);
 
@@ -290,27 +335,42 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
 
-                if(!mMarkersMap.containsKey(key))
-                {
-                    //New key
-                    String name= key;
-                    if(allContactNames.containsKey(name))
-                        name=allContactNames.get(name);
+                if(!key.equals(mUserID)) {
 
-                    LatLng memberLatLng= new LatLng(location.latitude,location.longitude);
-                    mMarkersMap.put(key,
-                            mMap.addMarker(new MarkerOptions().position(memberLatLng).
-                                    title(name).
-                                    icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))
-                            ));
-                }
-                else
-                {
-                    //Existing key
+                    if (!mMarkersMap.containsKey(key)) {
+                        //Member is present
 
-                    mMarkersMap.get(key).setPosition(new LatLng(location.latitude, location.longitude));
+
+                        //New key
+                        String name = key;
+                        if (allContactNames.containsKey(name))
+                            name = allContactNames.get(name);
+
+                        LatLng memberLatLng = new LatLng(location.latitude, location.longitude);
+                        mMarkersMap.put(key,
+                                mMap.addMarker(new MarkerOptions().position(memberLatLng).
+                                        title(name).
+                                        icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))
+                                ));
+
+                    } else {
+                        //Present before,Present now
+                        mMarkersMap.get(key).setPosition(new LatLng(
+                                location.latitude,location.longitude
+                        ));
+                    }
+
+                    memberPresentFlags.put(key, true);
+                    if (membersProfilePic != null && membersProfilePic.containsKey(key)) {
+
+                        mMarkersMap.get(key).setIcon(BitmapDescriptorFactory.fromBitmap(
+                                membersProfilePic.get(key)
+                        ));
+                        mMarkersMap.get(key).setAnchor(0.5f,0.5f);
+                    }
+
+                    count++;
                 }
-                count++;
             }
 
             @Override
@@ -328,8 +388,15 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 if(count<10)
                 {
-                    radius+=0.1;
+                    if(radius<2)
+                        radius+=0.1;
                 }
+                else if(count>15)
+                {
+                    if(radius>0.1)
+                        radius-=0.1;
+                }
+                eventmembersQuery.removeAllListeners();
             }
 
             @Override
@@ -547,52 +614,55 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             public void onLocationChanged(Location location) {
 
                 double Latitude= location.getLatitude();    //Get latitude
-
+                gl_lat=Latitude;
 
                 double Longitude = location.getLongitude();     //Get longitude
-
+                gl_long=Longitude;
 
                 LatLng latLng= new LatLng(Latitude, Longitude);
 
                 //Map latitude and longitude
                 if(mMap!=null) {
 
-                    if(mlocationMarker!=null)       //Not the first time location is initialized
+                    if (mlocationMarker != null)       //Not the first time location is initialized
                     {
                         mlocationMarker.setPosition(latLng);
 
-                    }
-                    else {                          //First time location is initialized
+                    } else {                          //First time location is initialized
 
                         mlocationMarker = mMap.addMarker(new MarkerOptions().position(latLng).
-                        title("Me").
-                        icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location)));
+                                title("Me").
+                                icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location)));
 
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                     }
 
-                    if(membersProfilePic!=null &&
-                            membersProfilePic.containsKey(mUserID) && !mlocationsetProfilePic)
-                    {
-                        Bitmap bitmap= membersProfilePic.get(mUserID);
+                    if (membersProfilePic != null &&
+                            membersProfilePic.containsKey(mUserID) && !mlocationsetProfilePic) {
+                        Bitmap bitmap = membersProfilePic.get(mUserID);
                         mlocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                        mlocationMarker.setAnchor(0.5f,0.5f);
-                        mlocationsetProfilePic=true;
+                        mlocationMarker.setAnchor(0.5f, 0.5f);
+                        mlocationsetProfilePic = true;
                     }
 
 
+                    if (mType == 'G') {
+                        //Testing
 
-                }
+                        if (placesQuery == null)
+                            getNearbyPlaces(Latitude, Longitude);
+                        else {
+                            placesQuery.setCenter(new GeoLocation(Latitude, Longitude));
+                        }
+                    }
 
-                if(mType=='G')
-                {
-                    //Testing
+                    if (mType == 'E') {
+                        //Events: Get members based on proximity
 
-                    if(placesQuery==null)
-                        getNearbyPlaces(Latitude,Longitude);
-                    else
-                    {
-                        placesQuery.setCenter(new GeoLocation(Latitude,Longitude));
+                        if (!locationAvailableFlag) {
+                            locationAvailableFlag = true;
+                            initEventMembers();
+                        }
                     }
                 }
 
