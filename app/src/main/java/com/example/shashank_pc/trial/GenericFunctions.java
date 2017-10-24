@@ -10,19 +10,54 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.example.shashank_pc.trial.R.id.password;
-
+import static com.example.shashank_pc.trial.Generic.firestore;
 /**
  * Created by shashank-pc on 8/31/2017.
  */
 
 public class GenericFunctions {
 
+    public static List<Event> secondaryEvents;
     public static String mEncoding = "";
     public static Map <Character,Integer> mDecoding= new HashMap();
+
+    public static void getAttendingEvents(Character type, String entityID)
+    {
+        DocumentReference attendingEvents=null;
+        if(type=='G')
+        {
+            attendingEvents= firestore.collection("groups").document(entityID).collection("events")
+                    .document("events");
+        }
+
+        attendingEvents.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                Map<String,Object> map = documentSnapshot.getData();
+
+                for(Map.Entry<String,Object> entry: map.entrySet())
+                {
+                    String eventID= entry.getKey();
+                    Event event = new Event("ToDo","ToDo",eventID);
+
+                    secondaryEvents.add(event);
+                }
+            }
+        });
+    }
+
+
+
     public static void initEncoding()
     {
         mEncoding="";

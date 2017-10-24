@@ -46,8 +46,10 @@ import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.Generic.storage;
+import static com.example.shashank_pc.trial.GenericFunctions.getAttendingEvents;
 import static com.example.shashank_pc.trial.GenericFunctions.getCircleBitmap;
 import static com.example.shashank_pc.trial.GenericFunctions.resizeImage;
+import static com.example.shashank_pc.trial.GenericFunctions.secondaryEvents;
 import static java.security.AccessController.getContext;
 
 public class SingleEntityActivity extends AppCompatActivity {
@@ -183,6 +185,12 @@ public class SingleEntityActivity extends AppCompatActivity {
         //Get details of Members
         membersInit();
         getPlacesFromDB();
+
+        if(mType=='G')
+        {
+            secondaryEvents = new ArrayList<>();
+            getAttendingEvents(mType,mEntityID);
+        }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

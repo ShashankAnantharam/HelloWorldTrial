@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ import java.util.concurrent.ExecutionException;
 
 import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.GenericFunctions.secondaryEvents;
 import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
@@ -125,6 +127,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     double gl_long;
 
 
+    GeoQuery secondaryEventMembersQuery;
+    Double secondaryEventRadius;
+    Runnable secondaryEventRunnable;
+    Handler secondaryEventHandler;
+    private Map<String,Marker> secondaryEventMarkerMap;
+    private Map<String,Boolean> secondaryEventMemberPresentFlag;
 
 
 
@@ -277,6 +285,64 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         }
 
         public mMapContact(){}
+    }
+
+    private void initSecondaryEventMembers()
+    {
+        secondaryEventMarkerMap= new HashMap<>();
+        secondaryEventMemberPresentFlag= new HashMap<>();
+        secondaryEventHandler= new Handler();
+
+        secondaryEventRunnable= new Runnable() {
+
+            private String lastEvent="";
+            private String currEvent="";
+
+            private String getChosenSecondaryEvent()
+            {
+
+                //TODO Change logic based on selected event
+                if(secondaryEvents!=null && secondaryEvents.size()>=1)
+                    return secondaryEvents.get(0).getID();
+                return "";
+            }
+
+            @Override
+            public void run() {
+
+                currEvent=getChosenSecondaryEvent();
+                if(!currEvent.equals(""))
+                {
+                    //eventID is got
+
+                    if(!lastEvent.equals(currEvent))
+                    {
+                        //Preferred secondary event changed
+
+                        //Remove all markers and flags; Reset event members
+
+                        secondaryEventMemberPresentFlag.clear();
+                        for(Map.Entry<String,Marker> marker: secondaryEventMarkerMap.entrySet())
+                        {
+                            marker.getValue().remove();
+                        }
+                        secondaryEventMarkerMap.clear();
+                    }
+
+
+
+
+                    Toast.makeText(getContext(),currEvent,Toast.LENGTH_SHORT).show();
+
+
+
+                    //ending statement
+                    lastEvent=currEvent;
+                }
+            }
+        };
+
+        secondaryEventHandler.postDelayed(secondaryEventRunnable,2500);
     }
 
     private void initEventMembers()
@@ -653,6 +719,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             getNearbyPlaces(Latitude, Longitude);
                         else {
                             placesQuery.setCenter(new GeoLocation(Latitude, Longitude));
+                        }
+
+                        if(!locationAvailableFlag)
+                        {
+                            locationAvailableFlag=true;
+                            initSecondaryEventMembers();
                         }
                     }
 
