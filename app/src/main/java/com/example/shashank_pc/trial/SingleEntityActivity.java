@@ -382,21 +382,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if(mType=='E')
             switch (position) {
-                case 0:
-                    return "MAP";
-                case 1:
-                    return "CHAT";
-                case 2:
-                    return "MEMBERS";
-                case 3:
-                    return "PLACES";
-
-            }
-            else if(mType=='G')
-            {
-                switch (position) {
                     case 0:
                         return "MAP";
                     case 1:
@@ -409,7 +395,6 @@ public class SingleEntityActivity extends AppCompatActivity {
                         return "EVENTS";
 
                 }
-            }
             return null;
         }
     }
