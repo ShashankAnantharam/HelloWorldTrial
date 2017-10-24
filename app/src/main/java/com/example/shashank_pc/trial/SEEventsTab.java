@@ -10,6 +10,24 @@ public class SEEventsTab extends LPEventsTab {
 
     boolean hasSecondaryEventsInit=false;
 
+    private SEEventListArrayAdapter<Event> arrayAdapter;
+
+    @Override
+    public void refresh()
+    {
+        if(arrayAdapter!=null) {
+            arrayAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void initArrayAdapter()
+    {
+        arrayAdapter = new SEEventListArrayAdapter<>(getContext(),
+                mEvents, mUserID);
+        listView.setAdapter(arrayAdapter);
+    }
+
     @Override
     public void initEvents()
     {

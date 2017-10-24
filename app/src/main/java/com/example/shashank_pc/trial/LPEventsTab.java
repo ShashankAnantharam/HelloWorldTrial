@@ -46,15 +46,15 @@ public class LPEventsTab extends Fragment {
 
 
     //List is used because it is faster than Vector because it is asynchronous
-    private List<Event> mEvents;
+    protected List<Event> mEvents;
 
     private View rootView;
 
-    private String mUserID;
+    protected String mUserID;
     private String mUserName;
 
     private LPListItemAdapter<Event> arrayAdapter;
-    private ListView listView;
+    protected ListView listView;
     private Intent listClickActivity;
 
     SharedPreferences preferences;
@@ -173,6 +173,15 @@ public class LPEventsTab extends Fragment {
 
     }
 
+    void initArrayAdapter()
+    {
+        //Populate listview with Events
+        arrayAdapter= new LPListItemAdapter<Event>(getContext(),
+                mEvents, mUserID);
+
+        listView.setAdapter(arrayAdapter);
+    }
+
     @Override
     public void onViewCreated(View rootView, Bundle savedInstanceState)
     {
@@ -192,10 +201,9 @@ public class LPEventsTab extends Fragment {
         if(mEvents==null)
             mEvents=new ArrayList<>();
 
-        //Populate listview with Events
-        arrayAdapter= new LPListItemAdapter<Event>(getContext(),
-                mEvents, mUserID);
-        listView.setAdapter(arrayAdapter);
+       initArrayAdapter();
+
+
 
         //Set intent to enable switching to new activity
         listClickActivity= new Intent();

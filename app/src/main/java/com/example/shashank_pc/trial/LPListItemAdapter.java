@@ -75,6 +75,10 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
 
 
+    public void settextColorListener(ViewHolder viewHolder)
+    {
+
+    }
 
 
 
@@ -138,6 +142,8 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
         holder.main_text.setText(main_text);            //Set title of list view item
         holder.subtitle.setText(subtitle);    //Set subtitle of list view item
+
+        settextColorListener(holder);
 
 
         if(getflagstatus(rowItem)==true)
