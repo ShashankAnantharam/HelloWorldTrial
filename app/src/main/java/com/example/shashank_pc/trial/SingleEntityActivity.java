@@ -100,6 +100,8 @@ public class SingleEntityActivity extends AppCompatActivity {
     public static Map<String, Place> placesMap;
     private DocumentReference placesRef;
 
+    public static Map<String,Boolean> secondaryEventsClickFlag;
+
 
 
     @Override
@@ -189,6 +191,7 @@ public class SingleEntityActivity extends AppCompatActivity {
         if(mType=='G')
         {
             secondaryEvents = new ArrayList<>();
+            secondaryEventsClickFlag= new HashMap<>();
             getAttendingEvents(mType,mEntityID);
         }
 

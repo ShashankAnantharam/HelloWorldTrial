@@ -21,6 +21,8 @@ import java.util.Map;
 
 import static com.example.shashank_pc.trial.R.id.password;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.SingleEntityActivity.secondaryEventsClickFlag;
+
 /**
  * Created by shashank-pc on 8/31/2017.
  */
@@ -51,6 +53,7 @@ public class GenericFunctions {
                     Event event = new Event("ToDo","ToDo",eventID);
 
                     secondaryEvents.add(event);
+                    secondaryEventsClickFlag.put(eventID,false);
                 }
             }
         });

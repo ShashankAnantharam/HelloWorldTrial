@@ -66,7 +66,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
     }
 
 
-    private class ViewHolder{
+    protected class ViewHolder{
         TextView main_text;
         TextView subtitle;
         Button locationBroadcastFlag;
@@ -75,7 +75,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
 
 
-    public void settextColorListener(ViewHolder viewHolder)
+    public void settextColorListener(ViewHolder viewHolder,View convertView, T rowitem)
     {
 
     }
@@ -143,7 +143,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
         holder.main_text.setText(main_text);            //Set title of list view item
         holder.subtitle.setText(subtitle);    //Set subtitle of list view item
 
-        settextColorListener(holder);
+
 
 
         if(getflagstatus(rowItem)==true)
@@ -182,6 +182,8 @@ public class LPListItemAdapter<T> extends BaseAdapter{
             }
         });
 
+
+        settextColorListener(holder,convertView,rowItem);
 
     return convertView;
 
