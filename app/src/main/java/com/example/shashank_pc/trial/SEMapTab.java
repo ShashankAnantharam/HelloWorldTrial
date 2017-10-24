@@ -117,6 +117,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private Map<String,Boolean> mMemberSetProfilePicFlag;
 
     private GeoQuery eventmembersQuery;
+    Double radius=0.2;
 
 
 
@@ -270,6 +271,73 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         }
 
         public mMapContact(){}
+    }
+
+    private void getEventMembers(Double lat, final Double lon)
+    {
+        String membersDatabaseAddress = "Loc/"+mEntityID;
+
+        DatabaseReference reference = database.getReference(membersDatabaseAddress);
+
+        GeoFire geoFire= new GeoFire(reference);
+
+        eventmembersQuery = geoFire.queryAtLocation(new GeoLocation(lat,lon),radius);
+
+        eventmembersQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+
+            int count=0;
+
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+
+                if(!mMarkersMap.containsKey(key))
+                {
+                    //New key
+                    String name= key;
+                    if(allContactNames.containsKey(name))
+                        name=allContactNames.get(name);
+
+                    LatLng memberLatLng= new LatLng(location.latitude,location.longitude);
+                    mMarkersMap.put(key,
+                            mMap.addMarker(new MarkerOptions().position(memberLatLng).
+                                    title(name).
+                                    icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))
+                            ));
+                }
+                else
+                {
+                    //Existing key
+
+                    mMarkersMap.get(key).setPosition(new LatLng(location.latitude, location.longitude));
+                }
+                count++;
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+                if(count<10)
+                {
+                    radius+=0.1;
+                }
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
     }
 
 
@@ -764,16 +832,13 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             mapFlag=false;
             if (mType == 'U')
                 mContactInit();
-            else if (mType == 'G' || mType == 'E') {
+            else if (mType == 'G') {
                 membersInit();
-            }
 
-            if(mType=='G')
-            {
                 //If Map is ready, then Initialize places
                 placesInit();
-
             }
+
 
 
         }
