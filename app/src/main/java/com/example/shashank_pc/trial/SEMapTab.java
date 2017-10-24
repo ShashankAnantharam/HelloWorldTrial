@@ -116,6 +116,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private Map<String,Marker> mMarkersMap;
     private Map<String,Boolean> mMemberSetProfilePicFlag;
 
+    private GeoQuery eventmembersQuery;
+
+
 
 
 

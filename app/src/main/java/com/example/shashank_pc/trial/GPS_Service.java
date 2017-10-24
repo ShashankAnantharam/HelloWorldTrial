@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,6 +22,7 @@ import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -95,11 +97,32 @@ public class GPS_Service extends Service {
                     else
                     {
                         //Update location if value true
-                        Map <String,Double> locationMap= new HashMap<>();
-                        locationMap.put("0",location.getLatitude());
-                        locationMap.put("1",location.getLongitude());
-                        reference.setValue(locationMap);
 
+                        if(entry.getKey().charAt(0)=='G') {
+
+                            //Group
+
+                            //Put only lat and long
+
+                            Map<String, Double> locationMap = new HashMap<>();
+                            locationMap.put("0", location.getLatitude());
+                            locationMap.put("1", location.getLongitude());
+                            reference.setValue(locationMap);
+                        }
+                        else if(entry.getKey().charAt(0)=='E')
+                        {
+                            //Event
+
+                            //Put geoLocation at database;
+
+                            String writeEventRef="Loc/"+entry.getKey();
+
+                            GeoFire geoFire = new GeoFire(database.getReference(writeEventRef));
+                            geoFire.setLocation(LandingPageActivity.getUserID(),new GeoLocation(
+                                    location.getLatitude(),location.getLongitude()
+                            ));
+
+                        }
                     }
                 }
             }
