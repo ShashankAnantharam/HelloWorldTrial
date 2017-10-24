@@ -329,16 +329,33 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         secondaryEventMarkerMap.clear();
                     }
 
+                    for(Map.Entry<String,Boolean> isMemberPresentFlag: secondaryEventMemberPresentFlag.entrySet())
+                    {
+                        if(!isMemberPresentFlag.getValue())
+                        {
+                            //Member not present. Remove marker
+                            secondaryEventMarkerMap.get(isMemberPresentFlag.getKey()).remove();
+                            secondaryEventMarkerMap.remove(isMemberPresentFlag.getKey());
+                        }
+                        else
+                        {
+                            //Member present. Set marker to false
+                            isMemberPresentFlag.setValue(false);
+                        }
+                    }
 
 
 
-                    Toast.makeText(getContext(),currEvent,Toast.LENGTH_SHORT).show();
 
+                    Toast.makeText(getContext(),Double.toString(secondaryEventRadius),Toast.LENGTH_SHORT).show();
 
+                    getSecondaryEventMembers(currEvent);
 
                     //ending statement
                     lastEvent=currEvent;
+
                 }
+                secondaryEventHandler.postDelayed(this,2500);
             }
         };
 
@@ -363,6 +380,45 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
 
+                if(!key.equals(mUserID) && !mMarkersMap.containsKey(key)) {
+
+                    if (!secondaryEventMarkerMap.containsKey(key)) {
+                        //Member is present
+
+
+                        //New key
+                        String name = key;
+                        if (allContactNames.containsKey(name))
+                            name = allContactNames.get(name);
+
+                        LatLng memberLatLng = new LatLng(location.latitude, location.longitude);
+                        secondaryEventMarkerMap.put(key,
+                                mMap.addMarker(new MarkerOptions().position(memberLatLng).
+                                        title(name).
+                                        icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))
+                                ));
+
+                    }
+                    else
+                    {
+                        //Present before,Present now
+                        secondaryEventMarkerMap.get(key).setPosition(new LatLng(
+                                location.latitude,location.longitude
+                        ));
+                    }
+
+                }
+                else if(mMarkersMap.containsKey(key))
+                {
+                    if(secondaryEventMarkerMap.containsKey(key))
+                    {
+                        //Conflict because both maps contain key
+
+                        //Remove key from secondary map
+                        secondaryEventMarkerMap.get(key).remove();
+                        secondaryEventMarkerMap.remove(key);
+                    }
+                }
             }
 
             @Override
@@ -380,8 +436,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 if(count<10)
                 {
-                    if(secondaryEventRadius<2)
-                        secondaryEventRadius+=0.1;
+                    if(secondaryEventRadius<10)
+                        secondaryEventRadius+=0.5;
                 }
                 else if(count>15)
                 {
