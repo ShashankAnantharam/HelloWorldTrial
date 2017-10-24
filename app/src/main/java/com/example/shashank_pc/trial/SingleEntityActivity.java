@@ -303,6 +303,7 @@ public class SingleEntityActivity extends AppCompatActivity {
         SEChatsTab mSEChatsTab;
         SEMembersTab mSEMembersTab;
         SEPlacesTab mSEPlacesTab;
+        SEEventsTab mSEEventsTab;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -356,6 +357,12 @@ public class SingleEntityActivity extends AppCompatActivity {
                         mPlacesTab= mSEPlacesTab;
                         return mSEPlacesTab;
                     }
+                case 4:
+                    if(mSEEventsTab==null)
+                    {
+                        mSEEventsTab= new SEEventsTab();
+                        return mSEEventsTab;
+                    }
                 default:
                     return null;
             }
@@ -365,11 +372,16 @@ public class SingleEntityActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 4 total pages.
+            if(mType=='E')
+                return 4;
+            else if(mType=='G')
+                return 5;
             return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
+            if(mType=='E')
             switch (position) {
                 case 0:
                     return "MAP";
@@ -379,6 +391,23 @@ public class SingleEntityActivity extends AppCompatActivity {
                     return "MEMBERS";
                 case 3:
                     return "PLACES";
+
+            }
+            else if(mType=='G')
+            {
+                switch (position) {
+                    case 0:
+                        return "MAP";
+                    case 1:
+                        return "CHAT";
+                    case 2:
+                        return "MEMBERS";
+                    case 3:
+                        return "PLACES";
+                    case 4:
+                        return "EVENTS";
+
+                }
             }
             return null;
         }

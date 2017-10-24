@@ -54,6 +54,8 @@ public class LPEventsTab extends Fragment {
     private String mUserName;
 
     private LPListItemAdapter<Event> arrayAdapter;
+    private ListView listView;
+    private Intent listClickActivity;
 
     SharedPreferences preferences;
 
@@ -135,35 +137,8 @@ public class LPEventsTab extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View rootView, Bundle savedInstanceState)
+    public void setListItemOnClickListener()
     {
-
-        /*
-        Function that executes after view is created
-         */
-
-
-        super.onViewCreated(rootView, savedInstanceState);
-
-        //Initialize Listview
-        final ListView listView;
-        listView= (ListView) rootView.findViewById(R.id.section_list_event);
-
-
-        //Get the Events from the database
-        if(mEvents==null)
-            mEvents=new ArrayList<>();
-
-        //Populate listview with Events
-        arrayAdapter= new LPListItemAdapter<Event>(getContext(),
-                mEvents, mUserID);
-        listView.setAdapter(arrayAdapter);
-
-        //Set intent to enable switching to new activity
-        final Intent listClickActivity= new Intent();
-        listClickActivity.setClass(getContext(),SingleEntityActivity.class);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -193,6 +168,40 @@ public class LPEventsTab extends Fragment {
 
             }
         });
+
+
+
+    }
+
+    @Override
+    public void onViewCreated(View rootView, Bundle savedInstanceState)
+    {
+
+        /*
+        Function that executes after view is created
+         */
+
+
+        super.onViewCreated(rootView, savedInstanceState);
+
+        //Initialize Listview
+        listView= (ListView) rootView.findViewById(R.id.section_list_event);
+
+
+        //Get the Events from the database
+        if(mEvents==null)
+            mEvents=new ArrayList<>();
+
+        //Populate listview with Events
+        arrayAdapter= new LPListItemAdapter<Event>(getContext(),
+                mEvents, mUserID);
+        listView.setAdapter(arrayAdapter);
+
+        //Set intent to enable switching to new activity
+        listClickActivity= new Intent();
+        listClickActivity.setClass(getContext(),SingleEntityActivity.class);
+
+        setListItemOnClickListener();
 
 
         if(hasInitEvents==false) {

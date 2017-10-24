@@ -347,7 +347,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
 
-                    Toast.makeText(getContext(),Double.toString(secondaryEventRadius),Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(),Double.toString(secondaryEventRadius),Toast.LENGTH_SHORT).show();
 
                     getSecondaryEventMembers(currEvent);
 
@@ -1128,6 +1128,25 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     runnable=null;
                 }
                 memberHandler=null;
+            }
+
+            if(secondaryEventHandler!=null)
+            {
+                if(secondaryEventRunnable!=null)
+                {
+                    secondaryEventHandler.removeCallbacks(secondaryEventRunnable);
+                    secondaryEventRunnable=null;
+                }
+                secondaryEventHandler=null;
+            }
+            if(secondaryEventMarkerMap!=null)
+            {
+                secondaryEventMarkerMap.clear();
+            }
+
+            if(secondaryEventMembersQuery!=null)
+            {
+                secondaryEventMembersQuery.removeAllListeners();
             }
 
             if(mMarkersMap!=null)
