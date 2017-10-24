@@ -136,6 +136,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
 
 
+    public static String chosenEvent="";
+
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
     {
@@ -294,7 +296,6 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         secondaryEventHandler= new Handler();
 
         secondaryEventRunnable= new Runnable() {
-
             private String lastEvent="";
             private String currEvent="";
 
@@ -302,32 +303,34 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             {
 
                 //TODO Change logic based on selected event
-                if(secondaryEvents!=null && secondaryEvents.size()>=1)
-                    return secondaryEvents.get(0).getID();
-                return "";
+          //      if(secondaryEvents!=null && secondaryEvents.size()>=1)
+            //        return secondaryEvents.get(0).getID();
+                return chosenEvent;
             }
 
             @Override
             public void run() {
 
+
                 currEvent=getChosenSecondaryEvent();
+                if(!lastEvent.equals(currEvent))
+                {
+                    //Preferred secondary event changed
+
+                    //Remove all markers and flags; Reset event members
+
+                    secondaryEventMemberPresentFlag.clear();
+                    for(Map.Entry<String,Marker> marker: secondaryEventMarkerMap.entrySet())
+                    {
+                        marker.getValue().remove();
+                    }
+                    secondaryEventMarkerMap.clear();
+                }
                 if(!currEvent.equals(""))
                 {
                     //eventID is got
 
-                    if(!lastEvent.equals(currEvent))
-                    {
-                        //Preferred secondary event changed
 
-                        //Remove all markers and flags; Reset event members
-
-                        secondaryEventMemberPresentFlag.clear();
-                        for(Map.Entry<String,Marker> marker: secondaryEventMarkerMap.entrySet())
-                        {
-                            marker.getValue().remove();
-                        }
-                        secondaryEventMarkerMap.clear();
-                    }
 
                     for(Map.Entry<String,Boolean> isMemberPresentFlag: secondaryEventMemberPresentFlag.entrySet())
                     {
