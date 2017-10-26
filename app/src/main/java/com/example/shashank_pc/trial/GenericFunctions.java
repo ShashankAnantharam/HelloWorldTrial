@@ -10,6 +10,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -19,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.R.id.password;
 import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.SingleEntityActivity.secondaryEventsClickFlag;
@@ -50,10 +55,25 @@ public class GenericFunctions {
                 for(Map.Entry<String,Object> entry: map.entrySet())
                 {
                     String eventID= entry.getKey();
-                    Event event = new Event("ToDo","ToDo",eventID);
 
-                    secondaryEvents.add(event);
-                    secondaryEventsClickFlag.put(eventID,false);
+                    DatabaseReference tempRef= database.getReference("Details/"+eventID);
+                    tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String ID = dataSnapshot.getKey();
+                            String name = (String) dataSnapshot.child("name").getValue();
+                            String desc = (String) dataSnapshot.child("desc").getValue();
+                            Event event = new Event(name,desc,ID);
+                            secondaryEvents.add(event);
+                            secondaryEventsClickFlag.put(ID,false);
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
         });
