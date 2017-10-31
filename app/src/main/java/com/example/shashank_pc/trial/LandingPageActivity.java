@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.ContactsContract;
@@ -50,10 +52,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shashank_pc.trial.GenericFunctions.addProfilePic;
 import static com.example.shashank_pc.trial.GenericFunctions.decodeNumber;
 import static com.example.shashank_pc.trial.GenericFunctions.encodeNumber;
+import static com.example.shashank_pc.trial.GenericFunctions.getCircleBitmap;
 import static com.example.shashank_pc.trial.GenericFunctions.initEncoding;
 import static com.example.shashank_pc.trial.GenericFunctions.mEncoding;
+import static com.example.shashank_pc.trial.GenericFunctions.resizeImage;
 import static java.security.AccessController.getContext;
 
 public class LandingPageActivity extends AppCompatActivity {
@@ -80,6 +85,8 @@ public class LandingPageActivity extends AppCompatActivity {
     private boolean regFlag=false;
 
 
+    public static Map<String,Bitmap> userProfilePics;
+
     private static String mUserID="";
 
     private String mUserName="";
@@ -93,6 +100,7 @@ public class LandingPageActivity extends AppCompatActivity {
     DocumentReference firestoneUserRef;
     private String fEntityName;
     private String fEntityDesc;
+    public static Bitmap unknownUser;
 
 
     private BroadcastReceiver locationBroadcastReceiver;
@@ -278,7 +286,12 @@ public class LandingPageActivity extends AppCompatActivity {
         Generic.database = FirebaseDatabase.getInstance();
         Generic.storage = FirebaseStorage.getInstance();
         Generic.firestore= FirebaseFirestore.getInstance();
+        userProfilePics = new HashMap<>();
+        unknownUser = BitmapFactory.decodeResource(getResources(),R.drawable.unknown);
+        unknownUser = resizeImage(unknownUser);
+        unknownUser = getCircleBitmap(unknownUser);
 
+        addProfilePic(mUserID);
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");

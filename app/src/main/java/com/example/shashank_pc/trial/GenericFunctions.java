@@ -1,6 +1,7 @@
 package com.example.shashank_pc.trial;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -8,8 +9,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,14 +22,18 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.database;
+import static com.example.shashank_pc.trial.Generic.storage;
+import static com.example.shashank_pc.trial.LandingPageActivity.userProfilePics;
 import static com.example.shashank_pc.trial.R.id.password;
 import static com.example.shashank_pc.trial.Generic.firestore;
+import static com.example.shashank_pc.trial.SingleEntityActivity.membersProfilePic;
 import static com.example.shashank_pc.trial.SingleEntityActivity.secondaryEventsClickFlag;
 
 /**
@@ -191,6 +199,52 @@ public class GenericFunctions {
             return ("C"+encodeNumber(u2)+"_"+encodeNumber(u1));
         else
             return ("C"+encodeNumber(u1)+ "_"+encodeNumber(u2));
+    }
+
+    public static void addProfilePic(final String memberID) {
+
+        //Get profile pics into hashmap
+
+        StorageReference ref= storage.getReference("ProfilePics").child(memberID+".jpg");
+        final long ONE_MEGABYTE = 1024 * 1024;
+        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+
+                //           Toast.makeText(getApplicationContext(),"Downloaded",Toast.LENGTH_SHORT).show();
+
+
+                try
+                {
+                    Bitmap profilePic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                    profilePic= resizeImage(profilePic);
+
+                    profilePic= getCircleBitmap(profilePic);
+                    //Bitmap round_img= getRoundedRectBitmap(small_img);
+
+                    if(membersProfilePic!=null && !membersProfilePic.containsKey(memberID))
+                          membersProfilePic.put(memberID,profilePic);
+                    if(!userProfilePics.containsKey(memberID))
+                        userProfilePics.put(memberID,profilePic);
+
+
+
+
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+
+                //              Toast.makeText(getApplicationContext(), exception.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public static boolean validatePhone(String phone) //function to validate phone number (Bharath Kota)

@@ -65,6 +65,8 @@ import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.GenericFunctions.secondaryEvents;
 import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
+import static com.example.shashank_pc.trial.LandingPageActivity.unknownUser;
+import static com.example.shashank_pc.trial.LandingPageActivity.userProfilePics;
 import static com.example.shashank_pc.trial.SingleEntityActivity.Members;
 import static com.example.shashank_pc.trial.SingleEntityActivity.isMemberBroadcastingLocation;
 import static com.example.shashank_pc.trial.SingleEntityActivity.mMembersTab;
@@ -191,7 +193,17 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                         mContactMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
                                 title(mEntityName).
-                                icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)));
+                                icon(BitmapDescriptorFactory.fromBitmap(unknownUser)));
+
+
+
+                    }
+
+                    if(userProfilePics.containsKey(mEntityID))
+                    {
+                        mContactMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                userProfilePics.get(mEntityID)
+                        ));
                     }
 
 
@@ -398,7 +410,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         secondaryEventMarkerMap.put(key,
                                 mMap.addMarker(new MarkerOptions().position(memberLatLng).
                                         title(name).
-                                        icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))
+                                        icon(BitmapDescriptorFactory.fromBitmap(unknownUser))
                                 ));
 
                     }
@@ -529,7 +541,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         mMarkersMap.put(key,
                                 mMap.addMarker(new MarkerOptions().position(memberLatLng).
                                         title(name).
-                                        icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))
+                                        icon(BitmapDescriptorFactory.fromBitmap(unknownUser))
                                 ));
 
                     } else {
@@ -678,7 +690,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             mMarkersMap.put(entry.getKey(),
                                     mMap.addMarker(new MarkerOptions().position(memberLatLng).
                                             title(title).
-                                            icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location)))
+                                            icon(BitmapDescriptorFactory.fromBitmap(unknownUser)))
                             );
 
                             if(membersProfilePic!=null && membersProfilePic.containsKey(entry.getKey()))
@@ -816,9 +828,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                     }
 
-                    if (membersProfilePic != null &&
-                            membersProfilePic.containsKey(mUserID) && !mlocationsetProfilePic) {
-                        Bitmap bitmap = membersProfilePic.get(mUserID);
+                    if (userProfilePics != null &&
+                            userProfilePics.containsKey(mUserID) && !mlocationsetProfilePic) {
+                        Bitmap bitmap = userProfilePics.get(mUserID);
                         mlocationMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
                         mlocationMarker.setAnchor(0.5f, 0.5f);
                         mlocationsetProfilePic = true;
@@ -940,7 +952,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 //Create marker with necessary variables
                 placesMarkers.put(key, mMap.addMarker(new MarkerOptions().position(placeLatLng).
                         title(name).
-                        icon(BitmapDescriptorFactory.fromResource(R.drawable.friend_location))));
+                        icon(BitmapDescriptorFactory.fromBitmap(unknownUser))));
             }
 
             //Set the icon of marker based on type

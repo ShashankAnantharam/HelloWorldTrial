@@ -46,6 +46,7 @@ import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.Generic.storage;
+import static com.example.shashank_pc.trial.GenericFunctions.addProfilePic;
 import static com.example.shashank_pc.trial.GenericFunctions.getAttendingEvents;
 import static com.example.shashank_pc.trial.GenericFunctions.getCircleBitmap;
 import static com.example.shashank_pc.trial.GenericFunctions.resizeImage;
@@ -84,6 +85,8 @@ public class SingleEntityActivity extends AppCompatActivity {
     private Event mEvent;
     private Group mGroup;
     private User mContact;
+
+
 
     public static SEMapTab mMapTab=null;
     public static SEMembersTab mMembersTab=null;
@@ -511,48 +514,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                 });
     }
 
-    private void addProfilePic(final String memberID) {
 
-        //Get profile pics into hashmap
-
-        StorageReference ref= storage.getReference("ProfilePics").child(memberID+".jpg");
-        final long ONE_MEGABYTE = 1024 * 1024;
-        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-
-     //           Toast.makeText(getApplicationContext(),"Downloaded",Toast.LENGTH_SHORT).show();
-
-
-                try
-                {
-                    Bitmap profilePic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-                    profilePic= resizeImage(profilePic);
-
-                    profilePic= getCircleBitmap(profilePic);
-                    //Bitmap round_img= getRoundedRectBitmap(small_img);
-
-                    membersProfilePic.put(memberID,profilePic);
-
-
-
-
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-
-  //              Toast.makeText(getApplicationContext(), exception.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     public void getPlacesFromDB()
     {
         placesMap = new HashMap<>();
