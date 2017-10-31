@@ -433,6 +433,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         secondaryEventMarkerMap.get(key).remove();
                         secondaryEventMarkerMap.remove(key);
                     }
+                    mMarkersMap.get(key).setVisible(true);
                 }
             }
 
