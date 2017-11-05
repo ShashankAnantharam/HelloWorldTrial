@@ -543,6 +543,7 @@ public class LandingPageActivity extends AppCompatActivity {
         private LPEventsTab eventLPTab;
         private LPGroupsTab groupLPTab;
         private LPContactsTab contactLPTab;
+        private LPMapTab mapLPTab;
 
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -555,6 +556,13 @@ public class LandingPageActivity extends AppCompatActivity {
             // Return a Landing Page (LP) Fragment (defined as classes).
             switch (position){
                 case 0:
+                    //return Common Map tab
+                    if(mapLPTab==null)
+                    {
+                        mapLPTab = new LPMapTab();
+                    }
+                    return mapLPTab;
+                case 1:
                     //Return events tab fragment
                     if(eventLPTab==null) {
                         eventLPTab = new LPEventsTab();
@@ -562,7 +570,7 @@ public class LandingPageActivity extends AppCompatActivity {
                         mEventLPTab=eventLPTab;
                     }
                     return eventLPTab;
-                case 1:
+                case 2:
                     // Return groups tab fragment
                     if(groupLPTab==null) {
                         groupLPTab = new LPGroupsTab();
@@ -570,7 +578,7 @@ public class LandingPageActivity extends AppCompatActivity {
                         mGroupLPTab=groupLPTab;
                     }
                     return groupLPTab;
-                case 2:
+                case 3:
                     //Return contacts tab fragment
                     if(contactLPTab==null) {
                         contactLPTab = new LPContactsTab();
@@ -588,17 +596,19 @@ public class LandingPageActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "EVENTS";        //Page title of first Tab is Events
+                    return "MAP";        //Page title of first Tab is Map
                 case 1:
-                    return "GROUPS";        //Page title of second Tab is Groups
+                    return "EVENTS";        //Page title of first Tab is Events
                 case 2:
+                    return "GROUPS";        //Page title of second Tab is Groups
+                case 3:
                     return "CONTACTS";      //Page title of third Tab is Contacts
             }
             return null;
