@@ -35,6 +35,7 @@ import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.GenericFunctions.addProfilePic;
 import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
+import static com.example.shashank_pc.trial.LandingPageActivity.contacts;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -244,40 +245,17 @@ public class LPContactsTab extends Fragment {
     {
         hasInitContacts=true;
 
-        firestore = FirebaseFirestore.getInstance();
-
-        firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("contacts");
-
-        firestoneUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if(e==null)
-                {
-                    Map<String,Object> userMap= new HashMap<>();
-                    userMap = documentSnapshot.getData();
-
-                    for(Map.Entry<String,Object> entry : userMap.entrySet())
-                    {
-                        Map<String,String> fContactDetails = (Map<String,String>) entry.getValue();
-                        String fContactNumber= fContactDetails.get("ID");
-                        String fContactName= fContactDetails.get("name");
-
-                        if(!allEntities.containsKey(fContactNumber))
-                        {
-                            User user = new User(fContactName,fContactNumber);
-                            allEntities.put(fContactNumber,getTotalContacts());
-                            addContact(user);
-
-                        }
-
-
-
-                    }
-
-                }
+        if(mContacts!=null)
+        {
+            for(User contact: contacts)
+            {
+                allEntities.put(contact.getNumber(),getTotalContacts());
+                addContact(contact);
             }
-        });
 
+            contacts.clear();
+        }
 
+       
     }
 }

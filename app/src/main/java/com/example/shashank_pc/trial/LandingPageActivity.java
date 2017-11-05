@@ -45,13 +45,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.GenericFunctions.addProfilePic;
 import static com.example.shashank_pc.trial.GenericFunctions.decodeNumber;
 import static com.example.shashank_pc.trial.GenericFunctions.encodeNumber;
@@ -94,6 +98,8 @@ public class LandingPageActivity extends AppCompatActivity {
     private LPEventsTab mEventLPTab;
     private LPGroupsTab mGroupLPTab;
     private LPContactsTab mContactLPTab;
+
+    public static List<User> contacts;
 
 
     FirebaseFirestore firestore;
@@ -346,6 +352,7 @@ public class LandingPageActivity extends AppCompatActivity {
                 }
         );
 
+        initContacts();
         startContactListener();
 
     }
@@ -596,5 +603,51 @@ public class LandingPageActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    public void initContacts()
+    {
+        contacts = new ArrayList<>();
+        firestore = FirebaseFirestore.getInstance();
+        firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("contacts");
+
+        firestoneUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if(e==null)
+                {
+                    Map<String,Object> userMap= new HashMap<>();
+                    userMap = documentSnapshot.getData();
+
+                    for(Map.Entry<String,Object> entry : userMap.entrySet())
+                    {
+                        Map<String,String> fContactDetails = (Map<String,String>) entry.getValue();
+                        String fContactNumber= fContactDetails.get("ID");
+                        String fContactName= fContactDetails.get("name");
+
+                        if(!allEntities.containsKey(fContactNumber))
+                        {
+                            User user = new User(fContactName,fContactNumber);
+
+                            if(mContactLPTab!=null)
+                            {
+                                allEntities.put(fContactNumber,mContactLPTab.getTotalContacts());
+                                mContactLPTab.addContact(user);
+                            }
+                            else
+                            {
+                                contacts.add(user);
+                            }
+
+
+                        }
+
+
+
+                    }
+
+                }
+            }
+        });
     }
 }
