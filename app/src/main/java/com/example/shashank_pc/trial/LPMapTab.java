@@ -135,6 +135,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                             allContactsMarkersMap.get(entry.getKey()).setPosition(
                                     new LatLng(lat,lon)
                             );
+                            allContactsMarkersMap.get(entry.getKey()).setVisible(true);
                         }
                         else
                         {
