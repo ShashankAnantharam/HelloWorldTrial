@@ -245,7 +245,7 @@ public class LPContactsTab extends Fragment {
     {
         hasInitContacts=true;
 
-        if(mContacts!=null)
+        if(contacts!=null)
         {
             for(User contact: contacts)
             {
@@ -256,6 +256,6 @@ public class LPContactsTab extends Fragment {
             contacts.clear();
         }
 
-       
+
     }
 }
