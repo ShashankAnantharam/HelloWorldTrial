@@ -452,8 +452,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 if(count<10)
                 {
-                    if(secondaryEventRadius<10)
-                        secondaryEventRadius+=0.5;
+                    if(secondaryEventRadius<20)
+                        secondaryEventRadius+=1;
                 }
                 else if(count>15)
                 {
@@ -1157,6 +1157,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             }
             if(secondaryEventMarkerMap!=null)
             {
+                for(Map.Entry<String,Marker> currentMarkers: secondaryEventMarkerMap.entrySet() )
+                {
+                    currentMarkers.getValue().remove();
+                }
                 secondaryEventMarkerMap.clear();
             }
 
@@ -1168,6 +1172,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             if(mMarkersMap!=null)
             {
                 mMarkersMap.clear();
+            }
+            if(chosenEvent!=null)
+            {
+                chosenEvent="";
             }
 
 
