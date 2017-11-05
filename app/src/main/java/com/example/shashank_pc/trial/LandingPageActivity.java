@@ -637,6 +637,8 @@ public class LandingPageActivity extends AppCompatActivity {
                             else
                             {
                                 contacts.add(user);
+                                allContactNames.put(user.getNumber(),user.getName());
+                                addProfilePic(user.getNumber());
                             }
 
 

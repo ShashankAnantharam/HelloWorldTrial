@@ -36,6 +36,7 @@ import static com.example.shashank_pc.trial.GenericFunctions.addProfilePic;
 import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 import static com.example.shashank_pc.trial.LandingPageActivity.contacts;
+import static com.example.shashank_pc.trial.LandingPageActivity.userProfilePics;
 
 /**
  * Created by shashank-pc on 8/22/2017.
@@ -85,8 +86,10 @@ public class LPContactsTab extends Fragment {
         user.initBroadcastLocationFlag(mBroadcastLocationFlag);
         mContacts.add(user);
         ContactListMap.put(user.getNumber(),mContacts.size()-1);
-        allContactNames.put(user.getNumber(),user.getName());
-        addProfilePic(user.getNumber());
+        if(!allContactNames.containsKey(user.getNumber()))
+            allContactNames.put(user.getNumber(),user.getName());
+        if(!userProfilePics.containsKey(user.getNumber()))
+            addProfilePic(user.getNumber());
         refresh();
     }
 
