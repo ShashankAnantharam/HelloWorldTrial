@@ -444,7 +444,7 @@ public class LandingPageActivity extends AppCompatActivity {
         SharedPreferences userDetails = getSharedPreferences("UserDetails",Context.MODE_PRIVATE);
 
 
-        if(userDetails.getString("UserID","")=="")
+        if(userDetails.getString("UserID","").equals(""))
             return false;
 
         mUserID = userDetails.getString("UserID","");
