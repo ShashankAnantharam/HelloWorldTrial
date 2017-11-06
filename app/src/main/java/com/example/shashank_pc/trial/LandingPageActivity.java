@@ -98,6 +98,7 @@ public class LandingPageActivity extends AppCompatActivity {
     private LPEventsTab mEventLPTab;
     private LPGroupsTab mGroupLPTab;
     private LPContactsTab mContactLPTab;
+    public static LPMapTab mMapLPTab;
 
     public static List<User> contacts;
 
@@ -560,6 +561,7 @@ public class LandingPageActivity extends AppCompatActivity {
                     if(mapLPTab==null)
                     {
                         mapLPTab = new LPMapTab();
+                        mMapLPTab = mapLPTab;
                     }
                     return mapLPTab;
                 case 1:

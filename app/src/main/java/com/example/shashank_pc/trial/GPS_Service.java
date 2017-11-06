@@ -35,6 +35,7 @@ import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
+import static com.example.shashank_pc.trial.LandingPageActivity.mMapLPTab;
 
 /**
  * Created by shashank-pc on 9/12/2017.
@@ -142,6 +143,10 @@ public class GPS_Service extends Service {
                 writeGPS.setValue(gpsWrite);
 
                 writeToGroupsEvents(location);
+                if(mMapLPTab!=null)
+                {
+                    mMapLPTab.setUserMarker(location.getLatitude(),location.getLongitude());
+                }
 
             }
 

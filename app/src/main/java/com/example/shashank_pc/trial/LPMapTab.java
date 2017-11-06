@@ -1,6 +1,7 @@
 package com.example.shashank_pc.trial;
 
 import android.app.FragmentManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +28,7 @@ import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.database;
 import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
+import static com.example.shashank_pc.trial.LandingPageActivity.getUserID;
 import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLocation;
 import static com.example.shashank_pc.trial.LandingPageActivity.unknownUser;
 import static com.example.shashank_pc.trial.LandingPageActivity.userProfilePics;
@@ -48,6 +51,10 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     private Runnable commonMapRunnable;
     private Handler commanMapHandler;
 
+    private boolean zoomFlag=false;
+    private Marker userMarker;
+    boolean mlocationsetProfilePic=false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,6 +73,38 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         return rootView;
     }
 
+    private boolean isMapZoomed()
+    {
+        return zoomFlag;
+    }
+
+    public void setUserMarker(double latitude, double longitude)
+    {
+        if(userMarker==null)
+        {
+            userMarker= mMap.addMarker(new MarkerOptions().position(
+                    new LatLng(latitude,longitude)).
+                    title("Me").
+                    icon(BitmapDescriptorFactory.fromBitmap(unknownUser)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(latitude,longitude)
+                    , 18));
+
+        }
+        else
+        {
+            userMarker.setPosition(new LatLng(latitude,longitude));
+        }
+
+
+        if (userProfilePics != null &&
+                userProfilePics.containsKey(getUserID()) && !mlocationsetProfilePic) {
+            Bitmap bitmap = userProfilePics.get(getUserID());
+            userMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+            userMarker.setAnchor(0.5f, 0.5f);
+            mlocationsetProfilePic = true;
+        }
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -148,6 +187,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                                             title(title).
                                             icon(BitmapDescriptorFactory.fromBitmap(unknownUser)))
                             );
+                            allContactsMarkersMap.get(entry.getKey()).setAnchor(0.5f,0.5f);
 
                         }
 
