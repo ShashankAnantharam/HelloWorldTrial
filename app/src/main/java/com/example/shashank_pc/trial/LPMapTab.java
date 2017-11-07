@@ -1,6 +1,8 @@
 package com.example.shashank_pc.trial;
 
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,6 +56,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     private boolean zoomFlag=false;
     private Marker userMarker;
     boolean mlocationsetProfilePic=false;
+    SharedPreferences entityVisibleflag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,29 +83,28 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
     public void setUserMarker(double latitude, double longitude)
     {
-        if(userMarker==null)
-        {
-            userMarker= mMap.addMarker(new MarkerOptions().position(
-                    new LatLng(latitude,longitude)).
-                    title("Me").
-                    icon(BitmapDescriptorFactory.fromBitmap(unknownUser)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(latitude,longitude)
-                    , 18));
+        if(mMap!=null) {
+            if (userMarker == null) {
+                userMarker = mMap.addMarker(new MarkerOptions().position(
+                        new LatLng(latitude, longitude)).
+                        title("Me").
+                        icon(BitmapDescriptorFactory.fromBitmap(unknownUser)));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(latitude, longitude)
+                        , 18));
 
-        }
-        else
-        {
-            userMarker.setPosition(new LatLng(latitude,longitude));
-        }
+            } else {
+                userMarker.setPosition(new LatLng(latitude, longitude));
+            }
 
 
-        if (userProfilePics != null &&
-                userProfilePics.containsKey(getUserID()) && !mlocationsetProfilePic) {
-            Bitmap bitmap = userProfilePics.get(getUserID());
-            userMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-            userMarker.setAnchor(0.5f, 0.5f);
-            mlocationsetProfilePic = true;
+            if (userProfilePics != null &&
+                    userProfilePics.containsKey(getUserID()) && !mlocationsetProfilePic) {
+                Bitmap bitmap = userProfilePics.get(getUserID());
+                userMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                userMarker.setAnchor(0.5f, 0.5f);
+                mlocationsetProfilePic = true;
+            }
         }
     }
 
@@ -141,6 +143,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     private void initCommonMapHandler()
     {
         commanMapHandler= new Handler();
+        entityVisibleflag = getContext().getSharedPreferences("DisplayFlags", Context.MODE_PRIVATE);
         commonMapRunnable= new Runnable() {
             @Override
             public void run() {
@@ -159,7 +162,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         for(final Map.Entry<String,Boolean> entry: isBroadcastingLocation.entrySet())
         {
 
-            if(entry.getValue())
+            if(entry.getValue() && entityVisibleflag.getBoolean(entry.getKey(),false))
             {
                 DatabaseReference temp = database.getReference("Users/"+entry.getKey()+"/Loc");
                 temp.addListenerForSingleValueEvent(new ValueEventListener() {
