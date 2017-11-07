@@ -37,6 +37,9 @@
         android:textSize="13sp"
         android:focusable="false" />
 
+
+
+
     <Button
         android:id="@+id/contact_gps_broadcast_flag"
         android:layout_width="33sp"
@@ -45,6 +48,18 @@
         android:layout_marginTop="9dp"
         android:textStyle="bold"
         android:layout_alignParentEnd="true"
+        android:focusable="false"
+        />
+
+    <Button
+        android:id="@+id/contact_display_flag"
+        android:layout_width="33sp"
+        android:layout_height="29sp"
+        android:layout_marginRight="5dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_marginTop="9dp"
+        android:layout_toLeftOf="@+id/contact_gps_broadcast_flag"
+        android:textStyle="bold"
         android:focusable="false"
         />
 

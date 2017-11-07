@@ -25,6 +25,7 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
     Context context;
     List<T> rowItems;
     String userID;
+    private SharedPreferences contactDisplay;
 
     public LPContactListItemAdapter(Context context, List<T> rowItems, String userID)
     {
@@ -58,6 +59,7 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
         TextView subtitle;
         Button locationBroadcastFlag;
         ImageView isContactBroadcastingFlag;
+        Button visibilityFlag;
 
     }
 
@@ -86,6 +88,7 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
             holder.subtitle= (TextView) convertView.findViewById(R.id.main_lp_contact_subtitle);
             holder.locationBroadcastFlag= (Button) convertView.findViewById(R.id.contact_gps_broadcast_flag);
             holder.isContactBroadcastingFlag = (ImageView) convertView.findViewById(R.id.is_contact_broadcasting_gps);
+            holder.visibilityFlag = (Button) convertView.findViewById(R.id.contact_display_flag);
 
             convertView.setTag(holder);
 
@@ -101,6 +104,8 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
         String subtitle;
         boolean buttons;
         boolean isContactBroadcastingLocationFlag=false;
+        boolean visibilityFlag=false;
+
 
         if(rowItem instanceof User)
         {
@@ -113,15 +118,63 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
                 isContactBroadcastingLocationFlag=true;
             }
 
+            //Getting display flag
+            contactDisplay = context.getSharedPreferences("DisplayFlags",Context.MODE_PRIVATE);
+            visibilityFlag = contactDisplay.getBoolean(((User) rowItem).getNumber(),
+                    false);
+
+
         }
         else
         {
             main_text="NA";
             subtitle="";
+
         }
 
         holder.main_text.setText(main_text);            //Set title of list view item
         holder.subtitle.setText(subtitle);    //Set subtitle of list view item
+
+        if(visibilityFlag)
+        {
+            //Set contact visibility button
+            holder.visibilityFlag.setBackground(context.getDrawable(R.drawable.entity_visible));
+        }
+        else
+        {
+            //reset contact visibility button
+            holder.visibilityFlag.setBackground(context.getDrawable(R.drawable.entity_invisible));
+
+        }
+
+
+        holder.visibilityFlag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(rowItem instanceof User)
+                {
+                    SharedPreferences.Editor edit= contactDisplay.edit();
+                    String ID = ((User) rowItem).getNumber();
+                    boolean curr_flag=contactDisplay.getBoolean(ID,false);
+                    if(!curr_flag)
+                    {
+                        //Set contact visibility button
+                        v.setBackground(context.getDrawable(R.drawable.entity_visible));
+                        edit.putBoolean(ID,true);
+                        edit.commit();
+                    }
+                    else
+                    {
+                        //reset contact visibility button
+                        v.setBackground(context.getDrawable(R.drawable.entity_invisible));
+                        edit.putBoolean(ID,false);
+                        edit.commit();
+                    }
+
+                }
+            }
+        });
 
 
         if(getflagstatus(rowItem)==true)
@@ -179,6 +232,9 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
         return convertView;
 
     }
+
+
+
 
 
 
