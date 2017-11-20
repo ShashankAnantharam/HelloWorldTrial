@@ -49,7 +49,10 @@ public class Generic {
     }
 
     public void initBroadcastLocationFlag(boolean BroadcastLocation)
-    {this.mBroadcastLocation = BroadcastLocation;}
+    {
+        this.mBroadcastLocation = BroadcastLocation;
+        allButtons.put(mID,BroadcastLocation);
+    }
 
 
     public void setBroadcastLocationFlag(boolean BroadcastLocation, String userID){

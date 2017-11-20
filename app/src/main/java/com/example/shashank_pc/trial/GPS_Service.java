@@ -107,7 +107,7 @@ public class GPS_Service extends Service {
 
                         if(entry.getKey().charAt(0)=='G' || entry.getKey().charAt(0)=='C') {
 
-                            //Group
+                            //Group or Contact
 
                             //Put only lat and long
 

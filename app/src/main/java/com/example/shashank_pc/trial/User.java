@@ -56,7 +56,12 @@ public class User{
         mName=name;
     }
 
-    public void initBroadcastLocationFlag(boolean BroadcastLocation){this.mBroadcastLocation=BroadcastLocation;}
+    public void initBroadcastLocationFlag(boolean BroadcastLocation){
+        this.mBroadcastLocation=BroadcastLocation;
+        String contactRef="C"+mNumber;
+        allButtons.put(contactRef,BroadcastLocation);
+
+    }
 
     public boolean getBroadcastLocationFlag(){return mBroadcastLocation;}
 }

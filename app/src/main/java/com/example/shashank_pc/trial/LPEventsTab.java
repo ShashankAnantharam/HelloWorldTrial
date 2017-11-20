@@ -82,7 +82,6 @@ public class LPEventsTab extends Fragment {
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(event.getID(),false);
         event.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        allButtons.put(event.getID(),mBroadcastLocationFlag);
         mEvents.add(event);
         refresh();
     }

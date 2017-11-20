@@ -78,7 +78,6 @@ public class LPGroupsTab extends Fragment {
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(group.getID(),false);
         group.initBroadcastLocationFlag(mBroadcastLocationFlag);
-        allButtons.put(group.getID(),mBroadcastLocationFlag);
         mGroups.add(group);
         refresh();
     }
