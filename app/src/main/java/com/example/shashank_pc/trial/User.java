@@ -2,6 +2,8 @@ package com.example.shashank_pc.trial;
 
 import com.google.firebase.database.DatabaseReference;
 
+import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
+
 /**
  * Created by shashank-pc on 8/22/2017.
  */
@@ -40,11 +42,9 @@ public class User{
 
         DatabaseReference ref = Generic.database.getReference(address); //go to that reference location
 
-        if(BroadcastLocation)
-        {
-            ref.child(userID).setValue("");
-        }
-        else
+        String contactRef="C"+mNumber;
+        allButtons.put(contactRef,BroadcastLocation);
+        if(!BroadcastLocation)
         {
             ref.child(userID).removeValue();
         }

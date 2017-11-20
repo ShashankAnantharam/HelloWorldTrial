@@ -89,6 +89,12 @@ public class GPS_Service extends Service {
                 for(Map.Entry<String,Boolean> entry: allButtons.entrySet())
                 {
                     String writeRef= "Loc/"+entry.getKey()+"/"+LandingPageActivity.getUserID();
+                    if(entry.getKey().charAt(0)=='C') {
+                        String contactNum=entry.getKey();
+                        contactNum = contactNum.substring(1);
+                        writeRef = "Users/" + contactNum + "/Cts/" + LandingPageActivity.getUserID();
+
+                    }
                     DatabaseReference reference = database.getReference(writeRef);
                     if(!entry.getValue())
                     {
@@ -99,7 +105,7 @@ public class GPS_Service extends Service {
                     {
                         //Update location if value true
 
-                        if(entry.getKey().charAt(0)=='G') {
+                        if(entry.getKey().charAt(0)=='G' || entry.getKey().charAt(0)=='C') {
 
                             //Group
 
