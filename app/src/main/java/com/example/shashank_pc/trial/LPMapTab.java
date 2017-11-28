@@ -129,8 +129,15 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", current_number, null));
-                startActivity(intent);
+
+                try {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", current_number, null));
+                    startActivity(intent);
+                }
+                catch (Exception e)
+                {
+                    
+                }
             }
         });
 
