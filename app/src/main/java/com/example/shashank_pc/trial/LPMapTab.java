@@ -11,6 +11,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,6 +58,10 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     private Marker userMarker;
     boolean mlocationsetProfilePic=false;
     SharedPreferences entityVisibleflag;
+
+    String current_number="";
+
+    Map <String,String> titleToNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,7 +118,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
         mapFlag=false;
 
-
+        titleToNumber= new HashMap<>();
 
 
         if (mMapFrag == null) {
@@ -138,6 +143,18 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
         allContactsMarkersMap= new HashMap<>();
         initCommonMapHandler();
+        setMarkerListener();
+    }
+
+    private void setMarkerListener(){
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                current_number=titleToNumber.get(marker.getTitle());
+           //     Toast.makeText(getContext(),current_number,Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
 
     private void initCommonMapHandler()
@@ -183,6 +200,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                         {
                             //Marker not present. Need to create it
                             String title=entry.getKey();
+                            String current_num_set="+91"+entry.getKey();
                             if(allContactNames.containsKey(title))
                                 title=allContactNames.get(title);
                             allContactsMarkersMap.put(entry.getKey(),
@@ -191,6 +209,8 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                                             icon(BitmapDescriptorFactory.fromBitmap(unknownUser)))
                             );
                             allContactsMarkersMap.get(entry.getKey()).setAnchor(0.5f,0.5f);
+                            titleToNumber.put(title,current_num_set);
+
 
                         }
 
