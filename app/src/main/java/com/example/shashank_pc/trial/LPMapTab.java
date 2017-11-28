@@ -150,7 +150,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                current_number=titleToNumber.get(marker.getTitle());
+                current_number="+91"+titleToNumber.get(marker.getTitle());
            //     Toast.makeText(getContext(),current_number,Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -200,7 +200,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                         {
                             //Marker not present. Need to create it
                             String title=entry.getKey();
-                            String current_num_set="+91"+entry.getKey();
+                            String current_num_set=entry.getKey();
                             if(allContactNames.containsKey(title))
                                 title=allContactNames.get(title);
                             allContactsMarkersMap.put(entry.getKey(),
