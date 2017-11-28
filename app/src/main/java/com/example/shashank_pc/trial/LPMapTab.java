@@ -2,8 +2,10 @@ package com.example.shashank_pc.trial;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,6 +65,8 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     String current_number="";
 
     Map <String,String> titleToNumber;
+
+    private Button callButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,6 +124,15 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mapFlag=false;
 
         titleToNumber= new HashMap<>();
+        callButton = (Button) getActivity().findViewById(R.id.callButton);
+
+        callButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", current_number, null));
+                startActivity(intent);
+            }
+        });
 
 
         if (mMapFrag == null) {
