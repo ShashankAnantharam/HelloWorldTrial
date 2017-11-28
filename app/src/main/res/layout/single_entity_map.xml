@@ -17,4 +17,18 @@
     </fragment>
 
 
+    <Button
+        android:id="@+id/callButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/call_button" />
+
+    <Button
+        android:id="@+id/chatButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/callButton"
+        android:text="Chat" />
+
 </RelativeLayout>
