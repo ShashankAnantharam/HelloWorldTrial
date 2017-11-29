@@ -136,7 +136,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                 }
                 catch (Exception e)
                 {
-                    
+
                 }
             }
         });
