@@ -21,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -67,6 +68,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     Map <String,String> titleToNumber;
 
     private Button callButton;
+    private Button chatButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,6 +127,12 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
         titleToNumber= new HashMap<>();
         callButton = (Button) getActivity().findViewById(R.id.callButton);
+        callButton.setVisibility(View.INVISIBLE);
+        callButton.setClickable(false);
+
+        chatButton = (Button) getActivity().findViewById(R.id.chatButton);
+        chatButton.setVisibility(View.INVISIBLE);
+        chatButton.setClickable(false);
 
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,17 +173,40 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         allContactsMarkersMap= new HashMap<>();
         initCommonMapHandler();
         setMarkerListener();
+        setMapClickListener();
     }
 
     private void setMarkerListener(){
+
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 current_number="+91"+titleToNumber.get(marker.getTitle());
            //     Toast.makeText(getContext(),current_number,Toast.LENGTH_SHORT).show();
+
+                callButton.setVisibility(View.VISIBLE);
+                callButton.setClickable(true);
+                chatButton.setVisibility(View.VISIBLE);
+                chatButton.setClickable(true);
+
                 return false;
             }
         });
+    }
+
+    private void setMapClickListener()
+    {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                chatButton.setVisibility(View.INVISIBLE);
+                chatButton.setClickable(false);
+                callButton.setVisibility(View.INVISIBLE);
+                callButton.setClickable(false);
+            }
+        });
+    
     }
 
     private void initCommonMapHandler()
