@@ -67,6 +67,8 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
     Map <String,String> titleToNumber;
 
+    boolean markerMoveFlag=false;
+
     private Button callButton;
     private Button chatButton;
 
@@ -185,6 +187,10 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                 current_number="+91"+titleToNumber.get(marker.getTitle());
            //     Toast.makeText(getContext(),current_number,Toast.LENGTH_SHORT).show();
 
+                markerMoveFlag=true;
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(
+                        marker.getPosition()
+                        ));
                 callButton.setVisibility(View.VISIBLE);
                 callButton.setClickable(true);
                 chatButton.setVisibility(View.VISIBLE);
@@ -204,6 +210,26 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                 chatButton.setClickable(false);
                 callButton.setVisibility(View.INVISIBLE);
                 callButton.setClickable(false);
+            }
+        });
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                markerMoveFlag=false;
+            }
+        });
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+
+                if(!markerMoveFlag) {
+                    chatButton.setVisibility(View.INVISIBLE);
+                    chatButton.setClickable(false);
+                    callButton.setVisibility(View.INVISIBLE);
+                    callButton.setClickable(false);
+                }
             }
         });
 
