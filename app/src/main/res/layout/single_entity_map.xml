@@ -22,6 +22,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="300dp"
         android:background="@drawable/call_button" />
 
     <Button
@@ -29,6 +31,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_toLeftOf="@+id/callButton"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="300dp"
         android:background="@drawable/chat_button_map"
         />
 
