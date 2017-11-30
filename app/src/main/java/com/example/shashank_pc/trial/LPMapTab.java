@@ -206,7 +206,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                 callButton.setClickable(false);
             }
         });
-    
+
     }
 
     private void initCommonMapHandler()
