@@ -127,33 +127,37 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
         mapFlag=false;
 
-        titleToNumber= new HashMap<>();
-        callButton = (Button) getActivity().findViewById(R.id.callButton);
-        callButton.setVisibility(View.INVISIBLE);
-        callButton.setClickable(false);
 
-        chatButton = (Button) getActivity().findViewById(R.id.chatButton);
-        chatButton.setVisibility(View.INVISIBLE);
-        chatButton.setClickable(false);
 
-        callButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", current_number, null));
-                    startActivity(intent);
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-        });
 
 
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
+
+            titleToNumber= new HashMap<>();
+            callButton = (Button) getActivity().findViewById(R.id.callButton);
+            callButton.setVisibility(View.INVISIBLE);
+            callButton.setClickable(false);
+
+            chatButton = (Button) getActivity().findViewById(R.id.chatButton);
+            chatButton.setVisibility(View.INVISIBLE);
+            chatButton.setClickable(false);
+
+            callButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", current_number, null));
+                        startActivity(intent);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+            });
+
 
             //           Toast.makeText(getContext(),mEntityID,Toast.LENGTH_SHORT).show();
 
