@@ -82,7 +82,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                 parent.removeView(rootView);
         }
         try {
-            rootView = inflater.inflate(R.layout.single_entity_map, container, false);
+            rootView = inflater.inflate(R.layout.main_lp_map, container, false);
         } catch (InflateException e) {
 
         }
@@ -135,11 +135,11 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
             super.onViewCreated(view, savedInstanceState);
 
             titleToNumber= new HashMap<>();
-            callButton = (Button) getActivity().findViewById(R.id.callButton);
+            callButton = (Button) getActivity().findViewById(R.id.lp_callButton);
             callButton.setVisibility(View.INVISIBLE);
             callButton.setClickable(false);
 
-            chatButton = (Button) getActivity().findViewById(R.id.chatButton);
+            chatButton = (Button) getActivity().findViewById(R.id.lp_chatButton);
             chatButton.setVisibility(View.INVISIBLE);
             chatButton.setClickable(false);
 
@@ -163,7 +163,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
             FragmentManager fragment = getActivity().getFragmentManager();
 
-            mMapFrag = (MapFragment) fragment.findFragmentById(R.id.map);
+            mMapFrag = (MapFragment) fragment.findFragmentById(R.id.lp_map);
 
             mapFlag=true;
             mMapFrag.getMapAsync(this);
@@ -182,6 +182,25 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         setMapClickListener();
     }
 
+    private void showMarkerButtons(boolean showMarkerButtons)
+    {
+        if(showMarkerButtons)
+        {
+            callButton.setVisibility(View.VISIBLE);
+            callButton.setClickable(true);
+            chatButton.setVisibility(View.VISIBLE);
+            chatButton.setClickable(true);
+        }
+        else
+        {
+            chatButton.setVisibility(View.INVISIBLE);
+            chatButton.setClickable(false);
+            callButton.setVisibility(View.INVISIBLE);
+            callButton.setClickable(false);
+        }
+    }
+
+
     private void setMarkerListener(){
 
 
@@ -195,10 +214,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(
                         marker.getPosition()
                         ));
-                callButton.setVisibility(View.VISIBLE);
-                callButton.setClickable(true);
-                chatButton.setVisibility(View.VISIBLE);
-                chatButton.setClickable(true);
+                showMarkerButtons(true);
 
                 return false;
             }
@@ -210,10 +226,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                chatButton.setVisibility(View.INVISIBLE);
-                chatButton.setClickable(false);
-                callButton.setVisibility(View.INVISIBLE);
-                callButton.setClickable(false);
+                showMarkerButtons(false);
             }
         });
 
@@ -229,10 +242,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
             public void onCameraMove() {
 
                 if(!markerMoveFlag) {
-                    chatButton.setVisibility(View.INVISIBLE);
-                    chatButton.setClickable(false);
-                    callButton.setVisibility(View.INVISIBLE);
-                    callButton.setClickable(false);
+                    showMarkerButtons(false);
                 }
             }
         });
