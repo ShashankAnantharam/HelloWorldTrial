@@ -63,7 +63,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     boolean mlocationsetProfilePic=false;
     SharedPreferences entityVisibleflag;
 
-    String current_number="";
+    String current_number="";   //Number of selected marker that is necessary to make calls.
 
     Map <String,String> titleToNumber;
 
@@ -147,6 +147,10 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onClick(View v) {
 
+                    /*
+                    Start a phone call based on number selected
+                     */
+
                     try {
                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", current_number, null));
                         startActivity(intent);
@@ -184,6 +188,9 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
     private void showMarkerButtons(boolean showMarkerButtons)
     {
+        /*
+        Function to show/hide marker buttons
+         */
         if(showMarkerButtons)
         {
             callButton.setVisibility(View.VISIBLE);
@@ -207,15 +214,12 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                current_number="+91"+titleToNumber.get(marker.getTitle());
-           //     Toast.makeText(getContext(),current_number,Toast.LENGTH_SHORT).show();
 
-                markerClickflag=true;
-      /*          mMap.moveCamera(CameraUpdateFactory.newLatLng(
-                        marker.getPosition()
-                        ));
-                        */
-              //  showMarkerButtons(true);
+
+                current_number="+91"+titleToNumber.get(marker.getTitle());
+                //On Marker Click, get the phonenumber of marker
+
+                markerClickflag=true;       //Set marker Click flag for true
 
                 return false;
             }
@@ -227,6 +231,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                //Any click on the map should hide all markers and make marketClickFlag false;
                 showMarkerButtons(false);
                 markerClickflag=false;
             }
@@ -235,8 +240,12 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
+                //If marker click flag is rue(marker is clicked), show the buttons.
                 if(markerClickflag)
                     showMarkerButtons(true);
+
+                //Once camera adjusts to the marker, make the marker click flag false. Any newmovement of camera will cause
+                //markers to disappear.
                 markerClickflag=false;
             }
         });
@@ -246,6 +255,8 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
+                //If marker is clicked (i.e. marker click flag is set), then do not do anthying
+                //otherwise, if marker click flag is false, hide the markers when camera is moved.
                     if(!markerClickflag)
                         showMarkerButtons(false);
             }
