@@ -134,6 +134,9 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         if (mMapFrag == null) {
             super.onViewCreated(view, savedInstanceState);
 
+            /*
+            Initializing the variables for Call Button Functionality
+             */
             titleToNumber= new HashMap<>();
             callButton = (Button) getActivity().findViewById(R.id.lp_callButton);
             callButton.setVisibility(View.INVISIBLE);
