@@ -65,6 +65,10 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
+        /*
+        Initialize chat and its display properties (to left or right, blue or purple, depending upon who said it)
+         */
+
         ViewHolder holder = null;
 
         LayoutInflater inflator= (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
