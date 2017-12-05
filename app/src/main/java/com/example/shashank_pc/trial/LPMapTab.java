@@ -320,7 +320,8 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                                             icon(BitmapDescriptorFactory.fromBitmap(unknownUser)))
                             );
                             allContactsMarkersMap.get(entry.getKey()).setAnchor(0.5f,0.5f);
-                            titleToNumber.put(title,current_num_set);
+
+                            titleToNumber.put(title,current_num_set);   //save marker number in hashmap for future calls
 
 
                         }
