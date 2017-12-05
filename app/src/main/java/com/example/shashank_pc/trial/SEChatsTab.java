@@ -76,20 +76,26 @@ public class SEChatsTab  extends Fragment {
 
     public void updateChatFlag(final DatabaseReference ref)
     {
+        /*
+        Function to update view count (and delete message if all people have seen it)
+         */
 
         DatabaseReference updateRef = ref.child("views");
         total = 0;
         if(mType=='U')
         {
+            //For Contact chats, only 2 people have to see the message
             total=2;
         }
         else if(mType=='E' || mType=='G')
         {
+            //If group or event, get the total number of people who have to see the message
             SharedPreferences preferences = getContext().getSharedPreferences(mEntityID,Context.MODE_PRIVATE);
             total = preferences.getLong("TotalMembers",100000);
         }
 
 
+        //Updating the viewcount using the transaction api of Firebase
         updateRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -133,9 +139,11 @@ public class SEChatsTab  extends Fragment {
             //Set Entity ID as pref ID for Events and Groups
             prefID=mEntityID;
 
-            //Get length of current total members who will see chat message
 
-            //TODO Move this later on to Service
+
+            //TODO Move this later on to Service if necessary
+
+            //Get the total number of members who will see the chat message from RealtimeDatabase
             fireStoreMemberLength= database.getReference("MemLen/"+prefID);
             firestoreMemLengthVal= fireStoreMemberLength.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -144,6 +152,7 @@ public class SEChatsTab  extends Fragment {
                     SharedPreferences preferences  = getContext().getSharedPreferences(
                             prefID,Context.MODE_PRIVATE
                     );
+                    //Save the total number of members in SharedPreferences
                     SharedPreferences.Editor edit = preferences.edit();
                     edit.putLong("TotalMembers",totalMembers);
 
@@ -162,6 +171,7 @@ public class SEChatsTab  extends Fragment {
                 Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = preferences.edit();
 
+        //Get the total number of chat messages until now
         length = preferences.getLong("length",0);
 
         for(int i=1;i<=length;i++)
@@ -169,7 +179,7 @@ public class SEChatsTab  extends Fragment {
             String key = preferences.getString(Integer.toString(i),"");
             if(!key.equals(""))
             {
-                //Message already present in local
+                //Message is already present in local, display on chat box
 
                 String mTS = preferences.getString((key+ "_TS"),"");
                 String chatText = preferences.getString((key+ "_msg"),"");
@@ -189,6 +199,7 @@ public class SEChatsTab  extends Fragment {
 
 
 
+        //Listen to new messages from Realtime Database
 
         commentListener=database.getReference("ChtMsgs/"+prefID);
         singleCommentListener = commentListener.addChildEventListener(new ChildEventListener() {
@@ -205,7 +216,7 @@ public class SEChatsTab  extends Fragment {
                     editor.putString(Long.toString(length),key); //Set index to key
 
 
-                    //Get data from Firebase
+                    //Get data from Firebase RealtimeDatabase
                     String chatText = (String)dataSnapshot.child("Msg").getValue();
                     String creator = (String) dataSnapshot.child("Creator").getValue();
                     String tS= (String) dataSnapshot.child("TS").getValue();
@@ -318,6 +329,7 @@ public class SEChatsTab  extends Fragment {
 
 
 
+        //Initialize objects
 
         mChatList= (ListView) rootView.findViewById(R.id.chat_list);
 
@@ -361,6 +373,9 @@ public class SEChatsTab  extends Fragment {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                Function to send typed chat message
+                 */
                 String chatText = mChatText.getText().toString();
                 mChatText.setText("");
 
