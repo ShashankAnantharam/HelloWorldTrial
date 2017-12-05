@@ -231,7 +231,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                //Any click on the map should hide all markers and make marketClickFlag false;
+                //Any click on the map should hide all buttons and make marketClickFlag false;
                 showMarkerButtons(false);
                 markerClickflag=false;
             }
@@ -245,7 +245,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                     showMarkerButtons(true);
 
                 //Once camera adjusts to the marker, make the marker click flag false. Any newmovement of camera will cause
-                //markers to disappear.
+                //buttons to disappear.
                 markerClickflag=false;
             }
         });
@@ -256,7 +256,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
             @Override
             public void onCameraMove() {
                 //If marker is clicked (i.e. marker click flag is set), then do not do anthying
-                //otherwise, if marker click flag is false, hide the markers when camera is moved.
+                //otherwise, if marker click flag is false, hide the buttons when camera is moved.
                     if(!markerClickflag)
                         showMarkerButtons(false);
             }
