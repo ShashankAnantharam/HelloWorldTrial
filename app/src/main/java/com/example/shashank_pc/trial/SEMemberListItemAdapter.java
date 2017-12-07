@@ -55,6 +55,7 @@ public class SEMemberListItemAdapter<T> extends BaseAdapter {
 
 
     private class ViewHolder{
+        //Class to hold the member item
         TextView main_text;
         TextView subtitle;
         ImageView isMemberBroadcastingFlag;
@@ -69,6 +70,7 @@ public class SEMemberListItemAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
+        //Initialize the MemberListItem
         ViewHolder holder=null;
 
 
@@ -94,6 +96,7 @@ public class SEMemberListItemAdapter<T> extends BaseAdapter {
         }
 
 
+        //Get the rowItem based on position
         final T rowItem= rowItems.get(position);
 
         String main_text;
@@ -102,6 +105,7 @@ public class SEMemberListItemAdapter<T> extends BaseAdapter {
 
         if(rowItem instanceof User)
         {
+            //If row item is user, get the name of user, the chat message and whether he/she is broadcasting
             main_text=((User) rowItem).getName();
             subtitle=((User) rowItem).getLastChatMessage();
 
@@ -118,22 +122,22 @@ public class SEMemberListItemAdapter<T> extends BaseAdapter {
             subtitle="";
         }
 
-        holder.main_text.setText(main_text);            //Set title of list view item
-        holder.subtitle.setText(subtitle);    //Set subtitle of list view item
+        holder.main_text.setText(main_text);            //Set Name of member list view item
+        holder.subtitle.setText(subtitle);    //Set subtitle of member list view item
 
 
 
 
         if(isMemberBroadcastingLocationFlag)
         {
-            //Contact is broadcasting GPS
+            //if Member is broadcasting GPS
             holder.isMemberBroadcastingFlag.setImageDrawable(
                     convertView.getResources().getDrawable(R.drawable.contact_loc_broadcasting_on)
             );
         }
         else
         {
-            //Contact is not broadcasting GPS
+            //Member is not broadcasting GPS
             holder.isMemberBroadcastingFlag.setImageDrawable(
                     convertView.getResources().getDrawable(R.drawable.contact_loc_broadcasting_off)
             );
