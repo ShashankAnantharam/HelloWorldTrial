@@ -88,6 +88,8 @@ public class GPS_Service extends Service {
                 //Write to the references
                 for(Map.Entry<String,Boolean> entry: allButtons.entrySet())
                 {
+                    //Iterate through the location broadcast buttons of
+                    // all groups, contacts and event
                     String writeRef= "Loc/"+entry.getKey()+"/"+LandingPageActivity.getUserID();
                     if(entry.getKey().charAt(0)=='C') {
                         String contactNum=entry.getKey();
@@ -98,12 +100,12 @@ public class GPS_Service extends Service {
                     DatabaseReference reference = database.getReference(writeRef);
                     if(!entry.getValue())
                     {
-                        //Delete location if value is false
+                        //Delete location from realtime DB if button value is false (button is not set)
                         reference.removeValue();
                     }
                     else
                     {
-                        //Update location if value true
+                        //Update location in realtime DB if value true
 
                         if(entry.getKey().charAt(0)=='G' || entry.getKey().charAt(0)=='C') {
 
