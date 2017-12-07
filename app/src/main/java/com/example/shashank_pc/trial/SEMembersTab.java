@@ -56,6 +56,7 @@ public class SEMembersTab  extends LPContactsTab{
     public void refresh()
     {
 
+        //Refresh the listview
         if(arrayAdapter!=null) {
             arrayAdapter.notifyDataSetChanged();
         }
@@ -65,6 +66,7 @@ public class SEMembersTab  extends LPContactsTab{
     @Override
     public void addContact(User user)
     {
+        //Add member to list
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(user.getNumber(),false);
         user.initBroadcastLocationFlag(mBroadcastLocationFlag);
@@ -115,6 +117,8 @@ public class SEMembersTab  extends LPContactsTab{
     @Override
     public void initUsers()
     {
+
+        //Initialize Members first time the Member tab is opened
         hasInitContacts=true;
 
 
