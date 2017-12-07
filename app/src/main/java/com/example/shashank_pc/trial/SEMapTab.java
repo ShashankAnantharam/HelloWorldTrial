@@ -615,23 +615,33 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void getMembersCoordinates()
     {
+        //Get address of the group members coordinates in Firebase
         String membersDatabaseAddress= "Loc/"+mEntityID;
 
+        //Get Firebase RealtimeDB Reference
         DatabaseReference reference= database.getReference(membersDatabaseAddress);
 
+        //Listen only once to the existing coordinates (This runs every 2.5 seconds or so. The coordinates
+        //are taken in bulk inorder to reduce overhead costs.
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //Put dataSnapshot in MemberMap
                 Map<String,ArrayList<Double>> memberMap = (Map) dataSnapshot.getValue();
 
                 for(Map.Entry<String,Marker> entry:mMarkersMap.entrySet())
                 {
+                    //Iterate through marker map
                     String memberID= entry.getKey();
                     if(memberMap!=null && memberMap.containsKey(memberID))
                     {
-                        //Already marker in hashmap and needs to be updated only
+                        //If memberMap contains the key of current element of MarkerMap, then
+                        //Already marker in Markermap and needs to be updated only
 
                         if(!memberID.equals(mUserID)) {
+                            //If group member is NOT the user himself
+                            //then get coordinates and store in LatLng object
+
                             Double latitude = memberMap.get(memberID).get(0);
                             Double longitude = memberMap.get(memberID).get(1);
                             LatLng memberLatLng = new LatLng(latitude, longitude);
@@ -640,7 +650,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                         }
 
+                        //Set isMemberBroadcastingLocation hashmap to true. This shows
+                        //in the members tab that the member is broadcasting location
                         isMemberBroadcastingLocation.put(memberID,true);
+
+                        //refresh member tab
                         if(mMembersTab!=null)
                            mMembersTab.refresh();
 
@@ -648,7 +662,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                 membersProfilePic.containsKey(memberID) && mMemberSetProfilePicFlag.containsKey(memberID)
                                 && !mMemberSetProfilePicFlag.get(memberID))
                         {
-                            //First time initialize the memberID marker
+                            //Change Member marker to ProfilePic
 
                             Bitmap memberProfilePic= membersProfilePic.get(entry.getKey());
                             mMarkersMap.get(entry.getKey()).setAnchor(0.5f,0.5f);
@@ -656,6 +670,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                                     memberProfilePic));
                         }
 
+                        //Remove member from the MemberMap because he/she has been updated on map
                         memberMap.remove(memberID);
 
                     }
@@ -676,6 +691,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 try {
                     Iterator<Map.Entry<String, ArrayList<Double>>> it = memberMap.entrySet().iterator();
 
+                    //Iterate through memberMap now. All the entries remaining are of those members who
+                    //were not broadcasting before (and hence absent from MarkersMap) but are doing so now
                     while (it.hasNext()) {
                         //All new members who were not available before
 
@@ -690,6 +707,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     //                    Toast.makeText(getContext(),"Changed",Toast.LENGTH_SHORT).show();
 
                         if (!title.equals(mUserID)) {
+                            //If member is not the current User, then get Latitude and Longitude
+                            //and store it in LatLng object
+
                             Double latitude = entry.getValue().get(0);
                             Double longitude = entry.getValue().get(1);
 
@@ -701,12 +721,14 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                             LatLng memberLatLng = new LatLng(latitude, longitude);
 
+                            //Initialize the new marker for the member
                             mMarkersMap.put(entry.getKey(),
                                     mMap.addMarker(new MarkerOptions().position(memberLatLng).
                                             title(title).
                                             icon(BitmapDescriptorFactory.fromBitmap(unknownUser)))
                             );
 
+                            //Change marker to profile picture if available
                             if(membersProfilePic!=null && membersProfilePic.containsKey(entry.getKey()))
                             {
                                 Toast.makeText(getContext(),entry.getKey(),Toast.LENGTH_SHORT).show();
@@ -747,6 +769,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void membersInit()
     {
+        /*
+        Initialize MarkersMap
+         */
         mMarkersMap = new HashMap<>();
         memberHandler= new Handler();
         runnable= new Runnable() {
