@@ -153,12 +153,19 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void contactMarkerinit(String contactFirebaseAddress)
     {
+        /*
+        Function to initialize contact Marker given the Firebase Address of the
+        location coordinates of the contact broadcasting location
+         */
+
+        //Get the Database Reference of the contact's coordinates from Firebase
         if(contactLatLong==null) {
 
             contactLatLong = Generic.database.getReference(contactFirebaseAddress);
             //      Toast.makeText(getContext(),contactFirebaseAddress,Toast.LENGTH_SHORT).show();
         }
 
+        //Event listener added to listen for changes in contact's address
         contactLatLongEventListener=contactLatLong.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -167,6 +174,8 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 int i=0;
                 for(DataSnapshot snapshot: dataSnapshot.getChildren())
                 {
+                    //Retrieving latitude and longitude from Datasnapshot
+
                     double temp= snapshot.getValue(Double.class);
                     if(i==0) {
                         latitude = temp;
@@ -180,25 +189,29 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     i++;
 
                 }
+                //Setting latitude and longitude to a temporary LatLng object
                 contactLatLng= new LatLng(latitude,longtitude);
                 if(mMap!=null) {
 
 
                     if(mContactMarker!=null)       //Not the first time location is initialized
                     {
+                        //Just change position of contact
                         mContactMarker.setPosition(contactLatLng);
 
                     }
                     else {                          //First time location is initialized
 
+                        //Create marker and set location
                         mContactMarker = mMap.addMarker(new MarkerOptions().position(contactLatLng).
                                 title(mEntityName).
-                                icon(BitmapDescriptorFactory.fromBitmap(unknownUser)));
+                                icon(BitmapDescriptorFactory.fromBitmap(unknownUser)).anchor(0.5f,0.5f));
 
 
 
                     }
 
+                    //If profile picture of the contact is avaialble, then set marker as profile picture
                     if(userProfilePics.containsKey(mEntityID))
                     {
                         mContactMarker.setIcon(BitmapDescriptorFactory.fromBitmap(
