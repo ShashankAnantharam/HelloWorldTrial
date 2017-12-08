@@ -110,6 +110,7 @@ public class SingleEntityActivity extends AppCompatActivity {
     @Override
     protected void onDestroy()
     {
+        //Clear al variables
         super.onDestroy();
         mMembersTab=null;
         Members.clear();
@@ -133,6 +134,7 @@ public class SingleEntityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_single_entity);
 
 
+        //Initialize all variables
         isMemberBroadcastingLocation= new HashMap<>();
         Members = new ArrayList<>();
         mirrorMembersMap = new HashMap<String,String>();
@@ -163,6 +165,7 @@ public class SingleEntityActivity extends AppCompatActivity {
         mTitle=(TextView) findViewById(R.id.single_entity_title);
         mTitle.setText(mEntityName);
 
+        //Initialize the Location Broadcast Button
         isGPSBroadcast = (Button) findViewById(R.id.single_entity_contact_gps_broadcast_flag);
 
         setGPSBroadcastButtoncolor(isGPSBroadcastFlag);
@@ -172,13 +175,16 @@ public class SingleEntityActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(isGPSBroadcastFlag) {
+                    //If isGPSBroadcast is true, then make it false
                     isGPSBroadcastFlag = false;
                     Toast.makeText(getApplicationContext(), "GPS broadcasting OFF", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    //If isGPSBroadcast is false, make it true
                     isGPSBroadcastFlag = true;
                     Toast.makeText(getApplicationContext(), "GPS broadcasting ON", Toast.LENGTH_SHORT).show();
                 }
+                //Set the button color and the SharedPreferences value of isGPSBroadcastFlag accordingly
                     setGPSBroadcastButtoncolor(isGPSBroadcastFlag);
                     setGPSBroadcastSharedPreferences(isGPSBroadcastFlag);
 
@@ -261,6 +267,7 @@ public class SingleEntityActivity extends AppCompatActivity {
     }
 
     public void setGPSBroadcastButtoncolor(boolean GPSBroadcastFlag) {
+        //Function to set GPSBroadcastFlag color
         if(GPSBroadcastFlag)
             isGPSBroadcast.setBackground(getDrawable(R.drawable.single_entity_activity_button_on));
         else
@@ -268,21 +275,22 @@ public class SingleEntityActivity extends AppCompatActivity {
     }
 
     public void setGPSBroadcastSharedPreferences(boolean GPSBroadcastFlag) {
+        //Function to set the location broadcast button state in shared preferences and alter the database
         SharedPreferences preferences = getSharedPreferences("LPLists", Context.MODE_PRIVATE);
         SharedPreferences.Editor edit= preferences.edit();
 
         if(mType=='E')
         {
             //Event
-            mEvent.setBroadcastLocationFlag(GPSBroadcastFlag,mUserID);
-            edit.putBoolean(mEntityID,GPSBroadcastFlag);
+            mEvent.setBroadcastLocationFlag(GPSBroadcastFlag,mUserID);      //Set the broadcast location flag in backend
+            edit.putBoolean(mEntityID,GPSBroadcastFlag);            //Save the flag in shared preferences
             edit.commit();
         }
         else if(mType=='G')
         {
             //Group
-            mGroup.setBroadcastLocationFlag(GPSBroadcastFlag,mUserID);
-            edit.putBoolean(mEntityID,GPSBroadcastFlag);
+            mGroup.setBroadcastLocationFlag(GPSBroadcastFlag,mUserID);  //Set the broadcast location flag in backend
+            edit.putBoolean(mEntityID,GPSBroadcastFlag);        //Save the flag in shared preferences
             edit.commit();
         }
         else if(mType=='U')
@@ -407,6 +415,9 @@ public class SingleEntityActivity extends AppCompatActivity {
 
     private void membersInit()
     {
+        /*
+        Function to get the members from Firstore Backend to Android
+         */
         String type="";
 
         if(mType=='E')
@@ -426,6 +437,7 @@ public class SingleEntityActivity extends AppCompatActivity {
                         if (e == null) {
                             Map<String, Object> firestoreMemberMap = new HashMap<>();
                             firestoreMemberMap = documentSnapshot.getData();
+                            //Backend data saved temporarily in firestoreMemberMap
 
                             List<String> entitiesToBeRemoved = new ArrayList<String>();
 
