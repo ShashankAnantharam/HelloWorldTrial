@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
@@ -22,6 +23,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -136,6 +138,12 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private Map<String,Marker> secondaryEventMarkerMap;
     private Map<String,Boolean> secondaryEventMemberPresentFlag;
 
+    Button callButton;
+    Button chatButton;
+
+    String current_number="";
+    boolean markerClickflag=false;
+    Map <String,String> titleToNumber;
 
 
     public static String chosenEvent="";
@@ -713,12 +721,15 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             Double latitude = entry.getValue().get(0);
                             Double longitude = entry.getValue().get(1);
 
+                            String current_num_set=title;
+
                             if (allContactNames.containsKey(title))
                                 title = allContactNames.get(title);
 
                             if (allContactNames != null && allContactNames.containsKey(title))
                                 title = allContactNames.get(title);
 
+                            titleToNumber.put(title,current_num_set);
                             LatLng memberLatLng = new LatLng(latitude, longitude);
 
                             //Initialize the new marker for the member
@@ -824,9 +835,37 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             FragmentManager fragment = getActivity().getFragmentManager();
 
             mMapFrag = (MapFragment) fragment.findFragmentById(R.id.map);
+            titleToNumber= new HashMap<>();
 
             mapFlag=true;
             mMapFrag.getMapAsync(this);
+
+            callButton = (Button) getActivity().findViewById(R.id.se_callButton);
+            callButton.setVisibility(View.INVISIBLE);
+            callButton.setClickable(false);
+
+            chatButton = (Button) getActivity().findViewById(R.id.se_chatButton);
+            chatButton.setVisibility(View.INVISIBLE);
+            chatButton.setClickable(false);
+
+            callButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    /*
+                    Start a phone call based on number selected
+                     */
+
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", current_number, null));
+                        startActivity(intent);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+            });
 
 
 
@@ -1143,11 +1182,93 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
                 //If Map is ready, then Initialize places
                 placesInit();
+                setMarkerListener();
+                setMapClickListener();
             }
 
 
 
+
         }
+
+    }
+
+    private void showMarkerButtons(boolean showMarkerButtons)
+    {
+        /*
+        Function to show/hide marker buttons
+         */
+        if(showMarkerButtons)
+        {
+            callButton.setVisibility(View.VISIBLE);
+            callButton.setClickable(true);
+        //    chatButton.setVisibility(View.VISIBLE);
+         //   chatButton.setClickable(true);
+        }
+        else
+        {
+        //    chatButton.setVisibility(View.INVISIBLE);
+        //    chatButton.setClickable(false);
+            callButton.setVisibility(View.INVISIBLE);
+            callButton.setClickable(false);
+        }
+    }
+
+    private void setMarkerListener(){
+
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+
+                current_number="+91"+titleToNumber.get(marker.getTitle());
+                //On Marker Click, get the phonenumber of marker
+
+                markerClickflag=true;       //Set marker Click flag for true
+
+                return false;
+            }
+        });
+    }
+
+    private void setMapClickListener()
+    {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                //Any click on the map should hide all buttons and make marketClickFlag false;
+                showMarkerButtons(false);
+                current_number="";
+                markerClickflag=false;
+            }
+        });
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                //If marker click flag is rue(marker is clicked), show the buttons.
+                if(markerClickflag)
+                    showMarkerButtons(true);
+
+                //Once camera adjusts to the marker, make the marker click flag false. Any newmovement of camera will cause
+                //buttons to disappear.
+                markerClickflag=false;
+            }
+        });
+
+
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                //If marker is clicked (i.e. marker click flag is set), then do not do anthying
+                //otherwise, if marker click flag is false, hide the buttons when camera is moved.
+                if(!markerClickflag)
+                    showMarkerButtons(false);
+            }
+        });
+
 
     }
 
@@ -1215,6 +1336,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             {
                 chosenEvent="";
             }
+
+            if(titleToNumber!=null)
+                titleToNumber.clear();
 
 
 

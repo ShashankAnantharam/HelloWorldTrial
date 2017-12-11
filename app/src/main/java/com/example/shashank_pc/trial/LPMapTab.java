@@ -307,7 +307,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                             allContactsMarkersMap.get(entry.getKey()).setPosition(
                                     new LatLng(lat,lon)
                             );
-                            
+
                             //If marker has been selected, then centre camera there
                             if(current_number.equals("+91"+entry.getKey())) {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));

@@ -18,7 +18,7 @@
 
 
     <Button
-        android:id="@+id/callButton"
+        android:id="@+id/se_callButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
@@ -29,7 +29,7 @@
         android:background="@drawable/call_button" />
 
     <Button
-        android:id="@+id/chatButton"
+        android:id="@+id/se_chatButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_toLeftOf="@+id/callButton"
