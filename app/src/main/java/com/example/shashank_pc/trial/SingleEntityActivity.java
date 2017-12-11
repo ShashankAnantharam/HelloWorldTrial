@@ -195,6 +195,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
         //Get details of Members
         membersInit();
+        //Get Places (Not part of the MVP)
         getPlacesFromDB();
 
         if(mType=='G')

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -236,6 +237,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
             public void onMapClick(LatLng latLng) {
                 //Any click on the map should hide all buttons and make marketClickFlag false;
                 showMarkerButtons(false);
+                current_number="";
                 markerClickflag=false;
             }
         });
@@ -305,6 +307,12 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                             allContactsMarkersMap.get(entry.getKey()).setPosition(
                                     new LatLng(lat,lon)
                             );
+                            
+                            //If marker has been selected, then centre camera there
+                            if(current_number.equals("+91"+entry.getKey())) {
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
+                            }
+
                             allContactsMarkersMap.get(entry.getKey()).setVisible(true);
                         }
                         else
