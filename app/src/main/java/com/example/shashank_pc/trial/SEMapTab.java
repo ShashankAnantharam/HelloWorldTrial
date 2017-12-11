@@ -656,6 +656,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                             entry.getValue().setPosition(memberLatLng);
                             entry.getValue().setVisible(true);
 
+                            //If marker has been selected, then centre camera there
+                            if(current_number.equals("+91"+entry.getKey())) {
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+                            }
+
                         }
 
                         //Set isMemberBroadcastingLocation hashmap to true. This shows
