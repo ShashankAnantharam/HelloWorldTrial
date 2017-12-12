@@ -42,12 +42,15 @@ import static com.example.shashank_pc.trial.SingleEntityActivity.secondaryEvents
 
 public class GenericFunctions {
 
-    public static List<Event> secondaryEvents;
-    public static String mEncoding = "";
-    public static Map <Character,Integer> mDecoding= new HashMap();
+    public static List<Event> secondaryEvents;  //Function to get attending events (Events inside groups fn)
+    public static String mEncoding = "";    //Encoding string
+    public static Map <Character,Integer> mDecoding= new HashMap();     //Decoding hashmap
 
     public static void getAttendingEvents(Character type, String entityID)
     {
+        /*
+        Function to get attending events (Events inside groups; Not needed at this point)
+         */
         DocumentReference attendingEvents=null;
         if(type=='G')
         {
@@ -91,20 +94,31 @@ public class GenericFunctions {
 
     public static void initEncoding()
     {
+        /*
+        Creation of the hash map function for encoding/decoding userIDs
+        Encoding function for userID
+        Basic idea is that we are converting base 10 into base 100
+        For doing this, we only need to traverse two characters at a time, get the number from the character (a two digit no.),
+        and make the necessary encoding
+         */
         mEncoding="";
         char c[] = new char[100];
+
+        //for numbers 0 to 9, the characters are ASCII values of 48,49,...,57
         for(int i=0;i<10;i++) {
             c[i] += i+48;
             mEncoding+=c[i];
             mDecoding.put(c[i],i);
         }
 
+        //for numbers 10 to 35, the characters are A,B,C,...,Z
         for(int i=10;i<36;i++) {
             c[i] += 65 + (i - 10);
             mEncoding+=c[i];
             mDecoding.put(c[i],i);
         }
 
+        //for numbers 26 to 61, the characters are a,b,c,...,z
         for(int i=36;i<62;i++) {
             c[i] += 97 + (i - 36);
             mEncoding+=c[i];
@@ -113,6 +127,7 @@ public class GenericFunctions {
 
         char tmp[] = {33,37,38,42,43,45,60,61,62,63,64,94,124,126,161,162,163,164,165,166,167,169,170,172,174,176,181,182,186,191,198,215,222,223,230,247,248,254};
 
+        //for numbers 62 to 99, the characters are the ASCII value of tmp array.
         for(int i=0;i<38;i++) {
             c[62 + i] = tmp[i];
             mEncoding+=c[62+i];
@@ -123,12 +138,21 @@ public class GenericFunctions {
 
     public static String decodeNumber(String encodedNumber)
     {
+        /*
+        Function to decode number (UserID) from encoded number
+         */
         String number="";
-        for(int i=0;i<encodedNumber.length();i++)
+        for(int i=0;i<encodedNumber.length();i++)       //Traverse the entire encoded number.
         {
+
+            //Get the new_number by decoding the value of the encoded character
             String new_number= Integer.toString(mDecoding.get(encodedNumber.charAt(i)));
+
+            //If new number is of length 1, Add "0" to the string beacuse we need 2 digits.
             if(new_number.length()==1)
                 new_number="0"+new_number;
+
+            //Append the new number to the already existing string for the number
             number+=new_number;
         }
         return number;
@@ -136,16 +160,22 @@ public class GenericFunctions {
 
     public static String encodeNumber(String number)
     {
+        /*
+        Function to encode number (User ID)
+         */
         String encodedNum="";
 
         for(int i=number.length()-1;i>=0;i=i-2) {
+            //Traversing two-two characters at a time
             String tmp="";
 
+            //if i!=0, then take the prevous character also
             if (i - 1 != -1) {
                 tmp += number.charAt(i - 1);
             }
             tmp+= number.charAt(i);
 
+            //Encode it using the string hashmap
             encodedNum=mEncoding.charAt(Integer.parseInt(tmp))+encodedNum;
 
         }
@@ -207,6 +237,8 @@ public class GenericFunctions {
 
         StorageReference ref= storage.getReference("ProfilePics").child(memberID+".jpg");
         final long ONE_MEGABYTE = 1024 * 1024;
+
+        //fetch data from Firebase Cloud Storage
         ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -216,13 +248,17 @@ public class GenericFunctions {
 
                 try
                 {
+                    //Get profile pic in Bitmap format
                     Bitmap profilePic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
+                    //Reisize image of Profile Pic
                     profilePic= resizeImage(profilePic);
 
+                    //Change shape of profile pic into a circle
                     profilePic= getCircleBitmap(profilePic);
                     //Bitmap round_img= getRoundedRectBitmap(small_img);
 
+                    //Place it in the hashmap of profile pics.
                     if(membersProfilePic!=null && !membersProfilePic.containsKey(memberID))
                           membersProfilePic.put(memberID,profilePic);
                     if(!userProfilePics.containsKey(memberID))
@@ -273,6 +309,9 @@ public class GenericFunctions {
 
     public static Bitmap getCircleBitmap(Bitmap bitmap) {
 
+        /*
+        Function to change shape of Bitmap to circle
+         */
 
         final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);
