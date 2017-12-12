@@ -44,26 +44,26 @@ import static com.example.shashank_pc.trial.LandingPageActivity.userProfilePics;
 
 public class LPContactsTab extends Fragment {
 
+    /*
+    Tab that holds the list of contacts
+     */
     //List is used because it is faster than Vector because it is asynchronous
-    protected List<User> mContacts;
+    protected List<User> mContacts; //List of Contacts
 
     private View rootView;
 
-    protected String mUserID;
-    protected String mUserName;
+    protected String mUserID;       //UserID
+    protected String mUserName;     //UserName
 
-    private LPContactListItemAdapter<User> arrayAdapter;
-    protected ListView listView;
+    private LPContactListItemAdapter<User> arrayAdapter;        //ArrayAdapter to hold contacts
+    protected ListView listView;        //Listview
 
     SharedPreferences preferences;
 
-    protected boolean hasInitContacts;
-    private DocumentReference firestoneUserRef;
-    private String fContactName;
-    private String fContactDesc;
+    protected boolean hasInitContacts;  //hasinitContacts flag to ensure that contacts are initialized only once
 
 
-    //TODO Change position of this map
+    //TODO Change position of this map from here to another class
     public static HashMap<String,Integer> ContactListMap;
 
     public void refresh()
@@ -79,7 +79,7 @@ public class LPContactsTab extends Fragment {
     public void addContact(User user)
     {
         /*
-        Add group
+        Add contact to Contact Listview
          */
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(user.getNumber(),false);
@@ -100,6 +100,9 @@ public class LPContactsTab extends Fragment {
 
     public void replaceContact(int index, User contact)
     {
+        /*
+        Function to replace contacts
+         */
         contact.initBroadcastLocationFlag(mContacts.get(index).getBroadcastLocationFlag());
         mContacts.remove(index);
         mContacts.add(index,contact);
@@ -108,6 +111,10 @@ public class LPContactsTab extends Fragment {
 
     public void updateListAtPosition(int position)
     {
+        /*
+        Function needs to be made better. Right now, it refreshes whole listview irrespective of position.
+        The original intention of this function is to only update the listview item at a given position
+         */
         if(listView.getCount()>position)
         {
             //No segmentation fault because of wrong indexing
@@ -129,6 +136,9 @@ public class LPContactsTab extends Fragment {
 
     public void passUserDetails(String userID, String userName)
     {
+        /*
+        Function to pass userdetails from parent activity to LPContactsTab
+         */
         mUserID=userID;
         mUserName=userName;
     }

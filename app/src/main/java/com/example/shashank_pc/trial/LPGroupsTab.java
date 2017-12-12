@@ -42,28 +42,32 @@ import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 
 public class LPGroupsTab extends Fragment {
 
+    /*
+    Tab that holds the list of Groups
+     */
     //List is used because it is faster than Vector because it is asynchronous
-    private List<Group> mGroups;
+    private List<Group> mGroups;    //List to hold Groups
 
     private View rootView;
 
-    private String mUserID;
-    private String mUserName;
+    private String mUserID; //UserID
+    private String mUserName;   //UserName
 
-    private LPListItemAdapter<Group> arrayAdapter;
+    private LPListItemAdapter<Group> arrayAdapter;      //Adapter to hold the list of groups
 
     SharedPreferences preferences;
 
-    private DocumentReference firestoneUserRef;
+    private DocumentReference firestoneUserRef;     //Firestore database reference to fetch the group members
     private String fGroupName;
     private String fGroupDesc;
-    private boolean hasInitGroups;
+    private boolean hasInitGroups;      //flag to note whether groups have been initialized or not
 
 
 
 
     public void refresh()
     {
+        //Refresh the array adapter and listview for any new changes
         if(arrayAdapter!=null) {
             arrayAdapter.notifyDataSetChanged();
         }
@@ -73,7 +77,7 @@ public class LPGroupsTab extends Fragment {
     public void addGroup(Group group)
     {
         /*
-        Add group
+        Function to Add group in List
          */
         boolean mBroadcastLocationFlag;
         mBroadcastLocationFlag=preferences.getBoolean(group.getID(),false);
@@ -89,6 +93,9 @@ public class LPGroupsTab extends Fragment {
 
     public void replaceGroup(int index, Group group)
     {
+        /*
+        Function to replace group
+         */
         group.initBroadcastLocationFlag(mGroups.get(index).getBroadcastLocationFlag());
         mGroups.remove(index);
         mGroups.add(index,group);
@@ -196,7 +203,10 @@ public class LPGroupsTab extends Fragment {
     
     public void initGroups()
     {
-        hasInitGroups=true;
+        /*
+        Function to initialize groups. May need to be reworked.
+         */
+        hasInitGroups=true; //set flag to true so that it does not initialize again
 
         firestore = FirebaseFirestore.getInstance();
 
@@ -223,6 +233,8 @@ public class LPGroupsTab extends Fragment {
 
                             if(!allEntities.containsKey(fGroupID)) {
 
+                                //First time group added
+
                             DocumentReference fireStoreGroupRef= firestore.collection("groups").document(fGroupID);
 
                             fireStoreGroupRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -232,6 +244,7 @@ public class LPGroupsTab extends Fragment {
                                     Map<String,Object> groupMap= new HashMap<>();
                                     groupMap = documentSnapshot.getData();
 
+                                    //Group details (Name, description) got from Firestore
                                     for(Map.Entry<String,Object> entry:groupMap.entrySet())
                                     {
                                         if(entry.getKey().equals("name"))
