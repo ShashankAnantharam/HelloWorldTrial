@@ -41,7 +41,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
     public void settextColorListener(ViewHolder viewHolder, View convertView, T rowItem)
     {
-
+            //Function overridden for Events inside group functionality later on. Not needed for now!
     }
 
     public LPListItemAdapter(Context context, List<T> rowItems, String userID)
