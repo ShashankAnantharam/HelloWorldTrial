@@ -311,7 +311,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
         allContactsMarkerMap (declared in this class)
 
         Traverse through isBroadcasting location
-        if contact's isbroadcastinglocation value is true,
+        if contact's isbroadcastinglocation value is true and contact is set as visible by user,
         set it as visible in allContactsMarkerMap (or create it if it is not already there)
         else
         set it as invisible
