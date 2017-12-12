@@ -39,6 +39,11 @@ public class LPListItemAdapter<T> extends BaseAdapter{
     List<T> rowItems;   //Rowitems (Event or Group)
     String userID;  //UserID
 
+    public void settextColorListener(ViewHolder viewHolder, View convertView, T rowItem)
+    {
+
+    }
+
     public LPListItemAdapter(Context context, List<T> rowItems, String userID)
     {
         //Constructor
@@ -187,7 +192,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
         });
 
 
-   //     settextColorListener(holder,convertView,rowItem);
+        settextColorListener(holder,convertView,rowItem);
 
     return convertView;
 
