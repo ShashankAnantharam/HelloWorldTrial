@@ -36,11 +36,12 @@ import static java.security.AccessController.getContext;
 public class LPListItemAdapter<T> extends BaseAdapter{
 
     Context context;
-    List<T> rowItems;
-    String userID;
+    List<T> rowItems;   //Rowitems (Event or Group)
+    String userID;  //UserID
 
     public LPListItemAdapter(Context context, List<T> rowItems, String userID)
     {
+        //Constructor
         this.context=context;
         this.rowItems=rowItems;
         this.userID=userID;
@@ -67,18 +68,15 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
 
     protected class ViewHolder{
-        TextView main_text;
-        TextView subtitle;
-        Button locationBroadcastFlag;
+        TextView main_text; //Textview to hold the name of the entity (eg.Family, Friends group, etc.)
+        TextView subtitle;  //Textview to hold the subtitle of the entity
+        Button locationBroadcastFlag;   //Button to hold the location broadcast flag and toggle the locationbraodcast flag
 
     }
 
 
 
-    public void settextColorListener(ViewHolder viewHolder,View convertView, T rowitem)
-    {
 
-    }
 
 
 
@@ -98,6 +96,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
         {
             convertView=mInflater.inflate(R.layout.main_lp_view_item, null);
 
+            //Initialize the objects
             holder.main_text= (TextView) convertView.findViewById(R.id.main_lp_text);
             holder.subtitle= (TextView) convertView.findViewById(R.id.main_lp_subtitle);
             holder.locationBroadcastFlag= (Button) convertView.findViewById(R.id.gps_broadcast_flag);
@@ -122,12 +121,12 @@ public class LPListItemAdapter<T> extends BaseAdapter{
             subtitle=  ((Event) rowItem).getDescription();
 
         }
-        else if(rowItem instanceof Group)
+        else if(rowItem instanceof Group)   //If Row Item is a group
         {
             main_text= ((Group) rowItem).getName();
             subtitle= ((Group) rowItem).getDescription();
         }
-        else if(rowItem instanceof User)
+        else if(rowItem instanceof User)    //IF Row item is a contact (Not needed now because it is a part of LPContactListItemAdapter
         {
             main_text=((User) rowItem).getName();
             subtitle=((User) rowItem).getLastChatMessage();
@@ -146,19 +145,23 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
 
 
-        if(getflagstatus(rowItem)==true)
+        if(getflagstatus(rowItem)==true)    //If user's location is being broadcast to the entity
         {
+            //set color blue
 
             holder.locationBroadcastFlag.setBackground(convertView.getResources().getDrawable(R.drawable.lp_list_button_blue));
 
         }
         else {
 
+            //set color black
+
             holder.locationBroadcastFlag.setBackground(convertView.getResources().getDrawable(R.drawable.lp_list_button_black));
 
         }
 
 
+        //Set onClickListener for locationBroadcastFlag button
         holder.locationBroadcastFlag.setOnClickListener(new View.OnClickListener() {
             boolean buttonClickFlag;
 
@@ -166,6 +169,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
             public void onClick(View v) {
                 buttonClickFlag=getflagstatus(rowItem);
 
+                //Toggle the locationBroadcastFlag on click
                 if(buttonClickFlag==false)
                 {
                     buttonClickFlag=true;
@@ -183,7 +187,7 @@ public class LPListItemAdapter<T> extends BaseAdapter{
         });
 
 
-        settextColorListener(holder,convertView,rowItem);
+   //     settextColorListener(holder,convertView,rowItem);
 
     return convertView;
 
@@ -193,6 +197,9 @@ public class LPListItemAdapter<T> extends BaseAdapter{
 
     public boolean getflagstatus(T rowItem)
     {
+        /*
+        Function to get the location broadcast flag status of rowitem
+         */
         SharedPreferences preferences = context.getSharedPreferences("LPLists", Context.MODE_PRIVATE);
         String mEntityID="";
 
@@ -209,6 +216,9 @@ public class LPListItemAdapter<T> extends BaseAdapter{
     }
     public void locationBroadcastButtonOnClickActivity(T rowItem, boolean mLBflag, View convertView)
     {
+        /*
+        Function to start/Stop broadcasting location based on the button click
+         */
         SharedPreferences preferences = context.getSharedPreferences("LPLists",Context.MODE_PRIVATE);
         SharedPreferences.Editor edit= preferences.edit();
 
@@ -219,13 +229,16 @@ public class LPListItemAdapter<T> extends BaseAdapter{
             edit.putBoolean(((Event) rowItem).getID(),mLBflag);
             edit.commit();
         }
-        else if(rowItem instanceof Group) {
+        else if(rowItem instanceof Group) {     //If RowItem is a group
+
+            //Set the broadcast flag (in the Firebase reatime DB). Function is present in Generic
             ((Group) rowItem).setBroadcastLocationFlag(mLBflag, userID);
+            //Set the new flag in sharedPreferences
             edit.putBoolean(((Group) rowItem).getID(),mLBflag);
             edit.commit();
 
         }
-        else if(rowItem instanceof User) {
+        else if(rowItem instanceof User) {  //If Row Item is a contact (Not needed as it is moved to LPContactListItemAdapter
             ((User) rowItem).setBroadcastLocationFlag(mLBflag, userID);
             edit.putBoolean(((User) rowItem).getNumber(),mLBflag);
             edit.commit();
