@@ -150,7 +150,7 @@ public class SEMemberListItemAdapter<T> extends BaseAdapter {
     }
 
 
-
+/*
     public boolean getflagstatus(T rowItem)
     {
         SharedPreferences preferences = context.getSharedPreferences("LPLists", Context.MODE_PRIVATE);
@@ -187,5 +187,5 @@ public class SEMemberListItemAdapter<T> extends BaseAdapter {
 
 
     }
-    
+    */
 }
