@@ -84,45 +84,52 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private View rootView;
 
-    private MapFragment mMapFrag;
-    private GoogleMap mMap;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    private Marker mlocationMarker=null;
-    private Boolean mlocationsetProfilePic;
+    //These varaibles are related to the user's marker
+    private MapFragment mMapFrag;       //Mapfragment to hold Map
+    private GoogleMap mMap;             //GoogleMap to contain the Map class and do modifications on Map
+    private LocationManager locationManager;        //Location Manager to get user's current location (not needed as stated earlier)
+    private LocationListener locationListener;          //Location listener to listen to user's current location
+    private Marker mlocationMarker=null;        //user's location marker
+    private Boolean mlocationsetProfilePic;     //Flag to know whether profile pic of user has been set
     private LatLng curr_loc;
 
 
 
-    private String mUserID;
+    //These variables are related to the entity
+    private String mUserID;             //String UserID
     private String mUserName;
-    private String mEntityName;
-    private String mEntityID;
-    private char mType;
-    private boolean mapFlag;
+    private String mEntityName;         //Entity name (Group/Event/Contact name)
+    private String mEntityID;           //Entity ID     (Group/Event/Contact ID)
+    private char mType;                 //type of entity (Group/Event/Contact)
+    private boolean mapFlag;            //flag to know if map has been initialized or not
 
 
-    private BroadcastReceiver contactBroadcastReceiver;
-    private boolean isLocationAllowed=false;
-    private boolean wasLocationAllowed=false;
-    private Marker mContactMarker=null;
-    private DatabaseReference contactLatLong;
-    private ValueEventListener contactLatLongEventListener;
+    //These variables are related to contact
+    private BroadcastReceiver contactBroadcastReceiver;     //Broadcast receiver to recieve whether contact
+                                                            //is broadcasting location or not
+    private boolean isLocationAllowed=false;                //Flag for whether contact is broadcasting location or not
+    private boolean wasLocationAllowed=false;               //Flag for whether contacct WAS broadcasting location or not
+    private Marker mContactMarker=null;                 //Contact marker
+    private DatabaseReference contactLatLong;               //Reference to Database containing Contact's location
+    private ValueEventListener contactLatLongEventListener;         //Value event listener to listen to contact's location
 
     private List<mMapContact> mMembersList=null;
     private List<Marker> mMarkersList=null;
     private HashMap<String,Integer> mMembersHashMap=null;
 
 
+    //Variables related to places (Not needed at this point)
     private Map<String,Marker> placesMarkers;
     private GeoQuery placesQuery;
 
 
-    private Handler memberHandler;
-    private Runnable runnable;
-    private Map<String,Marker> mMarkersMap;
-    private Map<String,Boolean> mMemberSetProfilePicFlag;
+    //Variables related to group members
+    private Handler memberHandler;      //A handler to listen to member's locations every 2.5 seconds
+    private Runnable runnable;          //A runnable that runs within the handler and listens to member's locations every 2.5 seconds
+    private Map<String,Marker> mMarkersMap;     //A hashmap containing the group member's ID mapped with the marker
+    private Map<String,Boolean> mMemberSetProfilePicFlag;       //A map to know whether the profile pic of group member has been set.
 
+    //These variables are related to Events (Not explained at this point)
     private GeoQuery eventmembersQuery;
     Double radius=0.2;
     private boolean locationAvailableFlag=false;
@@ -131,6 +138,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     double gl_long;
 
 
+    //These variables are related to secondary Events (Events inside group)
     GeoQuery secondaryEventMembersQuery;
     Double secondaryEventRadius=0.2;
     Runnable secondaryEventRunnable;
@@ -138,12 +146,13 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private Map<String,Marker> secondaryEventMarkerMap;
     private Map<String,Boolean> secondaryEventMemberPresentFlag;
 
-    Button callButton;
-    Button chatButton;
+    //Button for group markers
+    Button callButton;      //A button above marker to start phone call
+    Button chatButton;         //A button above marker to start chat (disabled and not needed over here because chat tab is already there)
 
-    String current_number="";
-    boolean markerClickflag=false;
-    Map <String,String> titleToNumber;
+    String current_number="";       //The number that has been selected currently
+    boolean markerClickflag=false;      //Flag to know whether a marker has been clicked or not
+    Map <String,String> titleToNumber;      //A Hashmap to get title of marker and map it to the phone number (Used for the phone call fn)
 
 
     public static String chosenEvent="";
@@ -151,6 +160,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
     {
+        /*
+        Function called by SingleEntityActivity to pass crucial variables to the tab.
+         */
         mUserID= userID;
         mUserName=userName;
         mEntityName=entityName;
@@ -241,6 +253,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     }
     private void mContactInit()
     {
+        /*
+        Function to initialize contact marker
+         */
         final String contactFirebaseAddress= "Users/"+mEntityID+"/Loc";
 
         if(isBroadcastingLocation.containsKey(mEntityID) && isBroadcastingLocation.get(mEntityID)==true)
@@ -253,16 +268,18 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
         if(contactBroadcastReceiver==null)
         {
 
+            //Initialize the broadcast reciever. This listens to LandingPageActivity to know
+            // whether a contact is broadcasting or not.
             contactBroadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
 
-                    wasLocationAllowed=isLocationAllowed;
-                    isLocationAllowed=intent.getBooleanExtra(mEntityID,false);
+                    wasLocationAllowed=isLocationAllowed;       //Current isLocationAllowed flag is no longer the currrent state. Put it in wasLocation allowed.
+                    isLocationAllowed=intent.getBooleanExtra(mEntityID,false);  //Flag to determine whether contact is currently broadcasting or not
 
                     if(isLocationAllowed)
                     {
-                        //Contact is Visible
+                        //Contact is Broadcasting now
 
                         if(mContactMarker==null)
                         {
@@ -272,8 +289,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                         }
                         else if(wasLocationAllowed==false)
                         {
-                            //GPS already initialized but location broadcast of contact was turned off
+                            //Contact was already initialized but location broadcast of contact was turned off
 
+                            //Set the listener (which listens to location of contact) to the database
+                            //reference (which contains the address of contact's location in Firebase)
                             contactLatLong.addValueEventListener(contactLatLongEventListener);
                             mContactMarker.setVisible(true);
 
@@ -282,11 +301,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                     }
                     else
                     {
-                        //Contact is invisible
+                        //Contact is no longer broadcasting
 
                         if(wasLocationAllowed==true)
                         {
-                            //Location was allowed before but not now
+                            //Contact was broadcasting before but not now
                             contactLatLong.removeEventListener(contactLatLongEventListener);
                             mContactMarker.setVisible(false);
                         }
@@ -296,6 +315,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
             };
         }
         getContext().registerReceiver(contactBroadcastReceiver,new IntentFilter("contact_listener"));
+        //register the receiver.
 
 
     }
@@ -324,6 +344,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void initSecondaryEventMembers()
     {
+        /*
+        Function to initialize the secondary event's members (Events inside group functionality, not needed here)
+         */
         secondaryEventMarkerMap= new HashMap<>();
         secondaryEventMemberPresentFlag= new HashMap<>();
         secondaryEventHandler= new Handler();
@@ -494,6 +517,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void initEventMembers()
     {
+        /*
+        Function to initialize markers for event members. Not needed at this point
+         */
         if(mMarkersMap==null)
             mMarkersMap = new HashMap<>();
         memberPresentFlags= new HashMap<>();
@@ -529,6 +555,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void getEventMembers()
     {
+        /*
+        Function to get the members of events from database to Map. Not needed at this point
+         */
         String membersDatabaseAddress = "Loc/"+mEntityID;
         double lat=gl_lat;
         double lon=gl_long;
@@ -623,6 +652,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void getMembersCoordinates()
     {
+        /*
+        Function to get coordinates of group members and put them in markers
+         */
         //Get address of the group members coordinates in Firebase
         String membersDatabaseAddress= "Loc/"+mEntityID;
 
@@ -637,6 +669,11 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
                 //Put dataSnapshot in MemberMap
                 Map<String,ArrayList<Double>> memberMap = (Map) dataSnapshot.getValue();
 
+                /*
+                Note: The Algo used here is nearly the same as the one used for fetching members from Database
+                 in the membersInit() function in SingleEntityActivity. Only here, we have the marker's map as the
+                 existing hashmap of markers of members and the memberMap as the map fetched from the database.
+                 */
                 for(Map.Entry<String,Marker> entry:mMarkersMap.entrySet())
                 {
                     //Iterate through marker map
@@ -786,7 +823,10 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private void membersInit()
     {
         /*
-        Initialize MarkersMap
+        Function to initialize markers of members.
+         */
+        /*
+        Initialize MarkersMap. Start a handler that contains a runnable that calls the function getMembersCoordinates every 2.5 seconds
          */
         mMarkersMap = new HashMap<>();
         memberHandler= new Handler();
@@ -1003,6 +1043,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     private void placesInit()
     {
+        /*
+        Function to init places. Not needed now
+         */
 
         for(Map.Entry<String,Place> placeEntry: placesMap.entrySet())
         {
@@ -1013,6 +1056,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     public void addPlace(String key, Place place)
     {
+        /*
+        Function to add place. Not needed now
+         */
         if(mMap!=null) {
             Double lon, lat;
             lat = Double.parseDouble(place.getLat());
@@ -1058,6 +1104,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
 
     public void removePlace(String key)
     {
+        /*
+        Function to remove place. Not needed now.
+         */
         if(placesMarkers.containsKey(key))
         {
             placesMarkers.get(key).remove();
@@ -1070,7 +1119,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     private void addGeoData(String key, double lat, double lon)
     {
         /*
-        Testing GeoFire by adding data
+        Testing GeoFire by adding data. Not needed now
          */
         String type="";
         if(mType=='E')
@@ -1087,7 +1136,7 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void getNearbyPlaces(double Lat, double Long)
     {
         /*
-        Function to Test Geoquery
+        Function to Test Geoquery. Not needed now
          */
         String type="";
         if(mType=='E')
@@ -1281,6 +1330,9 @@ public class SEMapTab extends Fragment implements OnMapReadyCallback {
     public void onDestroy() {
         super.onDestroy();
 
+        /*
+        Call back function to clear all variable once tab is destroyed
+         */
         mlocationsetProfilePic=false;
 
 
