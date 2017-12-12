@@ -23,9 +23,9 @@ import static com.example.shashank_pc.trial.LandingPageActivity.isBroadcastingLo
 public class LPContactListItemAdapter<T> extends BaseAdapter {
 
     Context context;
-    List<T> rowItems;
-    String userID;
-    private SharedPreferences contactDisplay;
+    List<T> rowItems;   //List of row items
+    String userID;      //UserID
+    private SharedPreferences contactDisplay;       //SharedPreferences for whether contact has to be displayed or not
 
     public LPContactListItemAdapter(Context context, List<T> rowItems, String userID)
     {
@@ -55,11 +55,11 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
 
 
     private class ViewHolder{
-        TextView main_text;
-        TextView subtitle;
-        Button locationBroadcastFlag;
-        ImageView isContactBroadcastingFlag;
-        Button visibilityFlag;
+        TextView main_text;     //Textview to hold contact name
+        TextView subtitle;      //Textview to hold contact's last chat message (Not yet done) //TODO implement this
+        Button locationBroadcastFlag;   //Button to toggle location broadcast on and off
+        ImageView isContactBroadcastingFlag;    //Imageview to know whether Contact is Broadcasting
+        Button visibilityFlag;      //Button to toggle contact visibility on and off.
 
     }
 
@@ -151,6 +151,9 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
         holder.visibilityFlag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                Function to set the visibility of contact On/OFF (This is the eye button in contacts tab)
+                 */
 
                 if(rowItem instanceof User)
                 {
@@ -177,7 +180,7 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
         });
 
 
-        if(getflagstatus(rowItem)==true)
+        if(getflagstatus(rowItem)==true)        //If else condition of code same as that in LPListItemAdapter
         {
 
             holder.locationBroadcastFlag.setBackground(convertView.getResources().getDrawable(R.drawable.lp_list_button_blue));
@@ -206,6 +209,8 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
 
 
         holder.locationBroadcastFlag.setOnClickListener(new View.OnClickListener() {
+
+            //Function to set the locationBroadcast flag on and off when the button is clicked
             boolean buttonClickFlag;
 
             @Override
@@ -240,6 +245,7 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
 
     public boolean getflagstatus(T rowItem)
     {
+        //Same as LPListItemAdapter function -> getflagstatus(rowitem)
         SharedPreferences preferences = context.getSharedPreferences("LPLists", Context.MODE_PRIVATE);
         String mEntityID="";
         if(rowItem instanceof User)
@@ -251,6 +257,7 @@ public class LPContactListItemAdapter<T> extends BaseAdapter {
     }
     public void locationBroadcastButtonOnClickActivity(T rowItem, boolean mLBflag, View convertView)
     {
+        //Same as LPListItemAdapter function -> locationBroadcastButtonOnClickActivity(....)
         SharedPreferences preferences = context.getSharedPreferences("LPLists",Context.MODE_PRIVATE);
         SharedPreferences.Editor edit= preferences.edit();
 
