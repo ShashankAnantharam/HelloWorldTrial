@@ -86,51 +86,51 @@ public class LandingPageActivity extends AppCompatActivity {
 
     private Button viewNearbyEvents;
 
-    private boolean regFlag=false;
+    private boolean regFlag=false;      //Flag to know if user is registered or not
 
 
-    public static Map<String,Bitmap> userProfilePics;
+    public static Map<String,Bitmap> userProfilePics;   //HashMap to store Profile Pics of contacts
 
-    private static String mUserID="";
+    private static String mUserID="";       //UserID string
 
-    private String mUserName="";
+    private String mUserName="";        //Usernae string
 
-    private LPEventsTab mEventLPTab;
-    private LPGroupsTab mGroupLPTab;
-    private LPContactsTab mContactLPTab;
-    public static LPMapTab mMapLPTab;
+    private LPEventsTab mEventLPTab;    //Events List Tab
+    private LPGroupsTab mGroupLPTab;    //Groups List Tab
+    private LPContactsTab mContactLPTab;    //Contacts List Tab
+    public static LPMapTab mMapLPTab;       //MapTab
 
-    public static List<User> contacts;
+    public static List<User> contacts;  //List of contacts
 
 
-    FirebaseFirestore firestore;
-    DocumentReference firestoneUserRef;
+    FirebaseFirestore firestore;        //Firestore database
+    DocumentReference firestoneUserRef; //Reference to Firestore database location
     private String fEntityName;
     private String fEntityDesc;
-    public static Bitmap unknownUser;
+    public static Bitmap unknownUser;       //Initialize the default profile picture (If no profile picture is available)
 
 
     private BroadcastReceiver locationBroadcastReceiver;
 
-    private boolean gpsflag;
+    private boolean gpsflag;        //flag for gps
 
 
-    private DatabaseReference contactNodeRef;
-    private ChildEventListener contactNodeChildListener;
-    private Intent contactListner;
-    public static HashMap<String,Boolean> isBroadcastingLocation;
+    private DatabaseReference contactNodeRef;       //database Reference for Firebase Realtime DB To listen to which contacts are broadcasting
+    private ChildEventListener contactNodeChildListener;  //child event listener for firebase database ref
+    private Intent contactListner;          //Contact listner Intent
+    public static HashMap<String,Boolean> isBroadcastingLocation;       //Hashmap to know if contact is broadcasting location
 
-    public static Map<String,Integer> allEntities;
+    public static Map<String,Integer> allEntities;      //All Entites hashmap
 
-    public static Map<String,Boolean> allButtons;
-    public static Map<String,String> allContactNames;
+    public static Map<String,Boolean> allButtons;       //Hashmap for the values of isGPSBroadcast button of all entities
+    public static Map<String,String> allContactNames;   //Hashmap connecting contact ID to contact Names
 
 
 
     public static String getUserID()
     {
         return mUserID;
-    }
+    }       //Function to get userID
 
 
 
@@ -205,9 +205,14 @@ public class LandingPageActivity extends AppCompatActivity {
     }
 
     public void getDialogue(){
+        /*
+        Function to start a dialogue box to help user register.
+        //TODO: Needs to be changed to incorporate firebase auth
+         */
 
-        //Pop dialogue
+        //Pop dialogue to ask user to register (Note: This needs to be changed as Firebase Auth is not used here)
 
+        //Initialize variables
         AlertDialog.Builder mBuilder= new AlertDialog.Builder(this);
         View mView= getLayoutInflater().inflate(R.layout.dialog_register, null);
         final EditText mPhone= (EditText) mView.findViewById(R.id.etPhone);
@@ -223,6 +228,8 @@ public class LandingPageActivity extends AppCompatActivity {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface D) {
+                //If dialog is dismissed but user is not registered yet, then show the dialog; otherwise,
+                //Load layout
                 if(regFlag==false)
                     dialog.show();
                 else {
@@ -240,6 +247,7 @@ public class LandingPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                //If register button is clicked, then check necessary preconditions for phone number and password
                 String mPassword, mRetypePassword;
                 mPassword=mPass.getText().toString();
                 mRetypePassword=mRtPass.getText().toString();
@@ -259,6 +267,7 @@ public class LandingPageActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    //If all conditions match, then register the user and save his credentials in shared preferences.
                     SharedPreferences userDetails = getSharedPreferences("UserDetails",Context.MODE_PRIVATE);
                     SharedPreferences.Editor userDetailsEdit= userDetails.edit();
 
@@ -286,7 +295,11 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void loadLayout()
     {
+        /*
+        Function to load the main layout of the activity (i.e. Events Tab, Groups Tab, Contacts Tab and LPMap Tab.
+         */
 
+        //Initialize variables
         initEncoding();
         allContactNames.put(mUserID,"Me");
 
@@ -294,12 +307,15 @@ public class LandingPageActivity extends AppCompatActivity {
         Generic.storage = FirebaseStorage.getInstance();
         Generic.firestore= FirebaseFirestore.getInstance();
         userProfilePics = new HashMap<>();
+
+        //Initialize the unknown user profile picture (also used for known users with no profile picture)
         unknownUser = BitmapFactory.decodeResource(getResources(),R.drawable.unknown);
         unknownUser = resizeImage(unknownUser);
         unknownUser = getCircleBitmap(unknownUser);
 
         addProfilePic(mUserID);
 
+        //Start a wake lock to ensure that the app does not sleep.
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");
         wakeLock.acquire();
@@ -320,6 +336,9 @@ public class LandingPageActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
+        /*
+        The fab function can be removed. It was put in for testing purposes.
+         */
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -340,6 +359,7 @@ public class LandingPageActivity extends AppCompatActivity {
             }
         });
 
+        //Button at top right to view nearby events. Not needed at this point
         viewNearbyEvents = (Button) findViewById(R.id.view_nearby_events);
 
         viewNearbyEvents.setOnClickListener(
@@ -353,23 +373,29 @@ public class LandingPageActivity extends AppCompatActivity {
                 }
         );
 
-        initContacts();
-        startContactListener();
+        initContacts(); //Initialize contacts
+        startContactListener(); //Start listening to contacts.
 
     }
 
     private void startContactListener(){
         isBroadcastingLocation = new HashMap<>();
 
+        //Get the reference to the Firebase Realtime DB to know which contacts are broadcasting location
         contactNodeRef= Generic.database.getReference("Users/"+mUserID+"/Cts");
 
+        //Contact listener intent initialized
         contactListner= new Intent("contact_listener");
 
 
+        //Start the child listener. Note: In the realtime DB, whenever a contact is broadcasting location,
+        //his/her phone number (UserID) attaches as a child to the current user's node's Cts branch.
         contactNodeChildListener=contactNodeRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-              //  Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+                //Contact has started broadcasting location
+
+              //  Update isBroadcastingLocation hashmap if contact is broadcasting location
                 if(isBroadcastingLocation.containsKey(dataSnapshot.getKey()))
                 {
                     isBroadcastingLocation.remove(dataSnapshot.getKey());
@@ -384,7 +410,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
                 if(mContactLPTab!=null)
                 {
-//                    Toast.makeText(getApplicationContext(),dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+//                    Contact LP Tab is already initialized. Then update the isContactBroadcastingLoc imageview there.
                     if(LPContactsTab.ContactListMap.containsKey(dataSnapshot.getKey()))
                     {
                         mContactLPTab.updateListAtPosition(LPContactsTab.ContactListMap.get(dataSnapshot.getKey()));
@@ -401,7 +427,10 @@ public class LandingPageActivity extends AppCompatActivity {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
+                //Contact stopped broadcasting location
+
 //                Toast.makeText(getApplicationContext(), dataSnapshot.getKey(),Toast.LENGTH_SHORT).show();
+                //Update isBroadcastingLocation hashmap of contact
                 if(isBroadcastingLocation.containsKey(dataSnapshot.getKey()))
                 {
                     isBroadcastingLocation.remove(dataSnapshot.getKey());
@@ -619,6 +648,9 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void initContacts()
     {
+        /*
+        Function to initialize contacts from firestore database
+         */
         contacts = new ArrayList<>();
         firestore = FirebaseFirestore.getInstance();
         firestoneUserRef = firestore.collection("users").document(mUserID).collection("activities").document("contacts");
