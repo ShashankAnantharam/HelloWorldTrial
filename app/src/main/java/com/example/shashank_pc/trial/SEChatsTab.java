@@ -147,7 +147,6 @@ public class SEChatsTab  extends Fragment {
 
 
 
-            //TODO Move this later on to Service if necessary
 
             //Get the total number of members who will see the chat message from RealtimeDatabase (total no. of members in group/event)
             fireStoreMemberLength= database.getReference("MemLen/"+prefID);
