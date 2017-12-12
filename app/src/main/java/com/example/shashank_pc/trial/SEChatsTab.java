@@ -39,34 +39,37 @@ import static com.example.shashank_pc.trial.LandingPageActivity.allContactNames;
 
 public class SEChatsTab  extends Fragment {
 
-    private String mUserID;
-    private String mUserName;
-    private String mEntityName;
-    private String mEntityID;
-    private char mType;
+    private String mUserID;     //UserID
+    private String mUserName;       //UserName
+    private String mEntityName;     //EntityName (Group,Contact,Event name)
+    private String mEntityID;       //EntityID
+    private char mType;             //Entity Type (Group, Contact or Event)
 
 
 
-    private ListView mChatList;
-    private Button mSendButton;
-    private EditText mChatText;
-    private ChatAdapter chatAdapter;
+    private ListView mChatList;     //ChatList: A ListView containing the chat bubbles
+    private Button mSendButton;         //Button to send messages
+    private EditText mChatText;         //EditText to write messages
+    private ChatAdapter chatAdapter;        //A ChatAdapter that stores the list in the listview
 
 
     private DatabaseReference newComment;
-    private String chatMessageAddress;
-    private DatabaseReference commentListener;
-    private ChildEventListener singleCommentListener;
-    private  DatabaseReference fireStoreMemberLength;
-    private ValueEventListener firestoreMemLengthVal;
+    private String chatMessageAddress;      //Address of Chat Message in the Firebase Realtime DB
+    private DatabaseReference commentListener;      //DatabaseReference to address of the Chat messages in Firebase Realtime DB
+    private ChildEventListener singleCommentListener;       //Listening to single chat messages in Firebase
+    private  DatabaseReference fireStoreMemberLength;       //Realtime DB Reference which contains the total length of members
+    private ValueEventListener firestoreMemLengthVal;       ///value event listener to listen to any change in the total length of members
     private String prefID;
 
-    long length;
-    long total;
+    long length;   //total number of chat messages stored in local and downloaded from Realtime database
+    long total; //total number of people who are in the group/event/contact chat bubbble
 
 
     public void passUserDetails(String userID, String userName, String entityName, String entityID, char type)
     {
+        /*
+        Function to pass crucial data to the Tab from the parent activity (SingleEntityActivity)
+         */
         mUserID= userID;
         mUserName=userName;
         mEntityName=entityName;
@@ -95,7 +98,7 @@ public class SEChatsTab  extends Fragment {
         }
 
 
-        //Updating the viewcount using the transaction api of Firebase
+        //Updating the viewcount using the transaction API of Firebase Realtime DB
         updateRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -128,6 +131,9 @@ public class SEChatsTab  extends Fragment {
 
     public void initCommentListener()
     {
+        /*
+        Function to initialize the comment listeners
+         */
 
         if(mType=='U')
         {
@@ -143,7 +149,7 @@ public class SEChatsTab  extends Fragment {
 
             //TODO Move this later on to Service if necessary
 
-            //Get the total number of members who will see the chat message from RealtimeDatabase
+            //Get the total number of members who will see the chat message from RealtimeDatabase (total no. of members in group/event)
             fireStoreMemberLength= database.getReference("MemLen/"+prefID);
             firestoreMemLengthVal= fireStoreMemberLength.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -186,6 +192,7 @@ public class SEChatsTab  extends Fragment {
                 String creator = preferences.getString((key+"_creator"),"");
                 if(allContactNames.containsKey(creator))
                 {
+                    //To display name as the creator of message instead of phone number
                     creator=allContactNames.get(creator);
                 }
                 boolean isNotMyMessage = preferences.getBoolean((key+ "_isNotMyMsg"),false);
@@ -237,7 +244,7 @@ public class SEChatsTab  extends Fragment {
                     editor.putBoolean((key+ "_isNotMyMsg"),isNotMyMessage);
                     editor.commit();
 
-                    //Add chat to adapter
+                    //Add chat to adapter and listview
                     ChatMessage nCM= new ChatMessage(isNotMyMessage, chatText, creator);
                     chatAdapter.add(nCM);
 
