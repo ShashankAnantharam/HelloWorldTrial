@@ -55,6 +55,10 @@ import static java.security.AccessController.getContext;
 
 public class SingleEntityActivity extends AppCompatActivity {
 
+    /*
+    Activity that starts whenever a user clicks on an event or a group
+     */
+
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -70,40 +74,40 @@ public class SingleEntityActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-    private String mEntityName;
-    private String mEntityID;
+    private String mEntityName;     //Name of Entity (Event/ Group)
+    private String mEntityID;       //If of Entity (Event/Group)
 
-    private char mType;
+    private char mType;             //Character to denote type of entity (E for event, G for group)
 
-    private String mUserName;
-    private String mUserID;
-    private boolean isGPSBroadcastFlag;
+    private String mUserName;       //UserName
+    private String mUserID;         //UserID
+    private boolean isGPSBroadcastFlag;     //flag to denote whether user is broadcasting location to entity
 
-    private TextView mTitle;
-    private Button isGPSBroadcast;
+    private TextView mTitle;        //Text view to show title of entity
+    private Button isGPSBroadcast;      //Button for User to Broadcast location
 
-    private Event mEvent;
-    private Group mGroup;
-    private User mContact;
+    private Event mEvent;           //Event class
+    private Group mGroup;               //Group class
+    private User mContact;              //Contact class (Although, now contacts are not included within this activity)
 
 
 
-    public static SEMapTab mMapTab=null;
-    public static SEMembersTab mMembersTab=null;
-    public static SEPlacesTab mPlacesTab=null;
+    public static SEMapTab mMapTab=null;        //SEMapTab class for the tab dealing with the map
+    public static SEMembersTab mMembersTab=null;        //SEMembersTab class to show all the members
+    public static SEPlacesTab mPlacesTab=null;          //SEPlacesTab class to show the places
 
-    public static HashMap<String,Boolean> isMemberBroadcastingLocation;
-    public static List<String> Members;
-    public static Map<String,String> mirrorMembersMap;
-    public static Map<String,Bitmap> membersProfilePic;
-    private DocumentReference MemberRef;
+    public static HashMap<String,Boolean> isMemberBroadcastingLocation;     //boolean map to know if member is broadcasting location
+    public static List<String> Members;         //List of members
+    public static Map<String,String> mirrorMembersMap;      //Hashmap for Members (i.e. A unique ID of the group mapped to the member's phone no.)
+    public static Map<String,Bitmap> membersProfilePic;         //Map of profile pics of group members
+    private DocumentReference MemberRef;            //Reference to the Firestore database where the member's details are present
 
     private String type;
 
-    public static Map<String, Place> placesMap;
+    public static Map<String, Place> placesMap;         //Map for places (Not need at this point)
     private DocumentReference placesRef;
 
-    public static Map<String,Boolean> secondaryEventsClickFlag;
+    public static Map<String,Boolean> secondaryEventsClickFlag;         //Relating to events inside groups (not needed now)
 
 
 
@@ -140,6 +144,7 @@ public class SingleEntityActivity extends AppCompatActivity {
         mirrorMembersMap = new HashMap<String,String>();
         membersProfilePic = new HashMap<>();
 
+        //Using the intent to get the details of the entity (group/event) from the previous activity (LPMainActivity)
         Intent caller = getIntent();
         mEntityName= caller.getStringExtra("Name");
         mEntityID=caller.getStringExtra("ID");
@@ -147,14 +152,18 @@ public class SingleEntityActivity extends AppCompatActivity {
         isGPSBroadcastFlag = getGPSBroadcastFLag(mEntityID);
 
         if(mType=='E') {
+            //If type is E, then create event object with the details
             mEvent = new Event(mEntityName, "", mEntityID);
             mEvent.initBroadcastLocationFlag(isGPSBroadcastFlag);
         }
         else if(mType=='G'){
+            //If type is G, then create group object with the details
             mGroup = new Group(mEntityName, "", mEntityID);
             mGroup.initBroadcastLocationFlag(isGPSBroadcastFlag);
         }
         else if(mType=='U'){
+            //If type is U, then create contact object with the details (This is no longer valid as
+            // contacts have been shifted to SingleContactActivity
             mContact = new User(mEntityName,mEntityID);
             mContact.initBroadcastLocationFlag(isGPSBroadcastFlag);
         }
@@ -168,11 +177,14 @@ public class SingleEntityActivity extends AppCompatActivity {
         //Initialize the Location Broadcast Button
         isGPSBroadcast = (Button) findViewById(R.id.single_entity_contact_gps_broadcast_flag);
 
+        //Based on whether user has broadcast location or not, set the color of the GPSBroadcastButton
         setGPSBroadcastButtoncolor(isGPSBroadcastFlag);
 
         isGPSBroadcast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Toggling the button to share/not share location with the entity (group/event)
 
                 if(isGPSBroadcastFlag) {
                     //If isGPSBroadcast is true, then make it false
@@ -200,6 +212,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
         if(mType=='G')
         {
+            //Get secondary events if the entity is group (Not needed at this point. Events inside group functionality)
             secondaryEvents = new ArrayList<>();
             secondaryEventsClickFlag= new HashMap<>();
             getAttendingEvents(mType,mEntityID);
@@ -239,6 +252,10 @@ public class SingleEntityActivity extends AppCompatActivity {
 
     boolean getGPSBroadcastFLag(String ID)
     {
+        /*
+        ID is the entity ID (ID of event, group)
+        Given the entity ID, the shared preferences are scanned to get the status of location broadcast flag.
+         */
         SharedPreferences preferences = getSharedPreferences("LPLists", Context.MODE_PRIVATE);
         return preferences.getBoolean(ID,false);
 
@@ -335,6 +352,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
             switch(position)
             {
+                //Initialize the tabs: SEMap, SEChats, SEMembers, SEPlaces, SEEvents
                 case 0:
                     if(mSEMapTab==null) {
                         mSEMapTab = new SEMapTab();
@@ -387,7 +405,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 4 total pages.
+            // Show 4 total pages for Events, 5 for groups.
             if(mType=='E')
                 return 4;
             else if(mType=='G')
@@ -430,10 +448,47 @@ public class SingleEntityActivity extends AppCompatActivity {
                 collection("members").
                 document("members");
 
+        //Add a realtime listener to the members document in Firebase Firestore
         MemberRef.
                 addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+
+                        /*
+                        Working of fetching code
+
+                        Assume the case:
+                        mirrorMembersMap (The current hashmap of members in our device):
+                        9701420818
+                        9989447799
+
+                        firestoreMemberMap (Map that contains data fetched from database):
+                        9701420818
+                        9967887767
+
+                        First traverse along mirrorMembersMap
+                        9701420818 is there in both maps, i.e. he was a member before and still is a member.
+                        Remove 9701420818 from firestoreMemberMap
+
+                        Next, we get to 9989447799.
+                        This member was present but is no longer present
+                        Delete 9989447799 from MembersTab and from mirrorMembersMap
+
+                        Therefore,
+                        MirrorMembersMap:
+                        9701420818
+
+                        firestoreMemberMap:
+                        9967887767
+
+                       Now, firestoreMemberMap contains all members who were not part of group but are now part of group
+                        traverse through firestoreMemberMap and initialize remaining members into group
+                        Therefore,
+                        mirrorMembersMap (final):
+                        9701420818
+                        9967887767
+
+                         */
 
                         if (e == null) {
                             Map<String, Object> firestoreMemberMap = new HashMap<>();
@@ -444,7 +499,7 @@ public class SingleEntityActivity extends AppCompatActivity {
 
                             for(Map.Entry<String,String> memberEntityID: mirrorMembersMap.entrySet())
                             {
-                                //Traverse along mirrorMembersMap
+                                //Traverse along mirrorMembersMap that contains the members
 
                                 if(firestoreMemberMap.containsKey(memberEntityID.getKey()))
                                 {
@@ -528,7 +583,7 @@ public class SingleEntityActivity extends AppCompatActivity {
     }
 
 
-    public void getPlacesFromDB()
+    public void getPlacesFromDB()           //Part of places functionality, not needed at this point
     {
         placesMap = new HashMap<>();
 
