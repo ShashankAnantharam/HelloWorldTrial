@@ -63,7 +63,9 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     private boolean zoomFlag=false;     //to know if map is zoomed. It is useless variable and not needed.
     private Marker userMarker;          //Marker of the user
     boolean mlocationsetProfilePic=false;   //Flag to know whether user's profile pic is set.
-    SharedPreferences entityVisibleflag;        //Retrieving whether entity is visible or not using shared preferences
+    SharedPreferences entityVisibleflag;        //Retrieving whether entity is visible or not by using shared preferences.
+                                            //This sharedPreferences is set in the LPContactListItemAdapter.
+                                            //This is for the visible/not-visible functionality
     String current_number="";   //Number of selected marker that is necessary to make calls.
     Map <String,String> titleToNumber;      //Hashmap containing title of marker as key and ID (Ph. Num) as value
 
@@ -323,8 +325,10 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
             if(entry.getValue() && entityVisibleflag.getBoolean(entry.getKey(),false))
             {
                 /*
-                If contact is broadcasting location
+                If contact is broadcasting location and it is set as visible
                  */
+
+                //Fetch database reference of user (Can be made better to reduce overhead leakages)
                 DatabaseReference temp = database.getReference("Users/"+entry.getKey()+"/Loc");
                 temp.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
