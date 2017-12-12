@@ -20,11 +20,13 @@ import java.util.List;
  * Created by shashank-pc on 8/31/2017.
  */
 
-//TODO Enhance the layout of ChatAdapter List
 
 public class ChatAdapter extends ArrayAdapter<ChatMessage> {
 
-    private List<ChatMessage> mChatList = new ArrayList<>();
+    /*
+    ChatAdapter is the arrayadapter to store chat messages
+     */
+    private List<ChatMessage> mChatList = new ArrayList<>();    //ArrayList containing ChatMessages
 
     Context mContext;
 
@@ -54,8 +56,9 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
 
     private class ViewHolder{
 
-        private TextView chatText;
-        private TextView creator;
+        private TextView chatText;      //TextView to hold the chat message
+        private TextView creator;       //Text View to hold the mesage creator name
+        //Layouts of the entire chat (See the xml file)
         private RelativeLayout chatLayout;
         private LinearLayout chatMainLayout;
 
@@ -78,6 +81,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         if(convertView==null)
         {
 
+            //Initialize the chat objects
             convertView= inflator.inflate(R.layout.chat_message_layout, parent,false);
             holder.chatText= (TextView) convertView.findViewById(R.id.single_chat_text);
             holder.creator= (TextView) convertView.findViewById(R.id.message_creator);
@@ -96,15 +100,18 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         boolean mPosition;
         String mCreator;
 
+        //Get the chat message at the position
         ChatMessage mCM = getItem(position);
 
         mMessage=mCM.getMessage();
         mPosition=mCM.isPosition();
         mCreator=mCM.getCreator();
 
+        //Set the chat message and creator
         holder.chatText.setText(mMessage);
         holder.creator.setText(mCreator);
 
+        //Set the color of the chat message (Blue if user sent, purple otherwise)
         holder.chatLayout.setBackgroundResource(mPosition? R.drawable.single_chat_drawable_left_main : R.drawable.single_chat_drawable_right_main);
 
         LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -116,7 +123,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
 
         holder.chatMainLayout= (LinearLayout) convertView.findViewById(R.id.single_chat_main_layout_id);
 
-        if(mPosition==true)
+        if(mPosition==true) //If user is not creator of message
         {
             //Set chat at left side
 //            chatLayout.setGravity(Gravity.LEFT);
