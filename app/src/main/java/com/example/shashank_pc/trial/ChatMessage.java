@@ -6,9 +6,9 @@ package com.example.shashank_pc.trial;
 
 public class ChatMessage {
 
-    private boolean position;
-    private String message;
-    private String creator;
+    private boolean position;   //Position of chat message
+    private String message;     //Message text of chat message
+    private String creator;     //creator of chat message
 
     public ChatMessage(){}
 
