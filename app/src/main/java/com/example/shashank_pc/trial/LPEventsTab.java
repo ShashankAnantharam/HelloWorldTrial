@@ -45,6 +45,9 @@ import static com.example.shashank_pc.trial.LandingPageActivity.allEntities;
 public class LPEventsTab extends Fragment {
 
 
+    /*
+    Tab containing list of Events (Not needed now)
+     */
     //List is used because it is faster than Vector because it is asynchronous
     protected List<Event> mEvents;
 

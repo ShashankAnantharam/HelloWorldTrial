@@ -47,6 +47,9 @@ import static com.example.shashank_pc.trial.LandingPageActivity.userProfilePics;
 
 public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
+    /*
+    Tab containing Common Google Map in the App
+     */
 
     private View rootView;
 
