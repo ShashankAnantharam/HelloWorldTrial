@@ -50,28 +50,27 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
     private View rootView;
 
-    private MapFragment mMapFrag;
-    private GoogleMap mMap;
+    private MapFragment mMapFrag;       //variable containing the MapFragment
+    private GoogleMap mMap;         //Variable containing the google Map object.
 
-    private boolean mapFlag;
-    private Map<String,Marker> allContactsMarkersMap;
+    private boolean mapFlag;            //Flag to know whether googlemap was initialized or not (Not used)
+    private Map<String,Marker> allContactsMarkersMap;       //Hashmap that contains contactID (Ph.No) as key and Marker as value
 
-    private Runnable commonMapRunnable;
-    private Handler commanMapHandler;
+    private Runnable commonMapRunnable;         //Runnable to listen to contacts location every 2.5 seconds
+    private Handler commanMapHandler;       //Handler that contains the runnable that listens to the contacts location every 2.5 seconds
 
-    private boolean zoomFlag=false;
-    private Marker userMarker;
-    boolean mlocationsetProfilePic=false;
-    SharedPreferences entityVisibleflag;
-
+    //variables relating to the Marker button functionality
+    private boolean zoomFlag=false;     //to know if map is zoomed. It is useless variable and not needed.
+    private Marker userMarker;          //Marker of the user
+    boolean mlocationsetProfilePic=false;   //Flag to know whether user's profile pic is set.
+    SharedPreferences entityVisibleflag;        //Retrieving whether entity is visible or not using shared preferences
     String current_number="";   //Number of selected marker that is necessary to make calls.
+    Map <String,String> titleToNumber;      //Hashmap containing title of marker as key and ID (Ph. Num) as value
 
-    Map <String,String> titleToNumber;
+    boolean markerClickflag=false;      //flag to determine whether marker has been clicked
 
-    boolean markerClickflag=false;
-
-    private Button callButton;
-    private Button chatButton;
+    private Button callButton;      //Call button
+    private Button chatButton;          //Chat button
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,16 +93,23 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     private boolean isMapZoomed()
     {
         return zoomFlag;
-    }
+    }   //Function not needed. Does not do anything big.
 
     public void setUserMarker(double latitude, double longitude)
     {
+        /*
+        Function to get UserMarker
+        //TODO : Need to get this function into SEMapTab as well
+         */
         if(mMap!=null) {
+            // If Google Map is ready
             if (userMarker == null) {
+                //If user marker is not yet initialized, then create it
                 userMarker = mMap.addMarker(new MarkerOptions().position(
                         new LatLng(latitude, longitude)).
                         title("Me").
-                        icon(BitmapDescriptorFactory.fromBitmap(unknownUser)));
+                        icon(BitmapDescriptorFactory.fromBitmap(unknownUser)).
+                anchor(0.5f,0.5f));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         new LatLng(latitude, longitude)
                         , 18));
@@ -113,6 +119,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
             }
 
 
+            //Function to set profile picture of userMarker
             if (userProfilePics != null &&
                     userProfilePics.containsKey(getUserID()) && !mlocationsetProfilePic) {
                 Bitmap bitmap = userProfilePics.get(getUserID());
@@ -185,9 +192,9 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         allContactsMarkersMap= new HashMap<>();
-        initCommonMapHandler();
-        setMarkerListener();
-        setMapClickListener();
+        initCommonMapHandler();     //get the contact markers
+        setMarkerListener();        //set the marker listener (i.e. if marker is clicked, buttons must pop up)
+        setMapClickListener();         //set the map click listener, i.e. if map is clicked, buttons must go off
     }
 
     private void showMarkerButtons(boolean showMarkerButtons)
@@ -272,6 +279,9 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
     private void initCommonMapHandler()
     {
+        /*
+        Function to init handler and get the contacts
+         */
         commanMapHandler= new Handler();
         entityVisibleflag = getContext().getSharedPreferences("DisplayFlags", Context.MODE_PRIVATE);
         commonMapRunnable= new Runnable() {
@@ -288,12 +298,33 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
 
     private void getContacts()
     {
+        /*
+        Function to retrieve contacts
+         */
+
+        /*
+        Algo:
+        Two hashmaps:
+        isBroadcastingLocation (from LandingPageActivity)
+        allContactsMarkerMap (declared in this class)
+
+        Traverse through isBroadcasting location
+        if contact's isbroadcastinglocation value is true,
+        set it as visible in allContactsMarkerMap (or create it if it is not already there)
+        else
+        set it as invisible
+
+         */
+
 
         for(final Map.Entry<String,Boolean> entry: isBroadcastingLocation.entrySet())
         {
 
             if(entry.getValue() && entityVisibleflag.getBoolean(entry.getKey(),false))
             {
+                /*
+                If contact is broadcasting location
+                 */
                 DatabaseReference temp = database.getReference("Users/"+entry.getKey()+"/Loc");
                 temp.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -320,6 +351,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
                             //Marker not present. Need to create it
                             String title=entry.getKey();
                             String current_num_set=entry.getKey();
+                            //Setting appropriate title for contact (Title is name of contact)
                             if(allContactNames.containsKey(title))
                                 title=allContactNames.get(title);
                             allContactsMarkersMap.put(entry.getKey(),
@@ -358,7 +390,7 @@ public class LPMapTab extends Fragment implements OnMapReadyCallback {
             }
             else
             {
-                //Marker needs to be invisible
+                //Contact is not broadcasting location, then Marker needs to be invisible
                 if(allContactsMarkersMap.containsKey(entry.getKey()))
                 {
                     allContactsMarkersMap.get(entry.getKey()).setVisible(false);
