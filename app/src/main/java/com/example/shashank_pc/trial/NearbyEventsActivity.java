@@ -1,6 +1,7 @@
 package com.example.shashank_pc.trial;
 
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationListener;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,8 +24,12 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.maps.android.heatmaps.Gradient;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.firestore;
@@ -38,6 +45,11 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
     private Double latitude;
     private Double longitude;
 
+    List<LatLng> heatMapCoord;
+
+    HeatmapTileProvider mProvider;
+    TileOverlay mOverlay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +60,10 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
         mapFragment.getMapAsync(this);
 
         nearbyEvents= new HashMap<>();
+
+
+
+
 
 
     }
@@ -129,8 +145,59 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
 
      //   mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,10));
 
-        getNearbyPlaces();
+      //  getNearbyPlaces();
+
+        populateList();
+        addHeatMap();
 
 
     }
+
+
+    public void addHeatMap()
+    {
+        mProvider = new HeatmapTileProvider.Builder().data(heatMapCoord).build();
+        mOverlay= mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+              //  Toast.makeText(getApplicationContext(),Double.toString(latLng.latitude),Toast.LENGTH_SHORT).show();
+                Location fix= new Location("fix");
+                fix.setLatitude(latLng.latitude);
+                fix.setLongitude(latLng.longitude);
+               for(LatLng l: heatMapCoord)
+               {
+                   Location curr= new Location("arr");
+                   curr.setLatitude(l.latitude);
+                   curr.setLongitude(l.longitude);
+
+                   if(fix.distanceTo(curr)<500000)
+                   {
+                       Toast.makeText(getApplicationContext(),Double.toString(l.latitude),Toast.LENGTH_SHORT).show();
+                   }
+
+               }
+
+               // mMap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude+x,latLng.longitude+x)));
+            }
+        });
+
+
+    }
+
+
+    public void populateList()
+    {
+        heatMapCoord= new ArrayList<>();
+        LatLng temp = new LatLng(-37.1886,145.708);
+        heatMapCoord.add(new LatLng(-37.8361,144.845));
+        heatMapCoord.add(new LatLng(-38.4034,144.192));
+        heatMapCoord.add(new LatLng(-38.7597,143.67));
+        heatMapCoord.add(new LatLng(-36.9672,141.083));
+
+    }
+
+
+
 }
