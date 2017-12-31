@@ -3,6 +3,7 @@ package com.example.shashank_pc.trial;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
+import android.support.annotation.IntegerRes;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.firestore;
@@ -156,6 +158,8 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
 
     public void addHeatMap()
     {
+
+
         mProvider = new HeatmapTileProvider.Builder().data(heatMapCoord).build();
         mOverlay= mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 
@@ -179,9 +183,25 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
 
                }
 
+                if(heatMapCoord.size()>0) {
+                  //  heatMapCoord.remove(heatMapCoord.size() - 1);     O(1)
+                    List<LatLng> temp = new ArrayList<LatLng>();        //O(N)
+                    for(int i=0;i<heatMapCoord.size();i++)
+                        temp.add(heatMapCoord.get(i));
+                    heatMapCoord.clear();
+                    for(int i=0;i<temp.size()-1;i++)
+                        heatMapCoord.add(temp.get(i));
+                    mOverlay.remove();
+                    if(heatMapCoord.size()>0) {
+                        mProvider.setData(heatMapCoord);
+                        mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+                    }
+                }
+
                // mMap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude+x,latLng.longitude+x)));
             }
         });
+
 
 
     }
