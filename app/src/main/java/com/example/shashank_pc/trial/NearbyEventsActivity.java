@@ -48,6 +48,7 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
     private Double longitude;
 
     List<LatLng> heatMapCoord;
+    List<String> pics;
 
     HeatmapTileProvider mProvider;
     TileOverlay mOverlay;
@@ -160,7 +161,7 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
     {
 
 
-        mProvider = new HeatmapTileProvider.Builder().data(heatMapCoord).build();
+        mProvider = new HeatmapTileProvider.Builder().data(heatMapCoord).radius(40).build();
         mOverlay= mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -191,6 +192,7 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
                     heatMapCoord.clear();
                     for(int i=0;i<temp.size()-1;i++)
                         heatMapCoord.add(temp.get(i));
+
                     mOverlay.remove();
                     if(heatMapCoord.size()>0) {
                         mProvider.setData(heatMapCoord);
@@ -210,6 +212,8 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
     public void populateList()
     {
         heatMapCoord= new ArrayList<>();
+        pics = new ArrayList<>();
+        //TODO Get pictures
         LatLng temp = new LatLng(-37.1886,145.708);
         heatMapCoord.add(new LatLng(-37.8361,144.845));
         heatMapCoord.add(new LatLng(-38.4034,144.192));
