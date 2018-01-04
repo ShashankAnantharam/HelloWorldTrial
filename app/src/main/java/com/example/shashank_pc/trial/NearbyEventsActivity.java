@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.support.annotation.IntegerRes;
+import android.support.annotation.StringDef;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -16,12 +17,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.example.shashank_pc.trial.Generic.firestore;
 
@@ -50,6 +55,7 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
     List<LatLng> heatMapCoord;
     List<String> pics;
 
+    Map<String,Map<String,LatLng>> DiaryHash;
     HeatmapTileProvider mProvider;
     TileOverlay mOverlay;
 
@@ -150,6 +156,7 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
 
       //  getNearbyPlaces();
 
+        initDiary();
         populateList();
         addHeatMap();
 
@@ -161,14 +168,30 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
     {
 
 
-        mProvider = new HeatmapTileProvider.Builder().data(heatMapCoord).radius(40).build();
-        mOverlay= mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+     //   mProvider = new HeatmapTileProvider.Builder().data(heatMapCoord).radius(40).build();
+     //   mOverlay= mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+
+                for(Map.Entry <String,Map<String,LatLng>> diary: DiaryHash.entrySet())
+                {
+                    for(Map.Entry<String,LatLng> diaryEntry: diary.getValue().entrySet())
+                    {
+                   /*     Toast.makeText(getApplicationContext(),diary.getKey()+" "+Double.toString(diaryEntry.getValue().latitude)+" "+
+                                        Double.toString(diaryEntry.getValue().longitude),
+                                Toast.LENGTH_SHORT).show();
+                     */
+                        heatMapCoord.add(diaryEntry.getValue());
+                        mMap.addMarker(new MarkerOptions().position(diaryEntry.getValue()).title(diary.getKey()));
+                    }
+                }
+
+                mProvider = new HeatmapTileProvider.Builder().data(heatMapCoord).radius(40).build();
+                mOverlay= mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
               //  Toast.makeText(getApplicationContext(),Double.toString(latLng.latitude),Toast.LENGTH_SHORT).show();
-                Location fix= new Location("fix");
+  /*              Location fix= new Location("fix");
                 fix.setLatitude(latLng.latitude);
                 fix.setLongitude(latLng.longitude);
                for(LatLng l: heatMapCoord)
@@ -199,7 +222,7 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
                         mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
                     }
                 }
-
+*/
                // mMap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude+x,latLng.longitude+x)));
             }
         });
@@ -208,17 +231,71 @@ public class NearbyEventsActivity extends FragmentActivity implements OnMapReady
 
     }
 
+    public void initDiary()
+    {
+        if(DiaryHash==null)
+            DiaryHash = new HashMap<>();
+        DiaryHash.clear();
+        Map <String,LatLng> temp = new HashMap<>();
+        DiaryHash.put("9701420818",temp);
+        temp = new HashMap<>();
+        DiaryHash.put("9848120818",temp);
+        populateList();
+    }
 
+    public void addUser(final String name, final String year)
+    {
+
+        DocumentReference reference = FirebaseFirestore.getInstance().collection("users").document(name)
+                .collection("diary").document(year);
+        reference.get().
+                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map <String,Object> db= documentSnapshot.getData();
+                 for(Map.Entry<String,Object> dbEntry: db.entrySet())
+                {
+                    String key= dbEntry.getKey();
+                    Map <String,Double> x = (Map <String,Double>) dbEntry.getValue();
+
+                    LatLng latLng = new LatLng(
+                            x.get("lat"),
+                            x.get("long"));
+          /*          Toast.makeText(getApplicationContext(),name+" "+Double.toString(latLng.latitude)+" "+
+                            Double.toString(latLng.longitude),
+                            Toast.LENGTH_SHORT).show();
+                            */
+                    DiaryHash.get(name).put(key,latLng);
+
+
+                }
+
+
+
+            }
+        });
+    }
     public void populateList()
     {
         heatMapCoord= new ArrayList<>();
-        pics = new ArrayList<>();
+
+        for(Map.Entry <String,Map<String,LatLng>> diary: DiaryHash.entrySet())
+        {
+            String name= diary.getKey();
+            addUser(name,"2018");
+            addUser(name,"2017.75");
+        }
+
+
         //TODO Get pictures
-        LatLng temp = new LatLng(-37.1886,145.708);
+     /*   LatLng temp = new LatLng(-37.1886,145.708);
         heatMapCoord.add(new LatLng(-37.8361,144.845));
         heatMapCoord.add(new LatLng(-38.4034,144.192));
         heatMapCoord.add(new LatLng(-38.7597,143.67));
         heatMapCoord.add(new LatLng(-36.9672,141.083));
+        */
+
+
 
     }
 
