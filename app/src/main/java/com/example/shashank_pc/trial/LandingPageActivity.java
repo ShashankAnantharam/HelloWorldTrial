@@ -189,6 +189,7 @@ public class LandingPageActivity extends AppCompatActivity {
         super.onDestroy();
 
         Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);
+//Toggle here
         stopService(gpsIntent);
         wakeLock.release();
         contactNodeRef.removeEventListener(contactNodeChildListener);

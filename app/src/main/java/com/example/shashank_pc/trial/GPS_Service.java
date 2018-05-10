@@ -209,6 +209,6 @@ public class GPS_Service extends Service {
     public void onDestroy() {
         super.onDestroy();
         locationManager.removeUpdates(locationListener);
-        stopForeground(true);
+    //    stopForeground(true);
     }
 }
