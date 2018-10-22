@@ -8,7 +8,7 @@ public class Alert {
     private boolean isDaily;
     private Location location;
     private String name;
-    private Float radius;
+    private Double radius;
     private List<AlertContact> selectedContacts = new ArrayList<>();
 
     public String getAddress() {
@@ -43,11 +43,11 @@ public class Alert {
         this.name = name;
     }
 
-    public Float getRadius() {
+    public Double getRadius() {
         return radius;
     }
 
-    public void setRadius(Float radius) {
+    public void setRadius(Double radius) {
         this.radius = radius;
     }
 
