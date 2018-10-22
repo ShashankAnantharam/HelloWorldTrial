@@ -22,7 +22,13 @@ public class Task extends Alert {
         }
     }
 
+    private String description;
     private CreatedBy createdBy;
+    private Long completedAt;
+    private String completedBy;
+    private Long deadline;
+    private boolean hasDeadline;
+
 
     public CreatedBy getCreatedBy() {
         return createdBy;
