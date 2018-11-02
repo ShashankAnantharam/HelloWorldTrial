@@ -58,6 +58,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
+import static com.example.shashank_pc.trial.Helper.BasicHelper.populateAlerts;
+
 /*
     GeoLocationService extends Service -
     onStart - service specific lifecycle method.
@@ -132,6 +134,8 @@ public class GeoLocationService extends Service {
         }
     }
 
+
+
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -147,6 +151,8 @@ public class GeoLocationService extends Service {
             if(wakeLock != null && wakeLock.isHeld()){
                 wakeLock.release();
             }
+            List<Alert> alerts = populateAlerts(alertMap);
+
             handler.postDelayed(sendData, 2000);
         }
 
