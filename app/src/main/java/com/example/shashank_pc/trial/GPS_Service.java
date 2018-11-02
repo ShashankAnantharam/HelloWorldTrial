@@ -170,7 +170,7 @@ public class GPS_Service extends Service {
             public void onStatusChanged(String provider, int status, Bundle extras) {
 
             }
-            
+
 
             @Override
             public void onProviderEnabled(String provider) {

@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toolbar;
 
-import static com.google.android.gms.R.id.toolbar;
 
 public class GroupCreateActivity extends AppCompatActivity {
 
