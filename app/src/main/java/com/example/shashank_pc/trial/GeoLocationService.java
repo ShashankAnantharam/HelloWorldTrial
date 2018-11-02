@@ -59,6 +59,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
 import static com.example.shashank_pc.trial.Helper.BasicHelper.populateAlerts;
+import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOffFirebaseDatabases;
+import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOnFirebaseDatabases;
 
 /*
     GeoLocationService extends Service -
@@ -101,39 +103,10 @@ public class GeoLocationService extends Service {
         }
     }
 
-    public void setDatabaseConnectionStatus(boolean flag){
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("IS_FIREBASE_ONLINE", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putBoolean("IS_FIREBASE_ONLINE",flag);
-        edit.commit();
-    }
-
-    public boolean getDatabaseConnectionStatus(){
-        SharedPreferences preferences = getApplicationContext().getSharedPreferences("IS_FIREBASE_ONLINE", Context.MODE_PRIVATE);
-        return preferences.getBoolean("IS_FIREBASE_ONLINE", true);
-    }
-
     public Boolean getErrorFlagStatus(){
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("ERROR_FLAG", Context.MODE_PRIVATE);
         return preferences.getBoolean("ERROR_FLAG", true);
     }
-
-    public void turnOffFirebaseDatabases(){
-        if(getDatabaseConnectionStatus() && !isAppInForeground()){
-            FirebaseDatabase.getInstance().goOffline();
-            FirebaseFirestore.getInstance().disableNetwork();
-            setDatabaseConnectionStatus(false);
-        }
-    }
-
-    public void turnOnFirebaseDatabases(){
-        if(!getDatabaseConnectionStatus()){
-            FirebaseDatabase.getInstance().goOnline();
-            FirebaseFirestore.getInstance().enableNetwork();
-            setDatabaseConnectionStatus(true);
-        }
-    }
-
 
 
     LocationListener locationListener = new LocationListener() {
@@ -169,7 +142,7 @@ public class GeoLocationService extends Service {
                 edit.putInt("FLAG",1);
                 edit.commit();
 
-                turnOnFirebaseDatabases();
+                turnOnFirebaseDatabases(getApplicationContext());
 
                 handler.removeCallbacks(sendData);
                 if(wakeLock != null && !wakeLock.isHeld()){
@@ -182,7 +155,7 @@ public class GeoLocationService extends Service {
         @Override
         public void onProviderDisabled(String s) {
             if(current_gps_status == true){
-                turnOffFirebaseDatabases();
+                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground());
                 current_gps_status = false;
                 userSet.clear();
                 if(wakeLock != null && wakeLock.isHeld()){
@@ -271,7 +244,7 @@ public class GeoLocationService extends Service {
         };
 
         if(d != null && ch != null){
-            turnOnFirebaseDatabases();
+            turnOnFirebaseDatabases(getApplicationContext());
             d.addChildEventListener(ch);
         }
 
@@ -383,7 +356,6 @@ public class GeoLocationService extends Service {
 
 //                        GeoLocationBroadcastReceiver sendEvent = new GeoLocationBroadcastReceiver();
 //                        sendEvent.sendEvent(getApplicationContext());
-
                         //   handler.postDelayed(this, 1000);
                     }
                     catch (Exception e) {
@@ -391,9 +363,6 @@ public class GeoLocationService extends Service {
                     }
                 }
             }
-
-
-            //}
         };
 
         //Toast.makeText(getApplicationContext(),"START",Toast.LENGTH_SHORT).show();
@@ -437,7 +406,6 @@ public class GeoLocationService extends Service {
                 Date date = new Date();
                 long mills = date.getTime() - e.getValue() ;
 
-
                 if(mills > 600000 && e.getKey().startsWith("+")) {
                     //   delete node
                     DatabaseReference mDatabase =  FirebaseDatabase.getInstance().getReference("/broadcasting/" + getUserPhoneNumber() + "/LocRequests/" + e.getKey() );
@@ -450,11 +418,9 @@ public class GeoLocationService extends Service {
                         value += e.getKey() + ",";
                     }
                 }
-
             }
 
             // Toast.makeText(getApplicationContext(), "request value" + value, Toast.LENGTH_LONG).show();
-
             Boolean errorFlag = getErrorFlagStatus();
             System.out.println(errorFlag);
             intent.putExtra("errorFlag",String.valueOf(errorFlag));
@@ -465,25 +431,6 @@ public class GeoLocationService extends Service {
 
 
             // remove lookouts and taks after sending to react native
-
-//            for(int i = requestList.size()-1 ; i >= 0; i--){
-//                String reqVal = requestList.get(i);
-//                if(reqVal.startsWith("L") || reqVal.startsWith("T")) {
-//                    requestList.remove(requestList.get(i));
-//                }
-//            }
-
-
-            /**
-             * Replacing with iterator due to ConcurrentModificationException
-             *Ref - https://stackoverflow.com/questions/602636/concurrentmodificationexception-and-a-hashmap
-             */
-            // for(Map.Entry<String, Long> e: locReqData.entrySet()) {
-            //     if(e.getKey().startsWith("L") || e.getKey().startsWith("T")) {
-            //         locReqData.remove(e.getKey());
-            //     }
-            // }
-
             Iterator it = userSet.entrySet().iterator();
             while (it.hasNext())
             {
@@ -533,7 +480,7 @@ public class GeoLocationService extends Service {
             if (intent.getAction().equals(STOP_ACTION)) {
                 if(d != null && ch !=null){
                     d.removeEventListener(ch);
-                    turnOffFirebaseDatabases();
+                    turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground());
                     d = null;
                 }
                 if(locationListener != null && locationManager!= null){
