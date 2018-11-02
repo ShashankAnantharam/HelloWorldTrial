@@ -37,6 +37,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
 import android.util.Log;
 
+import com.example.shashank_pc.trial.classes.Alert;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,6 +54,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
 /*
@@ -62,11 +65,12 @@ import java.util.concurrent.atomic.AtomicMarkableReference;
 public class GeoLocationService extends Service {
     public static final String FOREGROUND = "com.facemap.location.FOREGROUND";
     private static int GEOLOCATION_NOTIFICATION_ID = 12345689;
-    public static List<String> requestList;
     public static List<String> lookOutsList;
     public static List<String> tasksList;
 
-    HashMap<String, Long> locReqData;
+    Map<String,Alert> alertMap= new ConcurrentHashMap<>();
+    Map<String,Long> userSet = new ConcurrentHashMap<>();
+
 
     private int hCount = 0;
 
@@ -81,8 +85,7 @@ public class GeoLocationService extends Service {
     private  ChildEventListener ch;
     //   LocationListener locationListener;
     private WakeLock wakeLock = null;
-    private int lookoutFlag = 0;
-    private int requestsCount = 0;
+    private int alertFlag = 0;
 
     private boolean isNotificationReady = false;
 
@@ -175,7 +178,7 @@ public class GeoLocationService extends Service {
             if(current_gps_status == true){
                 turnOffFirebaseDatabases();
                 current_gps_status = false;
-                locReqData.clear();
+                userSet.clear();
                 if(wakeLock != null && wakeLock.isHeld()){
                     wakeLock.release();
                 }
@@ -195,10 +198,8 @@ public class GeoLocationService extends Service {
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"MyWakelockTag");
         wakeLock.setReferenceCounted(false);
-        requestList = new ArrayList<>();
         lookOutsList = new ArrayList<>();
         tasksList = new ArrayList<>();
-        locReqData = new HashMap<String, Long>();
 
         //Variable to get status of the GPS.
         current_gps_status = true;
@@ -223,9 +224,11 @@ public class GeoLocationService extends Service {
                 long timerString = newPost.time;
 
                 if(key.startsWith("+")){
-                    locReqData.put(key, timerString);
-                    requestList.add(key);
-                    requestsCount = requestsCount + 1;
+                    userSet.put(key, timerString);
+                }
+                else
+                {
+                    alertFlag=1;
                 }
 
             }
@@ -239,20 +242,15 @@ public class GeoLocationService extends Service {
                 System.out.println("newPost: " + newPost);
                 long timerString = newPost.time;
 
-                locReqData.put(key, timerString);
+                userSet.put(key, timerString);
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                requestList.remove(dataSnapshot.getKey());
+                userSet.remove(dataSnapshot.getKey());
 
-                locReqData.remove(dataSnapshot.getKey());
-
-                if(dataSnapshot.getKey().startsWith("+")){
-                    requestsCount = requestsCount - 1;
-                }
             }
 
             @Override
@@ -295,14 +293,8 @@ public class GeoLocationService extends Service {
                 }else{
                     try {
                         if(getFlag() == 1){
-                            //Toast.makeText(getApplicationContext(), getAlarmDuration() + "  " +  System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
-                            Log.d("ALARM_TIME", Long.toString(getAlarmDuration()));
-                            Log.d("CURR_TIME", Long.toString(System.currentTimeMillis()));
 
-                            // Toast.makeText(getApplicationContext(), "Alarm Time " + getAlarmDuration(),Toast.LENGTH_SHORT).show();
-
-
-                            if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || lookoutFlag != 0 || requestsCount != 0)){
+                            if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0)){
                                 // Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
 
                                 if(wakeLock != null && !wakeLock.isHeld()){
@@ -328,33 +320,24 @@ public class GeoLocationService extends Service {
                                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, locationListener);
                                 }
-                                if(lookoutFlag == 0){
+                                if(alertFlag == 0){
                                     handler.postDelayed(this, 35000);
                                 }else{
-                                    lookoutFlag = 0;
+                                    alertFlag = 0;
                                     handler.postDelayed(this,20000);
                                 }
                             }else{
-                                //Toast.makeText(getApplicationContext(), "false - flag is 1", Toast.LENGTH_SHORT).show();
-                                //if(database != null){
-                                // FirebaseDatabase.getInstance().getReference("temp").removeValue();
-                                // FirebaseDatabase.getInstance().getReference("temp").setValue("Test");
                                 handler.postDelayed(this,3000);
-                                //}
                             }
 
                         } else if(getFlag() == 2){
 
                             // location listener not yet triggerd
-
-
                             if(locationListener != null && locationManager!= null){
                                 locationManager.removeUpdates(locationListener);
                             }
 
                             Location lastLocation = new Location("service Provider");
-                            lastLocation.setLatitude(2000);
-                            lastLocation.setLongitude(2000);
                             GeoLocationService.this.sendMessage(lastLocation);
                             //Toast.makeText(getApplicationContext(), "flag is 2", Toast.LENGTH_SHORT).show();
                             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
@@ -442,9 +425,8 @@ public class GeoLocationService extends Service {
             String value = "";
             String deletedAlerts = "";
 
-            System.out.println("locReqData: " + locReqData);
 
-            for(Map.Entry<String, Long> e: locReqData.entrySet()){
+            for(Map.Entry<String, Long> e: userSet.entrySet()){
 
                 Date date = new Date();
                 long mills = date.getTime() - e.getValue() ;
@@ -496,7 +478,7 @@ public class GeoLocationService extends Service {
             //     }
             // }
 
-            Iterator it = locReqData.entrySet().iterator();
+            Iterator it = userSet.entrySet().iterator();
             while (it.hasNext())
             {
                 Map.Entry<String, Long> e = (Map.Entry<String, Long>) it.next();
