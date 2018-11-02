@@ -70,7 +70,12 @@
             android:label="Create Group" />
         <activity
             android:name=".NearbyEventsActivity"
-            android:label="@string/title_activity_nearby_events"></activity>
+            android:label="@string/title_activity_nearby_events" />
+
+        <service
+            android:name=".GeoLocationService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
