@@ -138,17 +138,8 @@ public class GeoLocationService extends Service {
             SharedPreferences.Editor edit = sharedPreferences.edit();
             edit.putInt("FLAG",3);
             edit.commit();
-            //Toast.makeText(getApplicationContext(), "GPS is enabled", Toast.LENGTH_SHORT).show();
-//            if(current_gps_status == false){
-//                Toast.makeText(getApplicationContext(), "GPS is enabled", Toast.LENGTH_SHORT).show();
-//
-////                if(d != null && ch !=null){
-////                    d.addChildEventListener(ch);
-////                }
-//                current_gps_status = true;
-//
-//            }
-            GeoLocationService.this.sendMessage(location);
+
+//            GeoLocationService.this.sendMessage(location);
             handler.removeCallbacks(sendData);
             if(wakeLock != null && wakeLock.isHeld()){
                 wakeLock.release();
@@ -229,37 +220,12 @@ public class GeoLocationService extends Service {
                 String key = dataSnapshot.getKey();
 
                 Timer newPost = dataSnapshot.getValue(Timer.class);
-                System.out.println("newPost: " + newPost);
                 long timerString = newPost.time;
 
-
-                locReqData.put(key, timerString);
-
-                requestList.add(key);
-
                 if(key.startsWith("+")){
+                    locReqData.put(key, timerString);
+                    requestList.add(key);
                     requestsCount = requestsCount + 1;
-                }
-
-
-                if(requestsCount == 1 || key.startsWith("L") || key.startsWith("T")){
-
-                    if(locationListener != null && locationManager!= null){
-                        locationManager.removeUpdates(locationListener);
-                    }
-
-                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor edit = sharedPreferences.edit();
-                    edit.putInt("FLAG",1);
-                    edit.commit();
-
-
-                    handler.removeCallbacks(sendData);
-                    lookoutFlag = 1;
-                    handler.postDelayed(sendData, 2000);
-
-                    //locationManager.removeUpdates(this);
-
                 }
 
             }
@@ -386,22 +352,6 @@ public class GeoLocationService extends Service {
                                 locationManager.removeUpdates(locationListener);
                             }
 
-                            System.out.print("MERGE TEST :::locationManager value " + locationManager);
-
-                            //boolean gps_status = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-//                            if(current_gps_status == true && gps_status == false){
-//                                Toast.makeText(getApplicationContext(), "GPS is disabled", Toast.LENGTH_SHORT).show();
-//
-//                                if(d != null && ch !=null){
-//                                    d.removeEventListener(ch);
-//                                }
-//                                current_gps_status = false;
-//
-//                            }
-
-
-//                           Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             Location lastLocation = new Location("service Provider");
                             lastLocation.setLatitude(2000);
                             lastLocation.setLongitude(2000);
