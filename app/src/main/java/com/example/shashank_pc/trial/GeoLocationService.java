@@ -188,14 +188,17 @@ public class GeoLocationService extends Service {
     {
         for(Alert alert: alerts)
         {
-            if(shouldCheckAlert(alert) && shouldTriggerAlert(x_curr, y_curr, x_prev, y_prev, alert))
+            if(shouldCheckAlert(alert))
             {
-                //Trigger alert
-                FirebaseDatabase.getInstance().getReference("testingBigTime").setValue(alert.getId());
+                if(shouldTriggerAlert(x_curr, y_curr, x_prev, y_prev, alert))
+                {
+                    //Trigger alert
+                    FirebaseDatabase.getInstance().getReference("testingBigTime").setValue(alert.getId());
 
-                updateAlertInMap(alert.getId());
+                    updateAlertInMap(alert.getId());
 
-
+                    //TODO Calculate distance here
+                }
             }
         }
     }
