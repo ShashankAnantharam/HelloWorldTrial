@@ -3,6 +3,7 @@ package com.example.shashank_pc.trial;;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -648,7 +649,7 @@ public class GeoLocationService extends Service {
 
         String str = "Using your location in the background";
         builder
-                .setSmallIcon(R.drawable.facemap_icon)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle("Facemap")
                 .setContentText(str)
@@ -660,7 +661,7 @@ public class GeoLocationService extends Service {
                         pstopIntent)
                 .setWhen(System.currentTimeMillis());
 
-        Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent startIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, startIntent, 0);
 //        PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, stopIntent, 0);
 
