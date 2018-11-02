@@ -63,7 +63,7 @@ public class GPS_Service extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
 
-        Intent stopIntent = new Intent(this, GeoLocationService.class);
+        Intent stopIntent = new Intent(this, GPS_Service.class);
         stopIntent.setAction(STOP_ACTION);
         PendingIntent tstopIntent = PendingIntent.getService(this, 0,
                 stopIntent, 0);
@@ -218,7 +218,7 @@ public class GPS_Service extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if(intent != null) {
-            if (intent.getAction().equals(STOP_ACTION)) {
+            if (intent.getAction()!=null && intent.getAction().equals(STOP_ACTION)) {
                 stopForeground(true);
                 stopSelf();
             }

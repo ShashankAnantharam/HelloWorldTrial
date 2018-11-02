@@ -190,7 +190,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
         Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);
 //Toggle here
-        stopService(gpsIntent);
+      //  stopService(gpsIntent);
         wakeLock.release();
         contactNodeRef.removeEventListener(contactNodeChildListener);
 //        Toast.makeText(getApplicationContext(),"ON DESTROY CALLED",Toast.LENGTH_SHORT);
