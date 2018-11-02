@@ -4,6 +4,9 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.List;
+
+import static com.example.shashank_pc.trial.Helper.AlertHelper.shouldCheckAlert;
 import static java.lang.Math.signum;
 
 public class Algorithm {
@@ -57,7 +60,7 @@ public class Algorithm {
     }
 
 
-    public static boolean shouldAlertTrigger(double x_curr, double y_curr, double x_prev, double y_prev, Alert alert)
+    public static boolean shouldTriggerAlert(double x_curr, double y_curr, double x_prev, double y_prev, Alert alert)
     {
         //Breakdown into variables
         double x_alert = alert.getLocation().getLatitude();
@@ -87,27 +90,6 @@ public class Algorithm {
         }
         return false;
     }
-
-    public static boolean isLookoutValid(Alert alert)
-    {
-        //TODO Later
-        if(alert instanceof Lookout)
-        {
-            return true;
-        }
-        else if(alert instanceof Task)
-        {
-            return true;
-        }
-
-        return false;
-
-    }
-
-
-
-
-
 
 
 }

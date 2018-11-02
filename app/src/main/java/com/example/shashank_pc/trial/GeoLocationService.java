@@ -58,9 +58,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
+import static com.example.shashank_pc.trial.Helper.AlertHelper.shouldCheckAlert;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.populateAlerts;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOffFirebaseDatabases;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOnFirebaseDatabases;
+import static com.example.shashank_pc.trial.classes.Algorithm.shouldTriggerAlert;
 
 /*
     GeoLocationService extends Service -
@@ -165,6 +167,38 @@ public class GeoLocationService extends Service {
             }
         }
     };
+
+    private void updateAlertInMap(String id)
+    {
+        Alert alert = alertMap.get(id);
+        for(int i=0;i<alert.getSelectedContacts().size();i++)
+        {
+            if(alert.getSelectedContacts().get(i).getId().equals(getUserPhoneNumber()))
+            {
+                alert.getSelectedContacts().get(i).setTimeStamp(System.currentTimeMillis());
+                break;
+            }
+        }
+        alertMap.remove(id);
+        alertMap.put(id,alert);
+    }
+
+
+    private void mainAlgo(List<Alert> alerts, double x_curr, double y_curr, double x_prev, double y_prev)
+    {
+        for(Alert alert: alerts)
+        {
+            if(shouldCheckAlert(alert) && shouldTriggerAlert(x_curr, y_curr, x_prev, y_prev, alert))
+            {
+                //Trigger alert
+                FirebaseDatabase.getInstance().getReference("testingBigTime").setValue(alert.getId());
+
+                updateAlertInMap(alert.getId());
+
+
+            }
+        }
+    }
 
     @Override
     @TargetApi(Build.VERSION_CODES.M)
@@ -388,7 +422,8 @@ public class GeoLocationService extends Service {
 
     private String getUserPhoneNumber(){
         SharedPreferences duration = getApplication().getSharedPreferences("USERNUMBER", MODE_PRIVATE);
-        return duration.getString("USERNUMBER","");
+//        return duration.getString("USERNUMBER","");
+        return "+919701420818";
     }
 
     private void sendMessage(Location location) {
