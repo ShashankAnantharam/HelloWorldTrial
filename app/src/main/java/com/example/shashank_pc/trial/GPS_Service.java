@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static com.example.shashank_pc.trial.Generic.database;
+import static com.example.shashank_pc.trial.GeoLocationService.STOP_ACTION;
 import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
 import static com.example.shashank_pc.trial.LandingPageActivity.mMapLPTab;
 
@@ -62,11 +63,18 @@ public class GPS_Service extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
 
+        Intent stopIntent = new Intent(this, GeoLocationService.class);
+        stopIntent.setAction(STOP_ACTION);
+        PendingIntent tstopIntent = PendingIntent.getService(this, 0,
+                stopIntent, 0);
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("My Awesome App")
                 .setContentText("Doing some work...")
+                .addAction(android.R.drawable.ic_media_pause, "Stop",
+                        tstopIntent)
                 .setContentIntent(pendingIntent).build();
+
 
         startForeground(1337,notification);
 
@@ -162,6 +170,7 @@ public class GPS_Service extends Service {
             public void onStatusChanged(String provider, int status, Bundle extras) {
 
             }
+            
 
             @Override
             public void onProviderEnabled(String provider) {
@@ -206,7 +215,20 @@ public class GPS_Service extends Service {
     }
 
     @Override
-    public void onDestroy() {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if(intent != null) {
+            if (intent.getAction().equals(STOP_ACTION)) {
+                stopForeground(true);
+                stopSelf();
+            }
+        }
+
+        return Service.START_STICKY;
+    }
+
+    @Override
+    public void onDestroy(){
         super.onDestroy();
         locationManager.removeUpdates(locationListener);
     //    stopForeground(true);
