@@ -47,6 +47,8 @@ public class GPS_Service extends Service {
     private LocationListener locationListener;
     private LocationManager locationManager;
     private DatabaseReference writeGPS;
+    FirebaseDatabase database;
+
 
 
     @Nullable
@@ -81,6 +83,7 @@ public class GPS_Service extends Service {
 
         String firebaseAddressLat = "Users/"+LandingPageActivity.getUserID()+"/Loc";
 
+        database = FirebaseDatabase.getInstance();
         writeGPS= database.getReference(firebaseAddressLat);
 
 
@@ -163,6 +166,8 @@ public class GPS_Service extends Service {
                 {
                     mMapLPTab.setUserMarker(location.getLatitude(),location.getLongitude());
                 }
+
+                FirebaseDatabase.getInstance().getReference("Testing/jingalala").setValue(System.currentTimeMillis());
 
             }
 

@@ -1,6 +1,8 @@
 package com.example.shashank_pc.trial;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -51,6 +53,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,6 +208,19 @@ public class LandingPageActivity extends AppCompatActivity {
   //      Toast.makeText(getApplicationContext(),"ON PAUSE CALLED",Toast.LENGTH_SHORT);
     }
 
+    public void startServiceUsingAlarm()
+    {
+        Calendar cur_cal = Calendar.getInstance();
+        cur_cal.setTimeInMillis(System.currentTimeMillis());
+        cur_cal.add(Calendar.SECOND, 50);
+
+        Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
+        PendingIntent pintent = PendingIntent.getService(getApplicationContext(), 0, gpsIntent, 0);
+        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 30*1000, pintent);
+        //startService(gpsIntent);
+    }
+
     public void getDialogue(){
         /*
         Function to start a dialogue box to help user register.
@@ -235,8 +251,7 @@ public class LandingPageActivity extends AppCompatActivity {
                     dialog.show();
                 else {
                     loadLayout();
-                    Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
-                    startService(gpsIntent);
+                    startServiceUsingAlarm();
                     gpsflag=true;
                 }
             }
@@ -514,7 +529,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
             Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);  //Intent to GPS service class
             gpsflag=true;
-            startService(gpsIntent);
+            startServiceUsingAlarm();
 
                 }
     }
