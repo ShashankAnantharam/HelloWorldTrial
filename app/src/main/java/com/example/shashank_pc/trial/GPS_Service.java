@@ -161,7 +161,7 @@ public class GPS_Service extends Service {
                 gpsWrite.put("Long",location.getLongitude());
                 writeGPS.setValue(gpsWrite);
 
-                writeToGroupsEvents(location);
+              //  writeToGroupsEvents(location);
                 if(mMapLPTab!=null)
                 {
                     mMapLPTab.setUserMarker(location.getLatitude(),location.getLongitude());
