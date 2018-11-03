@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -214,11 +215,17 @@ public class LandingPageActivity extends AppCompatActivity {
         cur_cal.setTimeInMillis(System.currentTimeMillis());
         cur_cal.add(Calendar.SECOND, 50);
 
-        Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
+        Intent broadcastIntent = new Intent(getApplicationContext(), AlarmBroadcastReciever.class);
+        PendingIntent pendingIntent= PendingIntent.getBroadcast(getApplicationContext(),0,broadcastIntent,0);
+        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 30*1000, pendingIntent);
+
+     /*   Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
         PendingIntent pintent = PendingIntent.getService(getApplicationContext(), 0, gpsIntent, 0);
         AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 30*1000, pintent);
         //startService(gpsIntent);
+        */
     }
 
     public void getDialogue(){
