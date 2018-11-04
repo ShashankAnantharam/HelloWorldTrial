@@ -59,6 +59,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
 import static com.example.shashank_pc.trial.Helper.AlertHelper.shouldCheckAlert;
+import static com.example.shashank_pc.trial.Helper.BasicHelper.isAppInForeground;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.populateAlerts;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOffFirebaseDatabases;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOnFirebaseDatabases;
@@ -157,7 +158,7 @@ public class GeoLocationService extends Service {
         @Override
         public void onProviderDisabled(String s) {
             if(current_gps_status == true){
-                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground());
+                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
                 current_gps_status = false;
                 userSet.clear();
                 if(wakeLock != null && wakeLock.isHeld()){
@@ -374,6 +375,8 @@ public class GeoLocationService extends Service {
                             edit.putInt("FLAG",0);
                             edit.commit();
 
+                            setAlarmDuration(3000L);
+
                             //Toast.makeText(getApplicationContext(), "flag is 3", Toast.LENGTH_SHORT).show();
                             hCount++;
                             if(hCount == 6){
@@ -411,6 +414,13 @@ public class GeoLocationService extends Service {
     private long getAlarmDuration(){
         SharedPreferences duration = getApplication().getSharedPreferences("ALARM_TIME", MODE_PRIVATE);
         return duration.getLong("ALARM_TIME",10);
+    }
+
+    private void setAlarmDuration(Long milliseconds){
+        SharedPreferences duration = getApplication().getSharedPreferences("ALARM_TIME", MODE_PRIVATE);
+        SharedPreferences.Editor edit = duration.edit();
+        edit.putLong("ALARM_TIME",System.currentTimeMillis()+milliseconds);
+        edit.commit();
     }
 
     private long getDuration(){
@@ -493,17 +503,13 @@ public class GeoLocationService extends Service {
         super.onDestroy();
     }
 
-    private boolean isAppInForeground(){
-        SharedPreferences isInForeground = getApplication().getSharedPreferences("IS_FOREGROUND", MODE_PRIVATE);
-        if(isInForeground.getString("IS_FOREGROUND","1").equals("0")){
-            return false;
-        }
-        return true;
-    }
+
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(isAppInForeground()){
+
+        if(isAppInForeground(getApplicationContext())){
             isNotificationReady = true;
             /*
                 getCompatNotification() - To build sticky notification.
@@ -515,10 +521,10 @@ public class GeoLocationService extends Service {
             If the user clicks on stop button on notification.
         */
         if(intent != null){
-            if (intent.getAction().equals(STOP_ACTION)) {
+            if ((intent.getAction()!=null) && intent.getAction().equals(STOP_ACTION)) {
                 if(d != null && ch !=null){
                     d.removeEventListener(ch);
-                    turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground());
+                    turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
                     d = null;
                 }
                 if(locationListener != null && locationManager!= null){
@@ -552,6 +558,7 @@ public class GeoLocationService extends Service {
 
 
     private Notification getCompatNotification() {
+
         isNotificationReady = true;
         String channelId = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

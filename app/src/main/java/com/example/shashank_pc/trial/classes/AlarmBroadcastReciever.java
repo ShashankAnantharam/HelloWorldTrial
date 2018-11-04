@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.shashank_pc.trial.GPS_Service;
+import com.example.shashank_pc.trial.GeoLocationService;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 
 public class AlarmBroadcastReciever extends BroadcastReceiver {
@@ -12,7 +13,8 @@ public class AlarmBroadcastReciever extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if(BasicHelper.getServiceStatus(context)) {
-            Intent gpsIntent = new Intent(context, GPS_Service.class);     //Intent to gps service class
+            BasicHelper.setAppInForeground(context,true);
+            Intent gpsIntent = new Intent(context, GeoLocationService.class);     //Intent to gps service class
             context.startService(gpsIntent);
         }
     }
