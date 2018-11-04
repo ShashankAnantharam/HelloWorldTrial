@@ -49,6 +49,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -128,6 +129,9 @@ public class GeoLocationService extends Service {
                     Lookout lookout = documentSnapshot.toObject(Lookout.class);
                     String lId =  documentSnapshot.getId();
                     lookout.setId(lId);
+                    Toast.makeText(getApplicationContext(),
+                            new Gson().toJson(lookout)
+                            ,Toast.LENGTH_LONG).show();
                     alertMap.put(lId,lookout);
                     FirebaseDatabase.getInstance().getReference("Testing/Alerts/"+lId).setValue(System.currentTimeMillis());
                 }
