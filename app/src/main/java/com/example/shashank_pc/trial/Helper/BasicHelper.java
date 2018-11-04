@@ -31,7 +31,7 @@ public class BasicHelper {
 
     public static Boolean getServiceStatus(Context context){
         SharedPreferences preferences = context.getSharedPreferences("IS_SERVICE_APPROVED", Context.MODE_PRIVATE);
-        return preferences.getBoolean("IS_FIREBASE_ONLINE", false);
+        return preferences.getBoolean("IS_SERVICE_APPROVED", false);
     }
 
     private static boolean getDatabaseConnectionStatus(Context context){

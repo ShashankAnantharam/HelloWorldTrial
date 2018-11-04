@@ -217,6 +217,9 @@ public class LandingPageActivity extends AppCompatActivity {
         cur_cal.add(Calendar.SECOND, 50);
 
         BasicHelper.setServiceStatus(getApplicationContext(),true);
+        Toast.makeText(getApplicationContext(),Boolean.toString(
+                BasicHelper.getServiceStatus(getApplicationContext())
+        ),Toast.LENGTH_SHORT).show();
         Intent broadcastIntent = new Intent(getApplicationContext(), AlarmBroadcastReciever.class);
         PendingIntent pendingIntent= PendingIntent.getBroadcast(getApplicationContext(),0,broadcastIntent,0);
         AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
