@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.shashank_pc.trial.Helper.BasicHelper;
+import com.example.shashank_pc.trial.Helper.TestHelper;
 import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -212,6 +213,8 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void startServiceUsingAlarm()
     {
+        TestHelper.setLookouts(getApplicationContext());
+
         Calendar cur_cal = Calendar.getInstance();
         cur_cal.setTimeInMillis(System.currentTimeMillis());
         cur_cal.add(Calendar.SECOND, 50);

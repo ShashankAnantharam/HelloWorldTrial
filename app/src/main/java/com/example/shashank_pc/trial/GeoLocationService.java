@@ -39,12 +39,16 @@ import android.util.Log;
 
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.classes.Alert;
+import com.example.shashank_pc.trial.classes.Lookout;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -110,6 +114,27 @@ public class GeoLocationService extends Service {
     public Boolean getErrorFlagStatus(){
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("ERROR_FLAG", Context.MODE_PRIVATE);
         return preferences.getBoolean("ERROR_FLAG", true);
+    }
+
+    private void getAlertsFromDb()
+    {
+        FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
+                .collection("Lookout(Others)").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> documentSnapshots = queryDocumentSnapshots.getDocuments();
+                for(DocumentSnapshot documentSnapshot: documentSnapshots)
+                {
+                    Lookout lookout = documentSnapshot.toObject(Lookout.class);
+                    String lId =  documentSnapshot.getId();
+                    lookout.setId(lId);
+                    alertMap.put(lId,lookout);
+                    FirebaseDatabase.getInstance().getReference("Testing/Alerts/"+lId).setValue(System.currentTimeMillis());
+                }
+            }
+        });
+
+
     }
 
 
@@ -223,6 +248,8 @@ public class GeoLocationService extends Service {
         current_gps_status = true;
 
         String userPhoneNumber = getUserPhoneNumber();
+
+        getAlertsFromDb();
 
 
         // FirebaseDatabase database = FirebaseDatabase.getInstance();
