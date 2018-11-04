@@ -37,6 +37,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
 import android.util.Log;
 
+import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -522,6 +523,7 @@ public class GeoLocationService extends Service {
         */
         if(intent != null){
             if ((intent.getAction()!=null) && intent.getAction().equals(STOP_ACTION)) {
+                BasicHelper.setServiceStatus(getApplicationContext(),false);
                 if(d != null && ch !=null){
                     d.removeEventListener(ch);
                     turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
