@@ -22,9 +22,28 @@ public class BasicHelper {
         return alerts;
     }
 
+    public static void setServiceStatus(Context context,Boolean flag){
+        SharedPreferences preferences = context.getSharedPreferences("IS_SERVICE_APPROVED", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putBoolean("IS_SERVICE_APPROVED",flag);
+        edit.commit();
+    }
+
+    public static Boolean getServiceStatus(Context context){
+        SharedPreferences preferences = context.getSharedPreferences("IS_SERVICE_APPROVED", Context.MODE_PRIVATE);
+        return preferences.getBoolean("IS_FIREBASE_ONLINE", false);
+    }
+
     private static boolean getDatabaseConnectionStatus(Context context){
         SharedPreferences preferences = context.getSharedPreferences("IS_FIREBASE_ONLINE", Context.MODE_PRIVATE);
         return preferences.getBoolean("IS_FIREBASE_ONLINE", true);
+    }
+
+    public static void setDatabaseConnectionStatus(Context context, boolean flag){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("IS_FIREBASE_ONLINE", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putBoolean("IS_FIREBASE_ONLINE",flag);
+        edit.commit();
     }
 
     public static void turnOnFirebaseDatabases(Context context){
@@ -43,10 +62,5 @@ public class BasicHelper {
         }
     }
 
-    public static void setDatabaseConnectionStatus(Context context, boolean flag){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("IS_FIREBASE_ONLINE", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putBoolean("IS_FIREBASE_ONLINE",flag);
-        edit.commit();
-    }
+
 }

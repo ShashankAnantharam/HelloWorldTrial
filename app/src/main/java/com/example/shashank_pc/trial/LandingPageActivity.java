@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -215,6 +216,7 @@ public class LandingPageActivity extends AppCompatActivity {
         cur_cal.setTimeInMillis(System.currentTimeMillis());
         cur_cal.add(Calendar.SECOND, 50);
 
+        BasicHelper.setServiceStatus(getApplicationContext(),true);
         Intent broadcastIntent = new Intent(getApplicationContext(), AlarmBroadcastReciever.class);
         PendingIntent pendingIntent= PendingIntent.getBroadcast(getApplicationContext(),0,broadcastIntent,0);
         AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);

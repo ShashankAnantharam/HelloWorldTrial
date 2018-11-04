@@ -21,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -224,6 +225,7 @@ public class GPS_Service extends Service {
 
         if(intent != null) {
             if (intent.getAction()!=null && intent.getAction().equals(STOP_ACTION)) {
+                BasicHelper.setServiceStatus(getApplicationContext(),false);
                 stopForeground(true);
                 stopSelf();
             }
