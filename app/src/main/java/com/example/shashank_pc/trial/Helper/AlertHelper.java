@@ -29,7 +29,6 @@ public class AlertHelper {
             }
         }
 
-        //TODO Fill this
         if(alert instanceof Lookout)
         {
             if((!((Lookout) alert).isEnabled())         //Lookout is not enabled
@@ -64,7 +63,7 @@ public class AlertHelper {
             }
             else
             {
-                if(lastTime!=-1)        //One time lookout
+                if(lastTime!=-1L)        //One time lookout
                     return false;
             }
 
@@ -72,7 +71,7 @@ public class AlertHelper {
         }
         else if(alert instanceof Task)
         {
-
+            //TODO Fill this
         }
 
         return true;
