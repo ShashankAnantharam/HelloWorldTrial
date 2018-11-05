@@ -85,6 +85,28 @@ public class BasicHelper {
         }
     }
 
+    public static Boolean compareDates(Long leftTs, Long rightTs)
+    {
+        //true if left<=right
+
+        Date leftTime = new Date();
+        leftTime.setTime(leftTs);
+        leftTime.setHours(0);
+        leftTime.setMinutes(0);
+        leftTime.setSeconds(0);
+
+        Date rightTime = new Date();
+        rightTime.setTime(rightTs);
+        rightTime.setHours(0);
+        rightTime.setMinutes(0);
+        rightTime.setSeconds(0);
+
+        if(leftTime.getTime()<=rightTime.getTime())
+            return true;
+        return false;
+
+    }
+
 
 
     public static Long DailyDateConversion(Long currTs, Long otherTs)

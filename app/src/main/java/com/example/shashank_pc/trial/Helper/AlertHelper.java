@@ -15,12 +15,32 @@ import static com.example.shashank_pc.trial.Helper.BasicHelper.DailyDateConversi
 public class AlertHelper {
 
     public static final long DAY_INTERVAL = 1000 * 60 * 60 * 24;
+    public static final long TASK_REMINDER_INTERVAL = 1000 * 60 * 60;
+
+    public static boolean checkTaskDeadline(Long deadline, Long currTime, Boolean isDaily)
+    {
+        if(isDaily)
+        {
+            Long todaysDeadline = DailyDateConversion(currTime,deadline);
+            if(todaysDeadline< currTime)
+                return false;
+        }
+        else
+        {
+            if(deadline<currTime)
+                return false;
+        }
+
+        return true;
+    }
 
     public static boolean shouldCheckAlert(Alert alert, Map<String,String> contactMap, String userID)
     {
-        Long currTime= System.currentTimeMillis();
+        //TODO Cross check once
 
+        Long currTime= System.currentTimeMillis();
         Long lastTime = -1L;
+
         for(int i=0;i<alert.getSelectedContacts().size();i++)
         {
             if(alert.getSelectedContacts().get(i).equals(userID))
@@ -71,7 +91,32 @@ public class AlertHelper {
         }
         else if(alert instanceof Task)
         {
-            //TODO Fill this
+            if(!alert.isDaily() && ((Task) alert).getCompletedAt()> -1L)
+                return false;       //Task already completed
+            else if(((Task) alert).isHasDeadline() &&
+                    !checkTaskDeadline(((Task) alert).getDeadline(), currTime, alert.isDaily())){
+                //If task is not within deadline
+                return false;
+            }
+            else{
+                if(alert.isDaily())
+                {
+                    if(((Task) alert).getCompletedAt()>-1L)
+                    {
+                        //Task is daily and has been completed previously.
+                        if(BasicHelper.compareDates(currTime, ((Task) alert).getCompletedAt() ))
+                        {
+                            //If currDate <= completionDate (If task got completed today)
+                            return false;
+                        }
+                    }
+                }
+            }
+            if(lastTime + TASK_REMINDER_INTERVAL < currTime)
+            {
+                //It is less than one hour since last reminder was sent
+                return false;
+            }
         }
 
         return true;
