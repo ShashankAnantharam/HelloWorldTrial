@@ -208,6 +208,7 @@ public class GeoLocationService extends Service {
             mainAlgo(alerts,location.getLatitude(),location.getLongitude(),
                     prevLoc.getLatitude(),prevLoc.getLongitude());
 
+            prevLoc = location;
             handler.postDelayed(sendData, 2000);
 
          //   Toast.makeText(getApplicationContext(),"loc",Toast.LENGTH_SHORT).show();
