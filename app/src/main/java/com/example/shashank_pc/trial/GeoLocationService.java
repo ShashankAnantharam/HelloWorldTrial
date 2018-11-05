@@ -155,12 +155,9 @@ public class GeoLocationService extends Service {
                     {
                         status = "N";
                     }
-
+                    contactStatus.put(id,status);
+                    Toast.makeText(getApplicationContext(),"id: "+id+"\n"+"status: "+status,Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
             }
         });
     }
@@ -177,9 +174,7 @@ public class GeoLocationService extends Service {
                     Lookout lookout = documentSnapshot.toObject(Lookout.class);
                     String lId =  documentSnapshot.getId();
                     lookout.setId(lId);
-                    Toast.makeText(getApplicationContext(),
-                            new Gson().toJson(lookout)
-                            ,Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), new Gson().toJson(lookout),Toast.LENGTH_LONG).show();
                     alertMap.put(lId,lookout);
                     FirebaseDatabase.getInstance().getReference("Testing/Alerts/"+lId).setValue(System.currentTimeMillis());
                 }
