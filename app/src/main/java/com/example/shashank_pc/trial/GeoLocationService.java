@@ -170,7 +170,7 @@ public class GeoLocationService extends Service {
 
             handler.postDelayed(sendData, 2000);
 
-            Toast.makeText(getApplicationContext(),"loc",Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(getApplicationContext(),"loc",Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -340,7 +340,7 @@ public class GeoLocationService extends Service {
 
 
                 if(getFlag() == 0){
-                    Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putInt("FLAG",1);
@@ -356,7 +356,7 @@ public class GeoLocationService extends Service {
                     try {
                         if(getFlag() == 1){
 
-                            Toast.makeText(getApplicationContext(),"1", Toast.LENGTH_SHORT).show();
+                         //   Toast.makeText(getApplicationContext(),"1", Toast.LENGTH_SHORT).show();
                             if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0)){
                                 // Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
 
@@ -395,7 +395,7 @@ public class GeoLocationService extends Service {
 
                         } else if(getFlag() == 2){
 
-                            Toast.makeText(getApplicationContext(),"2", Toast.LENGTH_SHORT).show();
+                        //    Toast.makeText(getApplicationContext(),"2", Toast.LENGTH_SHORT).show();
                             // location listener not yet triggerd
                             if(locationListener != null && locationManager!= null){
                                 locationManager.removeUpdates(locationListener);
@@ -414,7 +414,7 @@ public class GeoLocationService extends Service {
                             handler.postDelayed(this, 10000);
                         }else if(getFlag() == 3){
 
-                            Toast.makeText(getApplicationContext(),"3", Toast.LENGTH_SHORT).show();
+                         //   Toast.makeText(getApplicationContext(),"3", Toast.LENGTH_SHORT).show();
                             writeCrashLogs("flag 3" + hCount);
 
 
