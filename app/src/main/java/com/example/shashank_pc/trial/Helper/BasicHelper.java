@@ -85,6 +85,8 @@ public class BasicHelper {
         }
     }
 
+
+
     public static Long DailyDateConversion(Long currTs, Long otherTs)
     {
         Date currTime = new Date();
