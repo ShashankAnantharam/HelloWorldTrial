@@ -156,7 +156,7 @@ public class GeoLocationService extends Service {
                         status = "N";
                     }
                     contactStatus.put(id,status);
-                    Toast.makeText(getApplicationContext(),"id: "+id+"\n"+"status: "+status,Toast.LENGTH_SHORT).show();
+                    FirebaseDatabase.getInstance().getReference("Testing/Contacts/"+id).setValue(status);
                 }
             }
         });
@@ -306,7 +306,7 @@ public class GeoLocationService extends Service {
         String userPhoneNumber = getUserPhoneNumber();
 
         getAlertsFromDb();
-
+        getContactsFromDb();
 
         // FirebaseDatabase database = FirebaseDatabase.getInstance();
         d =  FirebaseDatabase.getInstance().getReference("/broadcasting/" + userPhoneNumber + "/LocRequests/");
