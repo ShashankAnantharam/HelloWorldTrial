@@ -46,8 +46,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
@@ -81,8 +84,12 @@ public class GeoLocationService extends Service {
     public static List<String> lookOutsList;
     public static List<String> tasksList;
 
+    private DocumentReference contactRef;
+
+
     Map<String,Alert> alertMap= new ConcurrentHashMap<>();
     Map<String,Long> userSet = new ConcurrentHashMap<>();
+    Map<String,String> contactStatus = new ConcurrentHashMap<>();
 
 
     private int hCount = 0;
@@ -118,6 +125,44 @@ public class GeoLocationService extends Service {
     public Boolean getErrorFlagStatus(){
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("ERROR_FLAG", Context.MODE_PRIVATE);
         return preferences.getBoolean("ERROR_FLAG", true);
+    }
+
+    private void getContactsFromDb()
+    {
+        contactRef = FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
+                .collection("activities").document("contacts");
+
+        contactRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+
+                List<Map<String,Object>> list = (List) documentSnapshot.get("Lists");
+
+                for(Map<String,Object> listItem: list)
+                {
+                    String status = "";
+                    String id = (String)listItem.get("id");
+
+                    if((Boolean)listItem.get("freezeMode"))
+                    {
+                        status="F";
+                    }
+                    else if((Boolean) listItem.get("isBroadcasting"))
+                    {
+                        status = "Y";
+                    }
+                    else
+                    {
+                        status = "N";
+                    }
+
+                }
+
+
+
+
+            }
+        });
     }
 
     private void getAlertsFromDb()

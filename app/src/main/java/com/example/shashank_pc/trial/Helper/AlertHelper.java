@@ -11,6 +11,12 @@ public class AlertHelper {
         //TODO Fill this
         if(alert instanceof Lookout)
         {
+            if(!((Lookout) alert).isEnabled())
+            {
+                return false;
+            }
+
+            //checkIfLookoutShouldTrigger
 
         }
         else if(alert instanceof Task)
