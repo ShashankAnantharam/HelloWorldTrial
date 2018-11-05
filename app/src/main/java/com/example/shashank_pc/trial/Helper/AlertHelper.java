@@ -86,8 +86,6 @@ public class AlertHelper {
                 if(lastTime!=-1L)        //One time lookout
                     return false;
             }
-
-
         }
         else if(alert instanceof Task)
         {
