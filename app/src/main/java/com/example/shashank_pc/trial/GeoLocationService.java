@@ -270,7 +270,7 @@ public class GeoLocationService extends Service {
     {
         for(Alert alert: alerts)
         {
-            if(shouldCheckAlert(alert))
+            if(shouldCheckAlert(alert,contactStatus,getUserPhoneNumber()))
             {
                 FirebaseDatabase.getInstance().getReference("testingBigTime/"+alert.getId()).setValue("check");
                 if(shouldTriggerAlert(x_curr, y_curr, x_prev, y_prev, alert))

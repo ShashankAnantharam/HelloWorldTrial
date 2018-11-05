@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.shashank_pc.trial.classes.Alert;
+import com.example.shashank_pc.trial.classes.Lookout;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +83,33 @@ public class BasicHelper {
             FirebaseFirestore.getInstance().disableNetwork();
             setDatabaseConnectionStatus(context,false);
         }
+    }
+
+    public static Long DailyDateConversion(Long currTs, Long otherTs)
+    {
+        Date currTime = new Date();
+        currTime.setTime(currTs);
+        Integer today = currTime.getDate();
+
+
+        Timestamp otherTimestamp = new Timestamp(otherTs);
+        Date otherDateOr = new Date(otherTimestamp.getTime());
+
+        Date otherDate = new Date();
+
+        otherDate.setYear(currTime.getYear());
+        otherDate.setMonth(currTime.getMonth());
+        otherDate.setDate(currTime.getDate());
+        otherDate.setHours(otherDateOr.getHours());
+        otherDate.setMinutes(otherDateOr.getMinutes());
+        otherDate.setSeconds(otherDateOr.getSeconds());
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
+        String formattedDate = sdf.format(otherDate);
+
+        FirebaseDatabase.getInstance().getReference("Testing/ts").setValue(formattedDate);
+        FirebaseDatabase.getInstance().getReference("Testing/tsOr").setValue(sdf.format(otherDateOr));
+
+        return otherDate.getTime();
     }
 
 
