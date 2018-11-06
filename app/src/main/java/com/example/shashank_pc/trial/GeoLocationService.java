@@ -87,7 +87,7 @@ public class GeoLocationService extends Service {
 
     private DocumentReference contactRef;
 
-    private BackupLocationRetriever backupLocationRetriever;
+    private BackupLocationRetriever backupLocationRetriever= new BackupLocationRetriever();;
 
     Map<String,Alert> alertMap= new ConcurrentHashMap<>();
     Map<String,Long> userSet = new ConcurrentHashMap<>();
