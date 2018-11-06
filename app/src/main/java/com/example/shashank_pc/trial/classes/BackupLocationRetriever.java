@@ -66,6 +66,7 @@ public class BackupLocationRetriever {
             public void onSuccess(Location location) {
                 if(location!=null)
                 {
+                    //Set location to Local
                     setLocationToLocal(context,location);
                 }
                 else{
