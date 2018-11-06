@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.shashank_pc.trial.classes.Alert;
+import com.example.shashank_pc.trial.classes.Location;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -27,6 +29,22 @@ public class BasicHelper {
         }
         return alerts;
     }
+
+    public static void setLocationToLocal(Context context, android.location.Location location)
+    {
+        SharedPreferences locationPref = context.getSharedPreferences("LOCATION", MODE_PRIVATE);
+        SharedPreferences.Editor edit = locationPref.edit();
+        String locationString = new Gson().toJson(location);
+        edit.putString("LOCATION",locationString);
+    }
+
+    public static android.location.Location getLocationFromLocal(Context context)
+    {
+        SharedPreferences locationPref = context.getSharedPreferences("LOCATION", MODE_PRIVATE);
+        String locationString = locationPref.getString("LOCATION","");
+        return new Gson().fromJson(locationString, android.location.Location.class);
+    }
+
 
     public static boolean isAppInForeground(Context context){
         SharedPreferences isInForeground = context.getSharedPreferences("IS_FOREGROUND", MODE_PRIVATE);
