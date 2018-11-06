@@ -39,6 +39,7 @@ import android.util.Log;
 
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.classes.Alert;
+import com.example.shashank_pc.trial.classes.BackupLocationRetriever;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -86,6 +87,7 @@ public class GeoLocationService extends Service {
 
     private DocumentReference contactRef;
 
+    private BackupLocationRetriever backupLocationRetriever;
 
     Map<String,Alert> alertMap= new ConcurrentHashMap<>();
     Map<String,Long> userSet = new ConcurrentHashMap<>();
@@ -300,6 +302,7 @@ public class GeoLocationService extends Service {
         wakeLock.setReferenceCounted(false);
         lookOutsList = new ArrayList<>();
         tasksList = new ArrayList<>();
+        backupLocationRetriever.init(getApplicationContext());
 
         //Variable to get status of the GPS.
         current_gps_status = true;
