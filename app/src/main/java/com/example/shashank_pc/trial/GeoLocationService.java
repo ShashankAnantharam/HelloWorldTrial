@@ -72,6 +72,7 @@ import java.util.concurrent.atomic.AtomicMarkableReference;
 import static com.example.shashank_pc.trial.Helper.AlertHelper.shouldCheckAlert;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.isAppInForeground;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.populateAlerts;
+import static com.example.shashank_pc.trial.Helper.BasicHelper.setErrorFlag;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOffFirebaseDatabases;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOnFirebaseDatabases;
 import static com.example.shashank_pc.trial.classes.Algorithm.getDistance;
@@ -209,8 +210,7 @@ public class GeoLocationService extends Service {
                 wakeLock.release();
             }
             List<Alert> alerts = populateAlerts(alertMap);
-            mainAlgo(alerts,location.getLatitude(),location.getLongitude(),
-                    prevLoc.getLatitude(),prevLoc.getLongitude());
+            mainAlgo(alerts,location,prevLoc);
 
             prevLoc = location;
             handler.postDelayed(sendData, 2000);
@@ -271,8 +271,13 @@ public class GeoLocationService extends Service {
     }
 
 
-    private void mainAlgo(List<Alert> alerts, double x_curr, double y_curr, double x_prev, double y_prev)
+    private void mainAlgo(List<Alert> alerts, Location currLoc, Location prevLoc)
     {
+        double x_curr = currLoc.getLatitude();
+        double y_curr = currLoc.getLongitude();
+        double x_prev = prevLoc.getLatitude();
+        double y_prev = prevLoc.getLongitude();
+
         Float minDist = Float.MAX_VALUE;
         for(Alert alert: alerts)
         {
@@ -300,37 +305,37 @@ public class GeoLocationService extends Service {
         {
             time = Algorithm.calculateTime(minDist);
         }
+        
+        time = powerSaverAlgo(time,currLoc);
 
     }
 
-    private Float powerSaverAlgo(Float calulatedtime)
+    private Float powerSaverAlgo(Float calulatedtime, Location location)
     {
         Long currTime = System.currentTimeMillis();
 
-        Float fixLocationTimeVal = await AsyncStorage.getItem('fixLocTime');
-        Float fixLocTime = JSON.parse(fixLocationTimeVal);
-        this.FIR_fixLocDist = fixLocTime;
+        Location fixLocation = BasicHelper.getFixLocation(getApplicationContext());
+        Long fixLocTime = BasicHelper.getFixTime(getApplicationContext());
 
-        var fixeLocDist;
+        Float fixLocDist=0f;
 
-        if(fixLocation !== null){
-            let distanceFromFixed = this.distanceBetweenLocations(location.latitude, location.longitude, fixLocation.latitude, fixLocation.longitude, "K");
-            fixeLocDist =  distanceFromFixed * 1000;
-            this.FIR_fixLocDist = fixeLocDist;
+        if(fixLocation != null){
+            //TODO Check location units
+            fixLocDist =  location.distanceTo(fixLocation) * 1000;
         }
 
-        if(fixLocation === null || (fixeLocDist > 75 && errorFlag)){
+        if(fixLocation == null || (fixLocDist > 75 && BasicHelper.getErrorFlag(getApplicationContext()))){
             fixLocation = location;
-            fixLocTime = Date.now();
-            this.FIR_fixLocation = location;
-            AsyncStorage.setItem("fixLocation", JSON.stringify(fixLocation));
-            AsyncStorage.setItem("fixLocTime", JSON.stringify(fixLocTime));
-            this.turnOnFirebaseDatabases();
-        }else if(fixeLocDist > 75 && !errorFlag){
-            NativeModules.GeoLocationModule.setErrorFlagStatus(true);
-            calulatedtime = 3;
+            fixLocTime = currTime;
+            BasicHelper.setFixLocation(getApplicationContext(),fixLocation);
+            BasicHelper.setFixTime(getApplicationContext(),fixLocTime);
+            turnOnFirebaseDatabases(getApplicationContext());
+
+        }else if(fixLocDist > 75 && !BasicHelper.getErrorFlag(getApplicationContext())){
+            BasicHelper.setErrorFlag(getApplicationContext(),true);
+            calulatedtime = 3f;
         }else{
-            NativeModules.GeoLocationModule.setErrorFlagStatus(false);
+            BasicHelper.setErrorFlag(getApplicationContext(),false);
             if(currTime - fixLocTime > 300000){ // check time format  :: 720000 is in mills
                 calulatedtime = Math.max(120, calulatedtime);
 
@@ -349,7 +354,7 @@ public class GeoLocationService extends Service {
             }
 
         }
-        AsyncStorage.setItem("PreviousLocation", JSON.stringify(location));
+//TODO Chek this if needed        AsyncStorage.setItem("PreviousLocation", JSON.stringify(location));
 
         //TODO check time units
         return calulatedtime*1000;
