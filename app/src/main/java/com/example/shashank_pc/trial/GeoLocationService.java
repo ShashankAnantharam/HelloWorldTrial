@@ -303,6 +303,59 @@ public class GeoLocationService extends Service {
 
     }
 
+    private Float powerSaverAlgo(Float calulatedtime)
+    {
+        Long currTime = System.currentTimeMillis();
+
+        Float fixLocationTimeVal = await AsyncStorage.getItem('fixLocTime');
+        Float fixLocTime = JSON.parse(fixLocationTimeVal);
+        this.FIR_fixLocDist = fixLocTime;
+
+        var fixeLocDist;
+
+        if(fixLocation !== null){
+            let distanceFromFixed = this.distanceBetweenLocations(location.latitude, location.longitude, fixLocation.latitude, fixLocation.longitude, "K");
+            fixeLocDist =  distanceFromFixed * 1000;
+            this.FIR_fixLocDist = fixeLocDist;
+        }
+
+        if(fixLocation === null || (fixeLocDist > 75 && errorFlag)){
+            fixLocation = location;
+            fixLocTime = Date.now();
+            this.FIR_fixLocation = location;
+            AsyncStorage.setItem("fixLocation", JSON.stringify(fixLocation));
+            AsyncStorage.setItem("fixLocTime", JSON.stringify(fixLocTime));
+            this.turnOnFirebaseDatabases();
+        }else if(fixeLocDist > 75 && !errorFlag){
+            NativeModules.GeoLocationModule.setErrorFlagStatus(true);
+            calulatedtime = 3;
+        }else{
+            NativeModules.GeoLocationModule.setErrorFlagStatus(false);
+            if(currTime - fixLocTime > 300000){ // check time format  :: 720000 is in mills
+                calulatedtime = Math.max(120, calulatedtime);
+
+                /*
+                  Set firebase databases to offline after 5 minutes of inactivity
+                */
+                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
+            }
+            if(currTime - fixLocTime > 600000){
+                calulatedtime = Math.max(240, calulatedtime);
+                //this.showServiceExitedNotification();
+            }
+            if(currTime - fixLocTime > 1200000){
+                calulatedtime = Math.max(470, calulatedtime);
+                //this.showServiceExitedNotification();
+            }
+
+        }
+        AsyncStorage.setItem("PreviousLocation", JSON.stringify(location));
+
+        //TODO check time units
+        return calulatedtime*1000;
+
+    }
+
     @Override
     @TargetApi(Build.VERSION_CODES.M)
     public void onCreate() {

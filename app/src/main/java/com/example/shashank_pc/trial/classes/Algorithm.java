@@ -124,6 +124,8 @@ public class Algorithm {
 
     public static Float calculateTime(Float distance)
     {
+        //TODO Need to see if this is in kiloseconds or in seconds
+
         Float time = 9*distance/ 125;
         time = Math.max(22, time);
         time = Math.min(300, time);
