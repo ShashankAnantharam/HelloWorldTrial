@@ -30,6 +30,49 @@ public class BasicHelper {
         return alerts;
     }
 
+    public static void setFixLocation(Context context, android.location.Location location)
+    {
+        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
+        SharedPreferences.Editor edit = fixed_values.edit();
+        String locationString = new Gson().toJson(location);
+        edit.putString("FIX_LOCATION",locationString);
+    }
+
+    public static android.location.Location getFixLocation(Context context)
+    {
+        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
+        return new Gson().fromJson(
+                fixed_values.getString("FIX_LOCATION",""),
+                android.location.Location.class);
+    }
+
+    public static void setFixTime(Context context, Long timestamp)
+    {
+        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
+        SharedPreferences.Editor edit = fixed_values.edit();
+        edit.putLong("FIX_TIME",timestamp);
+    }
+
+    public static Long getFixTime(Context context) {
+        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
+        return fixed_values.getLong("FIX_TIME",System.currentTimeMillis());
+    }
+
+    public static boolean getErrorFlag(Context context){
+        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
+        if(fixed_values.getBoolean("ERROR_FLAG",false)){
+            return false;
+        }
+        return true;
+    }
+
+    public static void setErrorFlag(Context context,Boolean value){
+        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
+        SharedPreferences.Editor edit = fixed_values.edit();
+        edit.putBoolean("ERROR_FLAG",value);
+        edit.commit();
+    }
+
     public static void setLocationToLocal(Context context, android.location.Location location)
     {
         SharedPreferences locationPref = context.getSharedPreferences("LOCATION", MODE_PRIVATE);
