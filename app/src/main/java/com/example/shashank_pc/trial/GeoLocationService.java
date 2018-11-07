@@ -42,6 +42,7 @@ import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.Algorithm;
 import com.example.shashank_pc.trial.classes.BackupLocationRetriever;
 import com.example.shashank_pc.trial.classes.Lookout;
+import com.example.shashank_pc.trial.classes.Task;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -127,9 +128,61 @@ public class GeoLocationService extends Service {
         }
     }
 
-    public Boolean getErrorFlagStatus(){
-        SharedPreferences preferences = getApplicationContext().getSharedPreferences("ERROR_FLAG", Context.MODE_PRIVATE);
-        return preferences.getBoolean("ERROR_FLAG", true);
+    private void getUpdatedAlertFromDb(final String alertId)
+    {
+        if(alertId.startsWith("L"))
+        {
+            //Lookout
+            FirebaseFirestore.getInstance().collection("Users").document(getUserPhoneNumber())
+                    .collection("Lookout(Others)").document(alertId).get().
+                    addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if(!documentSnapshot.exists())
+                    {
+                        if(alertMap!=null)
+                            alertMap.remove(alertId);
+                    }
+                    else
+                    {
+                        if(alertMap!=null) {
+                            if(alertMap.containsKey(alertId))
+                                alertMap.remove(alertId);
+                            alertMap.put(alertId, documentSnapshot.toObject(Lookout.class));
+                        }
+                    }
+                }
+            });
+        }
+        else if(alertId.startsWith("T"))
+        {
+            //Task
+            FirebaseFirestore.getInstance().collection("Users").document(getUserPhoneNumber())
+                    .collection("Task(Others)").document(alertId).get().
+                    addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(!documentSnapshot.exists())
+                            {
+                                if(alertMap!=null)
+                                    alertMap.remove(alertId);
+                            }
+                            else
+                            {
+                                if(alertMap!=null) {
+                                    if(alertMap.containsKey(alertId))
+                                        alertMap.remove(alertId);
+                                    alertMap.put(alertId, documentSnapshot.toObject(Task.class));
+                                }
+                            }
+                        }
+                    });
+        }
+        else
+        {
+            return ;
+        }
+
     }
 
     private void getContactsFromDb()
@@ -305,7 +358,7 @@ public class GeoLocationService extends Service {
         {
             time = Algorithm.calculateTime(minDist);
         }
-        
+
         time = powerSaverAlgo(time,currLoc);
 
     }
@@ -633,7 +686,7 @@ public class GeoLocationService extends Service {
             }
 
             // Toast.makeText(getApplicationContext(), "request value" + value, Toast.LENGTH_LONG).show();
-            Boolean errorFlag = getErrorFlagStatus();
+            Boolean errorFlag = BasicHelper.getErrorFlag(getApplicationContext());
             System.out.println(errorFlag);
             intent.putExtra("errorFlag",String.valueOf(errorFlag));
             intent.putExtra("reqContacts", value);
