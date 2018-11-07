@@ -39,6 +39,7 @@ import android.util.Log;
 
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.classes.Alert;
+import com.example.shashank_pc.trial.classes.Algorithm;
 import com.example.shashank_pc.trial.classes.BackupLocationRetriever;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -73,6 +74,7 @@ import static com.example.shashank_pc.trial.Helper.BasicHelper.isAppInForeground
 import static com.example.shashank_pc.trial.Helper.BasicHelper.populateAlerts;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOffFirebaseDatabases;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOnFirebaseDatabases;
+import static com.example.shashank_pc.trial.classes.Algorithm.getDistance;
 import static com.example.shashank_pc.trial.classes.Algorithm.shouldTriggerAlert;
 
 /*
@@ -271,6 +273,7 @@ public class GeoLocationService extends Service {
 
     private void mainAlgo(List<Alert> alerts, double x_curr, double y_curr, double x_prev, double y_prev)
     {
+        Float minDist = Float.MAX_VALUE;
         for(Alert alert: alerts)
         {
             if(shouldCheckAlert(alert,contactStatus,getUserPhoneNumber()))
@@ -285,8 +288,19 @@ public class GeoLocationService extends Service {
 
                     //TODO Calculate distance here
                 }
+                else
+                {
+                    minDist=Math.min(minDist,
+                            Algorithm.shortestDistanceFromAlert(x_curr, y_curr, x_prev, y_prev, alert));
+                }
             }
         }
+        Float time = 3f;
+        if(userSet.size()==0)
+        {
+            time = Algorithm.calculateTime(minDist);
+        }
+
     }
 
     @Override

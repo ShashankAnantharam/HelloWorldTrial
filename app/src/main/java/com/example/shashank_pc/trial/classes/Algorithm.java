@@ -11,6 +11,17 @@ import static java.lang.Math.signum;
 
 public class Algorithm {
 
+    public static Float getDistance(double latitude, double longitude, Alert alert)
+    {
+        Location alertLoc = new Location("alertLoc");
+        alertLoc.setLatitude(alert.getLocation().getLatitude());
+        alertLoc.setLongitude(alert.getLocation().getLongitude());
+        Location userLoc = new Location("userLoc");
+        userLoc.setLatitude(latitude);
+        userLoc.setLongitude(longitude);
+        return userLoc.distanceTo(alertLoc);
+    }
+
     public static boolean isWithinAlert(double latitude, double longitude, Alert alert)
     {
         Location alertLoc = new Location("alertLoc");
@@ -59,6 +70,25 @@ public class Algorithm {
         return false;
     }
 
+    public static Float shortestDistanceFromAlert(double x_curr, double y_curr, double x_prev, double y_prev, Alert alert)
+    {
+        //Breakdown into variables
+        double x_alert = alert.getLocation().getLatitude();
+        double y_alert = alert.getLocation().getLongitude();
+
+        //Get foot of perpendicular
+        LatLng perp = footOfPerpendicular(x_curr, y_curr, x_prev, y_prev, x_alert, y_alert);
+        double x_perp = perp.latitude;
+        double y_perp = perp.longitude;
+        if(isInBetween(x_curr, y_curr, x_prev, y_prev, x_perp, y_perp))
+        {
+            return getDistance(x_perp,y_perp,alert);
+        }
+        else
+        {
+            return Math.min(getDistance(x_curr,y_curr,alert), getDistance(x_prev,y_prev,alert));
+        }
+    }
 
     public static boolean shouldTriggerAlert(double x_curr, double y_curr, double x_prev, double y_prev, Alert alert)
     {
@@ -89,6 +119,16 @@ public class Algorithm {
 
         }
         return false;
+    }
+
+
+    public static Float calculateTime(Float distance)
+    {
+        Float time = 9*distance/ 125;
+        time = Math.max(22, time);
+        time = Math.min(300, time);
+
+        return time;
     }
 
 
