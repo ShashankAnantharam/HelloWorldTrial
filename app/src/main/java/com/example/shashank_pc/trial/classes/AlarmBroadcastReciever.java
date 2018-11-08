@@ -14,7 +14,6 @@ public class AlarmBroadcastReciever extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if(BasicHelper.getServiceStatus(context)) {
-            BasicHelper.setAppInForeground(context,true);
             Intent gpsIntent = new Intent(context, GeoLocationService.class);     //Intent to gps service class
             context.startService(gpsIntent);
         }
