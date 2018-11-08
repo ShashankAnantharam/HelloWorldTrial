@@ -365,6 +365,7 @@ public class GeoLocationService extends Service {
         FirebaseDatabase.getInstance().getReference("Testimg/Timelogs/"+Long.toString(System.currentTimeMillis())).setValue(time);
         setAlarmDuration((long) time);
 
+
     }
 
     private float powerSaverAlgo(float calulatedtime, Location location)
@@ -395,6 +396,9 @@ public class GeoLocationService extends Service {
             calulatedtime = 3f;
         }else{
             BasicHelper.setErrorFlag(getApplicationContext(),false);
+
+            //Logs
+            FirebaseDatabase.getInstance().getReference("Testing/here").setValue(Long.toString(currTime-fixLocTime));
             if(currTime - fixLocTime > 300000){ // check time format  :: 720000 is in mills
                 calulatedtime = Math.max(120, calulatedtime);
 
@@ -434,6 +438,7 @@ public class GeoLocationService extends Service {
         lookOutsList = new ArrayList<>();
         tasksList = new ArrayList<>();
         backupLocationRetriever.init(getApplicationContext());
+        setAlarmDuration(0L);
 
         //Variable to get status of the GPS.
         current_gps_status = true;

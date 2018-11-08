@@ -2,6 +2,7 @@ package com.example.shashank_pc.trial.Helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.Location;
@@ -36,6 +37,7 @@ public class BasicHelper {
         SharedPreferences.Editor edit = fixed_values.edit();
         String locationString = new Gson().toJson(location);
         edit.putString("FIX_LOCATION",locationString);
+        edit.commit();
     }
 
     public static android.location.Location getFixLocation(Context context)
@@ -51,6 +53,7 @@ public class BasicHelper {
         SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
         SharedPreferences.Editor edit = fixed_values.edit();
         edit.putLong("FIX_TIME",timestamp);
+        edit.commit();
     }
 
     public static Long getFixTime(Context context) {
@@ -79,6 +82,7 @@ public class BasicHelper {
         SharedPreferences.Editor edit = locationPref.edit();
         String locationString = new Gson().toJson(location);
         edit.putString("LOCATION",locationString);
+        edit.commit();
     }
 
     public static android.location.Location getLocationFromLocal(Context context)
@@ -131,6 +135,7 @@ public class BasicHelper {
     }
 
     public static void turnOnFirebaseDatabases(Context context){
+        FirebaseDatabase.getInstance().getReference("Testimg/dbStatus"+Boolean.toString(getDatabaseConnectionStatus(context)));
         if(!getDatabaseConnectionStatus(context)){
             FirebaseDatabase.getInstance().goOnline();
             FirebaseFirestore.getInstance().enableNetwork();
@@ -139,6 +144,7 @@ public class BasicHelper {
     }
 
     public static void turnOffFirebaseDatabases(Context context, boolean isAppInForeground){
+        FirebaseDatabase.getInstance().getReference("Testimg/dbStatus"+Boolean.toString(getDatabaseConnectionStatus(context)));
         if(getDatabaseConnectionStatus(context) && !isAppInForeground){
             FirebaseDatabase.getInstance().goOffline();
             FirebaseFirestore.getInstance().disableNetwork();
