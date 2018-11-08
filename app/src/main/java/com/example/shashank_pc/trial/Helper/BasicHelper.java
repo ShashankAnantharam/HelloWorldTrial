@@ -31,7 +31,7 @@ public class BasicHelper {
         return alerts;
     }
 
-    public static void setFixLocation(Context context, android.location.Location location)
+    public static void setFixLocation(Context context, Location location)
     {
         SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
         SharedPreferences.Editor edit = fixed_values.edit();
@@ -40,12 +40,12 @@ public class BasicHelper {
         edit.commit();
     }
 
-    public static android.location.Location getFixLocation(Context context)
+    public static Location getFixLocation(Context context)
     {
         SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
         return new Gson().fromJson(
                 fixed_values.getString("FIX_LOCATION",""),
-                android.location.Location.class);
+                Location.class);
     }
 
     public static void setFixTime(Context context, Long timestamp)
@@ -78,18 +78,23 @@ public class BasicHelper {
 
     public static void setLocationToLocal(Context context, android.location.Location location)
     {
+        Location wrapper = new Location();
+        wrapper.setLongitude(location.getLongitude());
+        wrapper.setLatitude(location.getLatitude());
+
         SharedPreferences locationPref = context.getSharedPreferences("LOCATION", MODE_PRIVATE);
         SharedPreferences.Editor edit = locationPref.edit();
-        String locationString = new Gson().toJson(location);
+        String locationString = new Gson().toJson(wrapper);
         edit.putString("LOCATION",locationString);
         edit.commit();
     }
 
-    public static android.location.Location getLocationFromLocal(Context context)
+    public static Location getLocationFromLocal(Context context)
     {
+        //TODO CHECK THIS
         SharedPreferences locationPref = context.getSharedPreferences("LOCATION", MODE_PRIVATE);
         String locationString = locationPref.getString("LOCATION","");
-        return new Gson().fromJson(locationString, android.location.Location.class);
+        return  new Gson().fromJson(locationString, Location.class);
     }
 
 

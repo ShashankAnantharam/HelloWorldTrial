@@ -373,20 +373,24 @@ public class GeoLocationService extends Service {
         //Time is in seconds. Need to return in milliseconds
         Long currTime = System.currentTimeMillis();
 
-        Location fixLocation = BasicHelper.getFixLocation(getApplicationContext());
+        com.example.shashank_pc.trial.classes.Location fixLocation = BasicHelper.getFixLocation(getApplicationContext());
         Long fixLocTime = BasicHelper.getFixTime(getApplicationContext());
 
         Float fixLocDist=0f;
 
         if(fixLocation != null){
-            //TODO Check location units
-            fixLocDist =  location.distanceTo(fixLocation);
+//TODO            fixLocDist =  location.distanceTo(fixLocation);
         }
 //        Toast.makeText(getApplicationContext(),"fix Loc: "+Float.toString(fixLocDist),Toast.LENGTH_SHORT).show();
 
         if(fixLocation == null || (fixLocDist > 75 && BasicHelper.getErrorFlag(getApplicationContext()))){
-            fixLocation = location;
+
+            //TODO Check change
+            fixLocation = new com.example.shashank_pc.trial.classes.Location();
+            fixLocation.setLongitude(location.getLongitude());
+            fixLocation.setLatitude(location.getLatitude());
             fixLocTime = currTime;
+
             BasicHelper.setFixLocation(getApplicationContext(),fixLocation);
             BasicHelper.setFixTime(getApplicationContext(),fixLocTime);
         //    turnOnFirebaseDatabases(getApplicationContext());
