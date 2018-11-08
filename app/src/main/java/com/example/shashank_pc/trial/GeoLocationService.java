@@ -437,6 +437,8 @@ public class GeoLocationService extends Service {
         wakeLock.setReferenceCounted(false);
         lookOutsList = new ArrayList<>();
         tasksList = new ArrayList<>();
+        if(backupLocationRetriever==null)
+            backupLocationRetriever = new BackupLocationRetriever();
         backupLocationRetriever.init(getApplicationContext());
         setAlarmDuration(0L);
 
