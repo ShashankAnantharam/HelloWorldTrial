@@ -135,9 +135,6 @@ public class BasicHelper {
     }
 
     public static void turnOnFirebaseDatabases(Context context){
-        FirebaseDatabase.getInstance().getReference("Testimg/dbStatus"+
-                Boolean.toString(getDatabaseConnectionStatus(context)
-                )).setValue("On");
         if(!getDatabaseConnectionStatus(context)){
             FirebaseDatabase.getInstance().goOnline();
             FirebaseFirestore.getInstance().enableNetwork();

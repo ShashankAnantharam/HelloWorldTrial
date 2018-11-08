@@ -213,9 +213,10 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void startServiceUsingAlarm()
     {
-        TestHelper.setLookouts(getApplicationContext());
+     //   TestHelper.setLookouts(getApplicationContext());
 
         BasicHelper.turnOnFirebaseDatabases(getApplicationContext());
+
         Calendar cur_cal = Calendar.getInstance();
         cur_cal.setTimeInMillis(System.currentTimeMillis());
         cur_cal.add(Calendar.SECOND, 50);
@@ -230,7 +231,10 @@ public class LandingPageActivity extends AppCompatActivity {
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1*1000, pendingIntent);
         BasicHelper.setAppInForeground(getApplicationContext(),true);
         Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
-        startService(gpsIntent);
+
+        //if(BasicHelper.getServiceStatus(getApplicationContext())) {
+        //    startService(gpsIntent);
+       // }
 
      /*   Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
         PendingIntent pintent = PendingIntent.getService(getApplicationContext(), 0, gpsIntent, 0);

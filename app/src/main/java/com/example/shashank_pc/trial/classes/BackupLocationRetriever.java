@@ -40,8 +40,6 @@ public class BackupLocationRetriever {
                     return;
                 }
 
-                //Write logs to db
-                FirebaseDatabase.getInstance().getReference("Testing/updatesHere").setValue(locationResult.getLastLocation());
 
                 //Latest known location to be set
                 setLocationToLocal(context,locationResult.getLastLocation());
