@@ -213,28 +213,43 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void startServiceUsingAlarm()
     {
+
      //   TestHelper.setLookouts(getApplicationContext());
 
-        BasicHelper.turnOnFirebaseDatabases(getApplicationContext());
+        try {
+  //          BasicHelper.turnOnFirebaseDatabases(getApplicationContext());
 
-        Calendar cur_cal = Calendar.getInstance();
-        cur_cal.setTimeInMillis(System.currentTimeMillis());
-        cur_cal.add(Calendar.SECOND, 50);
+            Calendar cur_cal = Calendar.getInstance();
+            cur_cal.setTimeInMillis(System.currentTimeMillis());
+            cur_cal.add(Calendar.SECOND, 50);
 
-        BasicHelper.setServiceStatus(getApplicationContext(),true);
-        Toast.makeText(getApplicationContext(),Boolean.toString(
-                BasicHelper.getServiceStatus(getApplicationContext())
-        ),Toast.LENGTH_SHORT).show();
-        Intent broadcastIntent = new Intent(getApplicationContext(), AlarmBroadcastReciever.class);
-        PendingIntent pendingIntent= PendingIntent.getBroadcast(getApplicationContext(),0,broadcastIntent,0);
-        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1*1000, pendingIntent);
-        BasicHelper.setAppInForeground(getApplicationContext(),true);
-        Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
 
-        //if(BasicHelper.getServiceStatus(getApplicationContext())) {
-        //    startService(gpsIntent);
-       // }
+            BasicHelper.setServiceStatus(getApplicationContext(), true);
+            Toast.makeText(getApplicationContext(), Boolean.toString(
+                    BasicHelper.getServiceStatus(getApplicationContext())
+            ), Toast.LENGTH_SHORT).show();
+
+            Intent broadcastIntent = new Intent(getApplicationContext(), AlarmBroadcastReciever.class);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, 0);
+            AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
+
+
+
+            BasicHelper.setAppInForeground(getApplicationContext(), true);
+
+            if (BasicHelper.getServiceStatus(getApplicationContext())) {
+                Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
+                startService(gpsIntent);
+            }
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
 
      /*   Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
         PendingIntent pintent = PendingIntent.getService(getApplicationContext(), 0, gpsIntent, 0);
