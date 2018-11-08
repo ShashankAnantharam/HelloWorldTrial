@@ -215,6 +215,7 @@ public class LandingPageActivity extends AppCompatActivity {
     {
         TestHelper.setLookouts(getApplicationContext());
 
+        BasicHelper.turnOnFirebaseDatabases(getApplicationContext());
         Calendar cur_cal = Calendar.getInstance();
         cur_cal.setTimeInMillis(System.currentTimeMillis());
         cur_cal.add(Calendar.SECOND, 50);
