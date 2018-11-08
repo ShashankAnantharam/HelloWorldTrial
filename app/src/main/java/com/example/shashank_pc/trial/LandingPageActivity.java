@@ -239,10 +239,8 @@ public class LandingPageActivity extends AppCompatActivity {
 
             BasicHelper.setAppInForeground(getApplicationContext(), true);
 
-            if (BasicHelper.getServiceStatus(getApplicationContext())) {
-                Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
-                startService(gpsIntent);
-            }
+            Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
+            startService(gpsIntent);
 
         }
         catch (Exception e)

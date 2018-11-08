@@ -506,7 +506,7 @@ public class GeoLocationService extends Service {
         };
 
         if(d != null && ch != null){
-            turnOnFirebaseDatabases(getApplicationContext());
+            //turnOnFirebaseDatabases(getApplicationContext());
             d.addChildEventListener(ch);
         }
 
@@ -777,7 +777,7 @@ public class GeoLocationService extends Service {
 
     public void onTaskRemoved(Intent rootIntent) {
 
-        this.writeCrashLogs("onTaskRemoved");
+        FirebaseDatabase.getInstance().getReference("Testing/logs/brdcst").setValue("onTaskRemoved");
         BasicHelper.setAppInForeground(getApplicationContext(),false);
     }
     void writeCrashLogs(String crashType){
