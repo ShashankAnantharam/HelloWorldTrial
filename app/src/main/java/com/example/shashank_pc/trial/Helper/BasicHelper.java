@@ -135,19 +135,21 @@ public class BasicHelper {
     }
 
     public static void turnOnFirebaseDatabases(Context context){
-        if(!getDatabaseConnectionStatus(context)){
+      //  if(!getDatabaseConnectionStatus(context)){
             FirebaseDatabase.getInstance().goOnline();
             FirebaseFirestore.getInstance().enableNetwork();
             setDatabaseConnectionStatus(context,true);
-        }
+      //  }
     }
 
     public static void turnOffFirebaseDatabases(Context context, boolean isAppInForeground){
-        FirebaseDatabase.getInstance().getReference("Testimg/dbStatus"+
+      /*  FirebaseDatabase.getInstance().getReference("Testimg/dbStatus"+
                 Boolean.toString(getDatabaseConnectionStatus(context))
                 + Boolean.toString(isAppInForeground)
         ).setValue("Off");
-        if(getDatabaseConnectionStatus(context) && !isAppInForeground){
+        */
+        if(//getDatabaseConnectionStatus(context) &&
+                !isAppInForeground){
             FirebaseDatabase.getInstance().goOffline();
             FirebaseFirestore.getInstance().disableNetwork();
             setDatabaseConnectionStatus(context,false);
