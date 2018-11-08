@@ -778,6 +778,7 @@ public class GeoLocationService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
 
         this.writeCrashLogs("onTaskRemoved");
+        BasicHelper.setAppInForeground(getApplicationContext(),false);
     }
     void writeCrashLogs(String crashType){
 
