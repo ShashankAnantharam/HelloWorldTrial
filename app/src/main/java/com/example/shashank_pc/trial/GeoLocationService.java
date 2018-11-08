@@ -250,7 +250,7 @@ public class GeoLocationService extends Service {
             locationManager.removeUpdates(this);
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit = sharedPreferences.edit();
-            edit.putInt("FLAG",3);
+            edit.putInt("FLAG",0);
             edit.commit();
 
 //            GeoLocationService.this.sendMessage(location);
@@ -353,18 +353,23 @@ public class GeoLocationService extends Service {
                 }
             }
         }
-        Float time = 3f;
+        Toast.makeText(getApplicationContext(),Float.toString(minDist)+" in meters",Toast.LENGTH_SHORT).show();
+        float time = 3f;
         if(userSet.size()==0)
         {
-            time = Algorithm.calculateTime(minDist);
+            time = Algorithm.calculateTime(getApplicationContext(),minDist);
         }
 
         time = powerSaverAlgo(time,currLoc);
+//        Toast.makeText(getApplicationContext(),"Final Time : "+ Float.toString(time),Toast.LENGTH_SHORT ).show();
+        FirebaseDatabase.getInstance().getReference("Testimg/Timelogs/"+Long.toString(System.currentTimeMillis())).setValue(time);
+        setAlarmDuration((long) time);
 
     }
 
-    private Float powerSaverAlgo(Float calulatedtime, Location location)
+    private float powerSaverAlgo(float calulatedtime, Location location)
     {
+        //Time is in seconds. Need to return in milliseconds
         Long currTime = System.currentTimeMillis();
 
         Location fixLocation = BasicHelper.getFixLocation(getApplicationContext());
@@ -374,8 +379,9 @@ public class GeoLocationService extends Service {
 
         if(fixLocation != null){
             //TODO Check location units
-            fixLocDist =  location.distanceTo(fixLocation) * 1000;
+            fixLocDist =  location.distanceTo(fixLocation);
         }
+//        Toast.makeText(getApplicationContext(),"fix Loc: "+Float.toString(fixLocDist),Toast.LENGTH_SHORT).show();
 
         if(fixLocation == null || (fixLocDist > 75 && BasicHelper.getErrorFlag(getApplicationContext()))){
             fixLocation = location;
@@ -592,7 +598,7 @@ public class GeoLocationService extends Service {
                             edit.putInt("FLAG",0);
                             edit.commit();
 
-                            setAlarmDuration(3000L);
+                           // setAlarmDuration(3000L);
 
                             //Toast.makeText(getApplicationContext(), "flag is 3", Toast.LENGTH_SHORT).show();
                             hCount++;

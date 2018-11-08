@@ -1,6 +1,8 @@
 package com.example.shashank_pc.trial.classes;
 
+import android.content.Context;
 import android.location.Location;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -122,11 +124,12 @@ public class Algorithm {
     }
 
 
-    public static Float calculateTime(Float distance)
+    public static Float calculateTime(Context context, Float distance)
     {
         //TODO Need to see if this is in kiloseconds or in seconds
 
         Float time = 9*distance/ 125;
+//        Toast.makeText(context,Float.toString(time)+" in seconds",Toast.LENGTH_SHORT).show();
         time = Math.max(22, time);
         time = Math.min(300, time);
 

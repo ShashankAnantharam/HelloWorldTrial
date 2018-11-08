@@ -227,6 +227,9 @@ public class LandingPageActivity extends AppCompatActivity {
         PendingIntent pendingIntent= PendingIntent.getBroadcast(getApplicationContext(),0,broadcastIntent,0);
         AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1*1000, pendingIntent);
+        BasicHelper.setAppInForeground(getApplicationContext(),true);
+        Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
+        startService(gpsIntent);
 
      /*   Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
         PendingIntent pintent = PendingIntent.getService(getApplicationContext(), 0, gpsIntent, 0);
