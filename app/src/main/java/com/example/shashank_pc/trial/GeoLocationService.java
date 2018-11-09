@@ -284,7 +284,7 @@ public class GeoLocationService extends Service {
                 edit.putInt("FLAG",1);
                 edit.commit();
 
-            //    turnOnFirebaseDatabases(getApplicationContext());
+                turnOnFirebaseDatabases(getApplicationContext());
 
                 handler.removeCallbacks(sendData);
                 if(wakeLock != null && !wakeLock.isHeld()){
@@ -297,7 +297,7 @@ public class GeoLocationService extends Service {
         @Override
         public void onProviderDisabled(String s) {
             if(current_gps_status == true){
-            //    turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
+                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
                 current_gps_status = false;
                 userSet.clear();
                 if(wakeLock != null && wakeLock.isHeld()){
@@ -393,7 +393,7 @@ public class GeoLocationService extends Service {
 
             BasicHelper.setFixLocation(getApplicationContext(),fixLocation);
             BasicHelper.setFixTime(getApplicationContext(),fixLocTime);
-        //    turnOnFirebaseDatabases(getApplicationContext());
+            turnOnFirebaseDatabases(getApplicationContext());
 
         }else if(fixLocDist > 75 && !BasicHelper.getErrorFlag(getApplicationContext())){
             BasicHelper.setErrorFlag(getApplicationContext(),true);
@@ -409,7 +409,7 @@ public class GeoLocationService extends Service {
                 /*
                   Set firebase databases to offline after 5 minutes of inactivity
                 */
-             //   turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
+                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
             }
             if(currTime - fixLocTime > 600000){
                 calulatedtime = Math.max(240, calulatedtime);
@@ -759,7 +759,7 @@ public class GeoLocationService extends Service {
                 BasicHelper.setServiceStatus(getApplicationContext(),false);
                 if(d != null && ch !=null){
                     d.removeEventListener(ch);
-                 //   turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
+                 //   OOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
                     d = null;
                 }
                 if(locationListener != null && locationManager!= null){
