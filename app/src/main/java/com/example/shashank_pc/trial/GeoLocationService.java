@@ -341,7 +341,9 @@ public class GeoLocationService extends Service {
                 {
                     //Trigger alert
                     FirebaseDatabase.getInstance().getReference("testingBigTime/"+alert.getId()).setValue("pp");
-
+                    FirebaseDatabase.getInstance().
+                            getReference("broadcasting/"+getUserPhoneNumber()+
+                                    "/TriggerAlerts/"+alert.getId()).setValue(System.currentTimeMillis());
                     updateAlertInMap(alert.getId());
 
                     //TODO Calculate distance here
