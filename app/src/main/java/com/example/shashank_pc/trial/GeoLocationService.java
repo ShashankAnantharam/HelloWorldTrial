@@ -376,16 +376,19 @@ public class GeoLocationService extends Service {
         Long currTime = System.currentTimeMillis();
 
         com.example.shashank_pc.trial.classes.Location fixLocation = BasicHelper.getFixLocation(getApplicationContext());
+        Location fixLocWrapper = new Location("dummyprovider");
+        fixLocWrapper.setLongitude(fixLocation.getLongitude());
+        fixLocWrapper.setLatitude(fixLocation.getLatitude());
         Long fixLocTime = BasicHelper.getFixTime(getApplicationContext());
 
         Float fixLocDist=0f;
 
         if(fixLocation != null){
-//TODO            fixLocDist =  location.distanceTo(fixLocation);
+            fixLocDist =  location.distanceTo(fixLocWrapper);
         }
-//        Toast.makeText(getApplicationContext(),"fix Loc: "+Float.toString(fixLocDist),Toast.LENGTH_SHORT).show();
+    //    Toast.makeText(getApplicationContext(),"fix Loc: "+Float.toString(fixLocDist),Toast.LENGTH_SHORT).show();
 
-        if(fixLocation == null || (fixLocDist > 75 && BasicHelper.getErrorFlag(getApplicationContext()))){
+        if(fixLocation == null || (fixLocDist > 75f && BasicHelper.getErrorFlag(getApplicationContext()))){
 
             //TODO Check change
             fixLocation = new com.example.shashank_pc.trial.classes.Location();
@@ -397,7 +400,7 @@ public class GeoLocationService extends Service {
             BasicHelper.setFixTime(getApplicationContext(),fixLocTime);
             turnOnFirebaseDatabases(getApplicationContext());
 
-        }else if(fixLocDist > 75 && !BasicHelper.getErrorFlag(getApplicationContext())){
+        }else if(fixLocDist > 75f && !BasicHelper.getErrorFlag(getApplicationContext())){
             BasicHelper.setErrorFlag(getApplicationContext(),true);
             calulatedtime = 3f;
         }else{
