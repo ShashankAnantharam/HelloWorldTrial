@@ -62,7 +62,7 @@ public class GPS_Service extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Intent notificationIntent = new Intent(this, LandingPageActivity.class);
+  /*      Intent notificationIntent = new Intent(this, LandingPageActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
 
@@ -80,7 +80,7 @@ public class GPS_Service extends Service {
 
 
         startForeground(1337,notification);
-
+*/
 
         String firebaseAddressLat = "Users/"+LandingPageActivity.getUserID()+"/Loc";
 
@@ -222,6 +222,25 @@ public class GPS_Service extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Intent notificationIntent = new Intent(this, LandingPageActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
+
+        Intent stopIntent = new Intent(this, GPS_Service.class);
+        stopIntent.setAction(STOP_ACTION);
+        PendingIntent tstopIntent = PendingIntent.getService(this, 0,
+                stopIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("My Awesome App")
+                .setContentText("Doing some work...")
+                .addAction(android.R.drawable.ic_media_pause, "Stop",
+                        tstopIntent)
+                .setContentIntent(pendingIntent).build();
+
+
+        startForeground(1337,notification);
 
         if(intent != null) {
             if (intent.getAction()!=null && intent.getAction().equals(STOP_ACTION)) {
