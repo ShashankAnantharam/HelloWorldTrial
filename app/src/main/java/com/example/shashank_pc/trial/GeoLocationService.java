@@ -364,7 +364,7 @@ public class GeoLocationService extends Service {
 
         time = powerSaverAlgo(time,currLoc);
 //        Toast.makeText(getApplicationContext(),"Final Time : "+ Float.toString(time),Toast.LENGTH_SHORT ).show();
-        FirebaseDatabase.getInstance().getReference("Testimg/Timelogs/"+Long.toString(System.currentTimeMillis())).setValue(time);
+        FirebaseDatabase.getInstance().getReference("Testimg/Timelogs/"+Long.toString(System.currentTimeMillis())).setValue(currLoc);
         setAlarmDuration((long) time);
 
 
@@ -745,13 +745,12 @@ public class GeoLocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if(isAppInForeground(getApplicationContext())){
+
             isNotificationReady = true;
             /*
                 getCompatNotification() - To build sticky notification.
             */
             startForeground(GEOLOCATION_NOTIFICATION_ID, getCompatNotification());
-        }
 
         /*
             If the user clicks on stop button on notification.
