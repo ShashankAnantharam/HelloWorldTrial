@@ -586,56 +586,46 @@ public class GeoLocationService extends Service {
 
                         } else if(getFlag() == 2){
 
-                        //    Toast.makeText(getApplicationContext(),"2", Toast.LENGTH_SHORT).show();
-                            // location listener not yet triggerd
+
+                            // Location listener not yet triggered, so use backup listener instead
                             if(locationListener != null && locationManager!= null){
                                 locationManager.removeUpdates(locationListener);
                             }
 
-                            Location lastLocation = new Location("service Provider");
-                            GeoLocationService.this.sendMessage(lastLocation);
+                            backupLocationRetriever.getLocation();
+
+                            //Location lastLocation = new Location("service Provider");
+                            //GeoLocationService.this.sendMessage(lastLocation);
                             //Toast.makeText(getApplicationContext(), "flag is 2", Toast.LENGTH_SHORT).show();
                             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
                             SharedPreferences.Editor edit = sharedPreferences.edit();
                             edit.putInt("FLAG",3);
                             edit.commit();
+
+                            handler.postDelayed(this, 13000);
+                        }else if(getFlag() == 3){
+
+                            //Backup listener gives output
+                            Location location = BasicHelper.getLocationFromLocal(getApplicationContext());
+                            if (prevLoc==null)
+                            {
+                                prevLoc=location;
+                            }
+                            List<Alert> alerts = populateAlerts(alertMap);
+                            mainAlgo(alerts,location,prevLoc);
+                            prevLoc=location;
                             if(wakeLock != null && wakeLock.isHeld()){
                                 wakeLock.release();
                             }
-                            handler.postDelayed(this, 10000);
-                        }else if(getFlag() == 3){
-
-                         //   Toast.makeText(getApplicationContext(),"3", Toast.LENGTH_SHORT).show();
-                            writeCrashLogs("flag 3" + hCount);
-
 
                             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
                             SharedPreferences.Editor edit = sharedPreferences.edit();
                             edit.putInt("FLAG",0);
                             edit.commit();
 
-                           // setAlarmDuration(3000L);
-
-                            //Toast.makeText(getApplicationContext(), "flag is 3", Toast.LENGTH_SHORT).show();
-                            hCount++;
-                            if(hCount == 6){
-                                // SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences("IS_FOREGROUND", Context.MODE_PRIVATE);
-                                // SharedPreferences.Editor edit1 = sharedPreferences1.edit();
-                                // edit1.putString("IS_FOREGROUND","0");
-                                // edit1.commit();
-                                stopForeground(true);
-                                stopSelf();
-                                handler.removeCallbacks(sendData);
-                            }
-                            else{
-                                handler.postDelayed(this, 4000);
-                            }
 
                         }
 
-//                        GeoLocationBroadcastReceiver sendEvent = new GeoLocationBroadcastReceiver();
-//                        sendEvent.sendEvent(getApplicationContext());
-                        //   handler.postDelayed(this, 1000);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
