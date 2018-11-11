@@ -376,14 +376,14 @@ public class GeoLocationService extends Service {
         Long currTime = System.currentTimeMillis();
 
         com.example.shashank_pc.trial.classes.Location fixLocation = BasicHelper.getFixLocation(getApplicationContext());
-        Location fixLocWrapper = new Location("dummyprovider");
-        fixLocWrapper.setLongitude(fixLocation.getLongitude());
-        fixLocWrapper.setLatitude(fixLocation.getLatitude());
         Long fixLocTime = BasicHelper.getFixTime(getApplicationContext());
 
         Float fixLocDist=0f;
 
         if(fixLocation != null){
+            Location fixLocWrapper = new Location("dummyprovider");
+            fixLocWrapper.setLongitude(fixLocation.getLongitude());
+            fixLocWrapper.setLatitude(fixLocation.getLatitude());
             fixLocDist =  location.distanceTo(fixLocWrapper);
         }
     //    Toast.makeText(getApplicationContext(),"fix Loc: "+Float.toString(fixLocDist),Toast.LENGTH_SHORT).show();
