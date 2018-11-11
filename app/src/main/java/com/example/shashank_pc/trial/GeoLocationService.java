@@ -592,7 +592,11 @@ public class GeoLocationService extends Service {
                                 locationManager.removeUpdates(locationListener);
                             }
 
-                            backupLocationRetriever.getLocation();
+                            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            if(location==null)
+                                backupLocationRetriever.getLocation();
+                            else
+                                BasicHelper.setLocationToLocal(getApplicationContext(),location);
 
                             //Location lastLocation = new Location("service Provider");
                             //GeoLocationService.this.sendMessage(lastLocation);
