@@ -89,12 +89,16 @@ public class BasicHelper {
         edit.commit();
     }
 
-    public static Location getLocationFromLocal(Context context)
+    public static android.location.Location getLocationFromLocal(Context context)
     {
         //TODO CHECK THIS
         SharedPreferences locationPref = context.getSharedPreferences("LOCATION", MODE_PRIVATE);
         String locationString = locationPref.getString("LOCATION","");
-        return  new Gson().fromJson(locationString, Location.class);
+        Location location = new Gson().fromJson(locationString, Location.class);
+        android.location.Location returnLoc = new android.location.Location("Fused");
+        returnLoc.setLatitude(location.getLatitude());
+        returnLoc.setLongitude(location.getLongitude());
+        return returnLoc;
     }
 
 
