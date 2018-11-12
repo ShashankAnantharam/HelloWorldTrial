@@ -219,6 +219,11 @@ public class LandingPageActivity extends AppCompatActivity {
         try {
             BasicHelper.turnOnFirebaseDatabases(getApplicationContext());
 
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit = sharedPreferences.edit();
+            edit.putInt("FLAG",1);
+            edit.commit();
+
             Calendar cur_cal = Calendar.getInstance();
             cur_cal.setTimeInMillis(System.currentTimeMillis());
             cur_cal.add(Calendar.SECOND, 50);
