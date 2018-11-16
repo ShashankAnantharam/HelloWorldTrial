@@ -126,12 +126,13 @@ public class Algorithm {
 
     public static Float calculateTime(Context context, Float distance)
     {
-        //TODO Need to see if this is in kiloseconds or in seconds
+        if(distance == Float.MAX_VALUE)
+            return (float)300;
 
         Float time = 9*distance/ 125;
 //        Toast.makeText(context,Float.toString(time)+" in seconds",Toast.LENGTH_SHORT).show();
-        time = Math.max(22, time);
-        time = Math.min(300, time);
+        time = Math.max((float)22, time);
+        time = Math.min((float)300, time);
 
         return time;
     }

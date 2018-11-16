@@ -292,7 +292,7 @@ public class GeoLocationService extends Service {
                 if(wakeLock != null && !wakeLock.isHeld()){
                     wakeLock.acquire();
                 }
-                handler.postDelayed(sendData, 2000);
+               // handler.postDelayed(sendData, 2000);
             }
         }
 
