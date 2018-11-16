@@ -1,6 +1,7 @@
 package com.example.shashank_pc.trial;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -197,7 +198,7 @@ public class LandingPageActivity extends AppCompatActivity {
         Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);
 //Toggle here
       //  stopService(gpsIntent);
-        wakeLock.release();
+      //  wakeLock.release();
         contactNodeRef.removeEventListener(contactNodeChildListener);
 //        Toast.makeText(getApplicationContext(),"ON DESTROY CALLED",Toast.LENGTH_SHORT);
     }
@@ -244,6 +245,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
             BasicHelper.setAppInForeground(getApplicationContext(), true);
 
+            BasicHelper.populateStates(getApplicationContext());
             Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
             startService(gpsIntent);
 
@@ -350,6 +352,7 @@ public class LandingPageActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     public void loadLayout()
     {
         /*
@@ -373,9 +376,9 @@ public class LandingPageActivity extends AppCompatActivity {
         addProfilePic(mUserID);
 
         //Start a wake lock to ensure that the app does not sleep.
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");
-        wakeLock.acquire();
+    //    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    //    wakeLock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,"My Wakelock");
+    //    wakeLock.acquire();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

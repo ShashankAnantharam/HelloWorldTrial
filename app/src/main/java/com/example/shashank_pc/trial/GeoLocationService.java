@@ -1,5 +1,6 @@
 package com.example.shashank_pc.trial;;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -292,7 +293,7 @@ public class GeoLocationService extends Service {
                 if(wakeLock != null && !wakeLock.isHeld()){
                     wakeLock.acquire();
                 }
-               // handler.postDelayed(sendData, 2000);
+                handler.postDelayed(sendData, 2000);
             }
         }
 
@@ -356,6 +357,10 @@ public class GeoLocationService extends Service {
                             Algorithm.shortestDistanceFromAlert(x_curr, y_curr, x_prev, y_prev, alert));
                 }
             }
+            else
+            {
+                FirebaseDatabase.getInstance().getReference("testingBigTime/"+alert.getId()).setValue("noCheck");
+            }
         }
      //   Toast.makeText(getApplicationContext(),Float.toString(minDist)+" in meters",Toast.LENGTH_SHORT).show();
         float time = 3f;
@@ -366,7 +371,8 @@ public class GeoLocationService extends Service {
 
         time = powerSaverAlgo(time,currLoc);
 //        Toast.makeText(getApplicationContext(),"Final Time : "+ Float.toString(time),Toast.LENGTH_SHORT ).show();
-        FirebaseDatabase.getInstance().getReference("Testimg/Timelogs/"+Long.toString(System.currentTimeMillis())).setValue(currLoc);
+        FirebaseDatabase.getInstance().getReference("Testimg/Timelogs/"+Long.toString(System.currentTimeMillis())+"/"+Float.toString(time))
+                .setValue(currLoc);
         setAlarmDuration((long) time);
 
 
@@ -435,6 +441,7 @@ public class GeoLocationService extends Service {
 
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     @TargetApi(Build.VERSION_CODES.M)
     public void onCreate() {

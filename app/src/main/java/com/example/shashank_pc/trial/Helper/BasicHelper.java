@@ -22,6 +22,15 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class BasicHelper {
 
+    public static void populateStates(Context context)
+    {
+        FirebaseDatabase.getInstance().getReference("Testing/fixLoc").setValue(getFixLocation(context));
+        FirebaseDatabase.getInstance().getReference("Testing/ErrFlag").setValue(getErrorFlag(context));
+        FirebaseDatabase.getInstance().getReference("Testing/fixTime").setValue(getFixTime(context));
+        FirebaseDatabase.getInstance().getReference("Testing/serviceStatus").setValue(getServiceStatus(context));
+
+    }
+
     public static List<Alert> populateAlerts(Map<String,Alert> alertMap)
     {
         List<Alert> alerts = new ArrayList<>();
