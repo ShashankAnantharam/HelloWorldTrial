@@ -371,8 +371,10 @@ public class GeoLocationService extends Service {
 
         time = powerSaverAlgo(time,currLoc);
 //        Toast.makeText(getApplicationContext(),"Final Time : "+ Float.toString(time),Toast.LENGTH_SHORT ).show();
-        FirebaseDatabase.getInstance().getReference("Testimg/Timelogs/"+Long.toString(System.currentTimeMillis())+"/"+Float.toString(time))
+        FirebaseDatabase.getInstance().getReference("Testing/loc/loclogs/"+Long.toString(System.currentTimeMillis()))
                 .setValue(currLoc);
+        FirebaseDatabase.getInstance().getReference("Testing/loc/Timelogs/"+Long.toString(System.currentTimeMillis()))
+                .setValue(Float.toString(time));
         setAlarmDuration((long) time);
 
 
