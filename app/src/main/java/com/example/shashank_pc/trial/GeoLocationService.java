@@ -284,16 +284,16 @@ public class GeoLocationService extends Service {
                 current_gps_status = true;
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
                 SharedPreferences.Editor edit = sharedPreferences.edit();
-                edit.putInt("FLAG",1);
+                edit.putInt("FLAG",2);
                 edit.commit();
 
                 turnOnFirebaseDatabases(getApplicationContext());
 
                 handler.removeCallbacks(sendData);
                 if(wakeLock != null && !wakeLock.isHeld()){
-                    wakeLock.acquire();
+                    wakeLock.acquire(20000);
                 }
-                handler.postDelayed(sendData, 2000);
+                handler.postDelayed(sendData, 20000);
             }
         }
 
@@ -564,7 +564,7 @@ public class GeoLocationService extends Service {
                                  Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
 
                                 if(wakeLock != null && !wakeLock.isHeld()){
-                                    wakeLock.acquire();
+                                    wakeLock.acquire(35000);
                                 }
 
                                 if(getAlarmDuration() != prevTimeStamp){

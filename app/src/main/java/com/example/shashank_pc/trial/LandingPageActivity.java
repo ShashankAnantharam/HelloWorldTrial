@@ -84,7 +84,7 @@ public class LandingPageActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    private PowerManager.WakeLock wakeLock;
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
