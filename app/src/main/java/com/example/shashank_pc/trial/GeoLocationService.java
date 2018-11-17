@@ -542,7 +542,7 @@ public class GeoLocationService extends Service {
 
 
                 if(getFlag() == 0){
-                   Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
+        //           Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putInt("FLAG",1);
@@ -559,9 +559,9 @@ public class GeoLocationService extends Service {
                         if(getFlag() == 1){
 
                         //    Toast.makeText(getApplicationContext(),"1", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
+                        //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
                             if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0)){
-                                 Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
+                             //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
 
                                 if(wakeLock != null && !wakeLock.isHeld()){
                                     wakeLock.acquire(35000);
@@ -599,7 +599,7 @@ public class GeoLocationService extends Service {
                         } else if(getFlag() == 2){
 
 
-                            Toast.makeText(getApplicationContext(),"2: Backup listener fired", Toast.LENGTH_SHORT).show();
+                        //    Toast.makeText(getApplicationContext(),"2: Backup listener fired", Toast.LENGTH_SHORT).show();
                             // Location listener not yet triggered, so use backup listener instead
                             if(locationListener != null && locationManager!= null){
                                 locationManager.removeUpdates(locationListener);
@@ -622,7 +622,7 @@ public class GeoLocationService extends Service {
                             handler.postDelayed(this, 13000);
                         }else if(getFlag() == 3){
 
-                            Toast.makeText(getApplicationContext(),"3: Backup listener output", Toast.LENGTH_SHORT).show();
+                        //    Toast.makeText(getApplicationContext(),"3: Backup listener output", Toast.LENGTH_SHORT).show();
                             //Backup listener gives output
                             Location location = BasicHelper.getLocationFromLocal(getApplicationContext());
                             if (prevLoc==null)
