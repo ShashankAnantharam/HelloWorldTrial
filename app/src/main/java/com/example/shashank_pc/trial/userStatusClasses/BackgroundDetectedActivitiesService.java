@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,6 +41,9 @@ public class BackgroundDetectedActivitiesService extends Service {
 
     IBinder mBinder = new BackgroundDetectedActivitiesService.LocalBinder();
 
+    private Handler handler;
+    private Runnable runnable;
+
     public class LocalBinder extends Binder {
         public BackgroundDetectedActivitiesService getServerInstance() {
             return BackgroundDetectedActivitiesService.this;
@@ -60,6 +64,8 @@ public class BackgroundDetectedActivitiesService extends Service {
         mIntentService = new Intent(this, DetectedActivitiesIntentService.class);
         mPendingIntent = PendingIntent.getService(this, 1, mIntentService, PendingIntent.FLAG_UPDATE_CURRENT);
         requestActivityUpdatesButtonHandler();
+
+        handler = new Handler();
     }
 
     @Nullable
