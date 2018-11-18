@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -44,6 +45,14 @@ public class DetectedActivitiesIntentService  extends IntentService {
         Intent intent = new Intent(Constants.BROADCAST_DETECTED_ACTIVITY);
         intent.putExtra("type", activity.getType());
         intent.putExtra("confidence", activity.getConfidence());
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        FirebaseDatabase.getInstance().getReference("NewTesting/"+Long.toString(System.currentTimeMillis()))
+        .setValue(new DetectedActivityWrappers(activity));
     }
+
+    private class UserActivityLogs{
+
+    }
+
 }

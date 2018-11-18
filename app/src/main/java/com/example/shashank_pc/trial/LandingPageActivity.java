@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.Helper.TestHelper;
 import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
+import com.example.shashank_pc.trial.userStatusClasses.BackgroundDetectedActivitiesService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -246,8 +247,12 @@ public class LandingPageActivity extends AppCompatActivity {
             BasicHelper.setAppInForeground(getApplicationContext(), true);
 
             BasicHelper.populateStates(getApplicationContext());
-            Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
-            startService(gpsIntent);
+         //   Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
+         //   startService(gpsIntent);
+
+            //Testing
+            Intent activityTypeIntent = new Intent(getApplicationContext(), BackgroundDetectedActivitiesService.class);
+            getApplicationContext().startService(activityTypeIntent);
 
         }
         catch (Exception e)
