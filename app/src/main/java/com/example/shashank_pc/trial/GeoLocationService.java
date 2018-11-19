@@ -44,6 +44,7 @@ import com.example.shashank_pc.trial.classes.Algorithm;
 import com.example.shashank_pc.trial.classes.BackupLocationRetriever;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.example.shashank_pc.trial.classes.Task;
+import com.example.shashank_pc.trial.userStatusClasses.DetectedActivityWrappers;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -369,7 +370,7 @@ public class GeoLocationService extends Service {
             time = Algorithm.calculateTime(getApplicationContext(),minDist);
         }
 
-        time = powerSaverAlgo(time,currLoc);
+ //       time = powerSaverAlgo(time,currLoc);
 //        Toast.makeText(getApplicationContext(),"Final Time : "+ Float.toString(time),Toast.LENGTH_SHORT ).show();
         FirebaseDatabase.getInstance().getReference("Testing/loc/loclogs/"+Long.toString(System.currentTimeMillis()))
                 .setValue(currLoc);
@@ -380,7 +381,55 @@ public class GeoLocationService extends Service {
 
     }
 
-    private float powerSaverAlgo(float calulatedtime, Location location)
+    private boolean shouldContinue(){
+
+        DetectedActivityWrappers latestActivity = BasicHelper.getUserMovementState(getApplicationContext());
+
+        if(latestActivity.equals("Still") || latestActivity.equals("Tilting")
+                || latestActivity.equals("Unknown"))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private float powerSaverAlgo(float calculatedTime) {
+
+        Long currTime = System.currentTimeMillis();
+        Long fixLocTime = BasicHelper.getFixTime(getApplicationContext());
+
+        DetectedActivityWrappers latestActivity = BasicHelper.getUserMovementState(getApplicationContext());
+
+        if(latestActivity.equals("Still") || latestActivity.equals("Tilting")
+                || latestActivity.equals("Unknown"))
+        {
+            if(currTime - fixLocTime > 300000){ // check time format  :: 720000 is in mills
+                calculatedTime = Math.max(120, calculatedTime);
+
+                /*
+                  Set firebase databases to offline after 5 minutes of inactivity
+                */
+                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
+            }
+            if(currTime - fixLocTime > 600000){
+                calculatedTime = Math.max(240, calculatedTime);
+                //this.showServiceExitedNotification();
+            }
+            if(currTime - fixLocTime > 1200000){
+                calculatedTime = Math.max(470, calculatedTime);
+                //this.showServiceExitedNotification();
+            }
+        }
+        else
+        {
+            BasicHelper.setFixTime(getApplicationContext(),currTime);
+        }
+
+        return calculatedTime;
+
+    }
+
+    private float powerSaverAlgoOld(float calulatedtime, Location location)
     {
         //Time is in seconds. Need to return in milliseconds
         Long currTime = System.currentTimeMillis();

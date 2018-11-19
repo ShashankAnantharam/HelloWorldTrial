@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,20 +36,33 @@ public class DetectedActivitiesIntentService  extends IntentService {
         // 0 and 100.
         ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
 
+        DetectedActivityWrappers wrapper = null;
+        int maxConfidence = 0;
         for (DetectedActivity activity : detectedActivities) {
             Log.e(TAG, "Detected activity: " + activity.getType() + ", " + activity.getConfidence());
-            broadcastActivity(activity);
+            if(wrapper==null || wrapper.getConfidence()>maxConfidence)
+            {
+                if(!wrapper.getActivityType().equals("Unknown") && !wrapper.getActivityType().equals("Tilting"))
+                {
+                    wrapper = new DetectedActivityWrappers(activity);
+                }
+            }
         }
+
+        broadcastActivity(wrapper);
     }
 
-    private void broadcastActivity(DetectedActivity activity) {
+    private void broadcastActivity(DetectedActivityWrappers activity) {
         Intent intent = new Intent(Constants.BROADCAST_DETECTED_ACTIVITY);
-        intent.putExtra("type", activity.getType());
+        intent.putExtra("type", activity.getActivityType());
         intent.putExtra("confidence", activity.getConfidence());
+
+        BasicHelper.setUserMovementState(getApplicationContext(),activity);
+
+
         //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-        FirebaseDatabase.getInstance().getReference("NewTesting/"+Long.toString(System.currentTimeMillis()))
-        .setValue(new DetectedActivityWrappers(activity));
+        //FirebaseDatabase.getInstance().getReference("NewTesting/"+Long.toString(System.currentTimeMillis())).setValue(new DetectedActivityWrappers(activity));
     }
 
     private class UserActivityLogs{

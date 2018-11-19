@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.Location;
 import com.example.shashank_pc.trial.classes.Lookout;
+import com.example.shashank_pc.trial.userStatusClasses.DetectedActivityWrappers;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
@@ -38,6 +39,23 @@ public class BasicHelper {
             alerts.add(entry.getValue());
         }
         return alerts;
+    }
+
+    public static void setUserMovementState(Context context, DetectedActivityWrappers userState)
+    {
+        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
+        SharedPreferences.Editor edit = fixed_values.edit();
+        String userStateString = new Gson().toJson(userState);
+        edit.putString("USER_STATE",userStateString);
+        edit.commit();
+    }
+
+    public static DetectedActivityWrappers getUserMovementState(Context context)
+    {
+        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
+        return new Gson().fromJson(
+                fixed_values.getString("USER_STATE",""),
+                DetectedActivityWrappers.class);
     }
 
     public static void setFixLocation(Context context, Location location)
