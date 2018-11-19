@@ -49,7 +49,8 @@ public class DetectedActivitiesIntentService  extends IntentService {
             }
         }
 
-        broadcastActivity(wrapper);
+        if(wrapper!=null)
+            broadcastActivity(wrapper);
     }
 
     private void broadcastActivity(DetectedActivityWrappers activity) {

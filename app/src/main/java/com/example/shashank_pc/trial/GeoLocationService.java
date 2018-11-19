@@ -26,6 +26,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Binder;
 import android.provider.SyncStateContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -44,7 +45,11 @@ import com.example.shashank_pc.trial.classes.Algorithm;
 import com.example.shashank_pc.trial.classes.BackupLocationRetriever;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.example.shashank_pc.trial.classes.Task;
+import com.example.shashank_pc.trial.userStatusClasses.Constants;
+import com.example.shashank_pc.trial.userStatusClasses.DetectedActivitiesIntentService;
 import com.example.shashank_pc.trial.userStatusClasses.DetectedActivityWrappers;
+import com.google.android.gms.location.ActivityRecognitionClient;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -88,11 +93,15 @@ import static com.example.shashank_pc.trial.classes.Algorithm.shouldTriggerAlert
 public class GeoLocationService extends Service {
     public static final String FOREGROUND = "com.facemap.location.FOREGROUND";
     private static int GEOLOCATION_NOTIFICATION_ID = 12345689;
+    private static int DETECTION_INTERVAL_IN_MILLISECONDS = 30*1000;
     public static List<String> lookOutsList;
     public static List<String> tasksList;
 
-    private DocumentReference contactRef;
+    private Intent mIntentService;
+    private PendingIntent mPendingIntent;
+    private ActivityRecognitionClient mActivityRecognitionClient;
 
+    private DocumentReference contactRef;
     private BackupLocationRetriever backupLocationRetriever= new BackupLocationRetriever();;
 
     Map<String,Alert> alertMap= new ConcurrentHashMap<>();
@@ -388,109 +397,39 @@ public class GeoLocationService extends Service {
         if(latestActivity.equals("Still") || latestActivity.equals("Tilting")
                 || latestActivity.equals("Unknown"))
         {
+            turnOffFirebaseDatabases(getApplicationContext(),BasicHelper.isAppInForeground(getApplicationContext()));
             return false;
         }
+        turnOnFirebaseDatabases(getApplicationContext());
         return true;
     }
 
-    private float powerSaverAlgo(float calculatedTime) {
+    public void requestActivityUpdatesButtonHandler() {
+        com.google.android.gms.tasks.Task<Void> task = mActivityRecognitionClient.requestActivityUpdates(
+                DETECTION_INTERVAL_IN_MILLISECONDS,
+                mPendingIntent);
 
-        Long currTime = System.currentTimeMillis();
-        Long fixLocTime = BasicHelper.getFixTime(getApplicationContext());
-
-        DetectedActivityWrappers latestActivity = BasicHelper.getUserMovementState(getApplicationContext());
-
-        if(latestActivity.equals("Still") || latestActivity.equals("Tilting")
-                || latestActivity.equals("Unknown"))
-        {
-            if(currTime - fixLocTime > 300000){ // check time format  :: 720000 is in mills
-                calculatedTime = Math.max(120, calculatedTime);
-
-                /*
-                  Set firebase databases to offline after 5 minutes of inactivity
-                */
-                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
+        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                Toast.makeText(getApplicationContext(),
+                        "Successfully requested activity updates",
+                        Toast.LENGTH_SHORT)
+                        .show();
             }
-            if(currTime - fixLocTime > 600000){
-                calculatedTime = Math.max(240, calculatedTime);
-                //this.showServiceExitedNotification();
-            }
-            if(currTime - fixLocTime > 1200000){
-                calculatedTime = Math.max(470, calculatedTime);
-                //this.showServiceExitedNotification();
-            }
-        }
-        else
-        {
-            BasicHelper.setFixTime(getApplicationContext(),currTime);
-        }
+        });
 
-        return calculatedTime;
-
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(),
+                        "Requesting activity updates failed to start",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 
-    private float powerSaverAlgoOld(float calulatedtime, Location location)
-    {
-        //Time is in seconds. Need to return in milliseconds
-        Long currTime = System.currentTimeMillis();
-
-        com.example.shashank_pc.trial.classes.Location fixLocation = BasicHelper.getFixLocation(getApplicationContext());
-        Long fixLocTime = BasicHelper.getFixTime(getApplicationContext());
-
-        Float fixLocDist=0f;
-
-        if(fixLocation != null){
-            Location fixLocWrapper = new Location("dummyprovider");
-            fixLocWrapper.setLongitude(fixLocation.getLongitude());
-            fixLocWrapper.setLatitude(fixLocation.getLatitude());
-            fixLocDist =  location.distanceTo(fixLocWrapper);
-        }
-    //    Toast.makeText(getApplicationContext(),"fix Loc: "+Float.toString(fixLocDist),Toast.LENGTH_SHORT).show();
-
-        if(fixLocation == null || (fixLocDist > 75f && BasicHelper.getErrorFlag(getApplicationContext()))){
-
-            //TODO Check change
-            fixLocation = new com.example.shashank_pc.trial.classes.Location();
-            fixLocation.setLongitude(location.getLongitude());
-            fixLocation.setLatitude(location.getLatitude());
-            fixLocTime = currTime;
-
-            BasicHelper.setFixLocation(getApplicationContext(),fixLocation);
-            BasicHelper.setFixTime(getApplicationContext(),fixLocTime);
-            turnOnFirebaseDatabases(getApplicationContext());
-
-        }else if(fixLocDist > 75f && !BasicHelper.getErrorFlag(getApplicationContext())){
-            BasicHelper.setErrorFlag(getApplicationContext(),true);
-            calulatedtime = 3f;
-        }else{
-            BasicHelper.setErrorFlag(getApplicationContext(),false);
-
-            //Logs
-            FirebaseDatabase.getInstance().getReference("Testing/here").setValue(Long.toString(currTime-fixLocTime));
-            if(currTime - fixLocTime > 300000){ // check time format  :: 720000 is in mills
-                calulatedtime = Math.max(120, calulatedtime);
-
-                /*
-                  Set firebase databases to offline after 5 minutes of inactivity
-                */
-                turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
-            }
-            if(currTime - fixLocTime > 600000){
-                calulatedtime = Math.max(240, calulatedtime);
-                //this.showServiceExitedNotification();
-            }
-            if(currTime - fixLocTime > 1200000){
-                calulatedtime = Math.max(470, calulatedtime);
-                //this.showServiceExitedNotification();
-            }
-
-        }
-//TODO Chek this if needed        AsyncStorage.setItem("PreviousLocation", JSON.stringify(location));
-
-        //TODO check time units
-        return calulatedtime*1000;
-
-    }
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -518,6 +457,12 @@ public class GeoLocationService extends Service {
 
         getAlertsFromDb();
         getContactsFromDb();
+
+        //Get the user activity
+        mActivityRecognitionClient = new ActivityRecognitionClient(this);
+        mIntentService = new Intent(this, DetectedActivitiesIntentService.class);
+        mPendingIntent = PendingIntent.getService(this, 1, mIntentService, PendingIntent.FLAG_UPDATE_CURRENT);
+        requestActivityUpdatesButtonHandler();
 
         // FirebaseDatabase database = FirebaseDatabase.getInstance();
         d =  FirebaseDatabase.getInstance().getReference("/broadcasting/" + userPhoneNumber + "/LocRequests/");
@@ -609,7 +554,7 @@ public class GeoLocationService extends Service {
 
                         //    Toast.makeText(getApplicationContext(),"1", Toast.LENGTH_SHORT).show();
                         //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
-                            if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0)){
+                            if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0) && shouldContinue()){
                              //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
 
                                 if(wakeLock != null && !wakeLock.isHeld()){
