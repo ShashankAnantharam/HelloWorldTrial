@@ -40,12 +40,11 @@ public class DetectedActivitiesIntentService  extends IntentService {
         int maxConfidence = 0;
         for (DetectedActivity activity : detectedActivities) {
             Log.e(TAG, "Detected activity: " + activity.getType() + ", " + activity.getConfidence());
-            if(wrapper==null || wrapper.getConfidence()>maxConfidence)
+            if(wrapper==null ||
+                    (wrapper.getConfidence()>maxConfidence &&
+                            !wrapper.getActivityType().equals("Unknown") && !wrapper.getActivityType().equals("Tilting")))
             {
-                if(!wrapper.getActivityType().equals("Unknown") && !wrapper.getActivityType().equals("Tilting"))
-                {
-                    wrapper = new DetectedActivityWrappers(activity);
-                }
+                wrapper = new DetectedActivityWrappers(activity);
             }
         }
 
