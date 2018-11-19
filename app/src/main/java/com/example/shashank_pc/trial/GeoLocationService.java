@@ -378,6 +378,7 @@ public class GeoLocationService extends Service {
         {
             time = Algorithm.calculateTime(getApplicationContext(),minDist);
         }
+        time*=1000;
 
  //       time = powerSaverAlgo(time,currLoc);
 //        Toast.makeText(getApplicationContext(),"Final Time : "+ Float.toString(time),Toast.LENGTH_SHORT ).show();
@@ -394,9 +395,8 @@ public class GeoLocationService extends Service {
 
         DetectedActivityWrappers latestActivity = BasicHelper.getUserMovementState(getApplicationContext());
 
-        Toast.makeText(getApplicationContext(),new Gson().toJson(latestActivity),Toast.LENGTH_SHORT).show();
-        if(latestActivity.equals("Still") || latestActivity.equals("Tilting")
-                || latestActivity.equals("Unknown"))
+        if(latestActivity.getActivityType().equals("Still") || latestActivity.getActivityType().equals("Tilting")
+                || latestActivity.getActivityType().equals("Unknown"))
         {
             turnOffFirebaseDatabases(getApplicationContext(),BasicHelper.isAppInForeground(getApplicationContext()));
             return false;
@@ -548,13 +548,13 @@ public class GeoLocationService extends Service {
                     if(wakeLock != null && wakeLock.isHeld()){
                         wakeLock.release();
                     }
-                    handler.postDelayed(this, getAlarmDuration());
+                    handler.postDelayed(this, 3000);
                 }else{
                     try {
                         if(getFlag() == 1){
 
                         //    Toast.makeText(getApplicationContext(),"1", Toast.LENGTH_SHORT).show();
-                            shouldContinue();
+                            Toast.makeText(getApplicationContext(),Boolean.toString(shouldContinue()),Toast.LENGTH_SHORT).show();
                             Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
                             if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0) && shouldContinue()){
                              //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
@@ -636,7 +636,7 @@ public class GeoLocationService extends Service {
                             SharedPreferences.Editor edit = sharedPreferences.edit();
                             edit.putInt("FLAG",0);
                             edit.commit();
-
+                            Toast.makeText(getApplicationContext(),"3: Here", Toast.LENGTH_SHORT).show();
                             handler.postDelayed(this, 2000);
                         }
 
