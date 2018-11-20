@@ -395,6 +395,7 @@ public class GeoLocationService extends Service {
 
         DetectedActivityWrappers latestActivity = BasicHelper.getUserMovementState(getApplicationContext());
 
+        Toast.makeText(getApplicationContext(),latestActivity.getActivityType(),Toast.LENGTH_SHORT).show();
         if(latestActivity.getActivityType().equals("Still") || latestActivity.getActivityType().equals("Tilting")
                 || latestActivity.getActivityType().equals("Unknown"))
         {
@@ -553,9 +554,8 @@ public class GeoLocationService extends Service {
                     try {
                         if(getFlag() == 1){
 
-                        //    Toast.makeText(getApplicationContext(),"1", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getApplicationContext(),Boolean.toString(shouldContinue()),Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue())+"TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
+
                             if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0) && shouldContinue()){
                              //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
 
