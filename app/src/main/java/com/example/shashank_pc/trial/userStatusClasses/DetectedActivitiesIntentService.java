@@ -36,20 +36,22 @@ public class DetectedActivitiesIntentService  extends IntentService {
         // 0 and 100.
         ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
 
-        DetectedActivityWrappers wrapper = null;
+        DetectedActivityWrappers currWrapper = null;
         int maxConfidence = 0;
         for (DetectedActivity activity : detectedActivities) {
             Log.e(TAG, "Detected activity: " + activity.getType() + ", " + activity.getConfidence());
-            if(wrapper==null ||
+            DetectedActivityWrappers wrapper = new DetectedActivityWrappers(activity);
+            if(currWrapper==null ||
                     (wrapper.getConfidence()>maxConfidence &&
                             !wrapper.getActivityType().equals("Unknown") && !wrapper.getActivityType().equals("Tilting")))
             {
-                wrapper = new DetectedActivityWrappers(activity);
+                currWrapper=wrapper;
+                maxConfidence=wrapper.getConfidence();
             }
         }
 
-        if(wrapper!=null)
-            broadcastActivity(wrapper);
+        if(currWrapper!=null)
+            broadcastActivity(currWrapper);
     }
 
     private void broadcastActivity(DetectedActivityWrappers activity) {
