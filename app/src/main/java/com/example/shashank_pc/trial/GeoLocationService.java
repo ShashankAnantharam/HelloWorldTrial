@@ -549,6 +549,10 @@ public class GeoLocationService extends Service {
                     if(wakeLock != null && wakeLock.isHeld()){
                         wakeLock.release();
                     }
+
+                    //TESTING
+                    setAlarmDuration(3000L);
+
                     handler.postDelayed(this, 3000);
                 }else{
                     try {
@@ -556,7 +560,9 @@ public class GeoLocationService extends Service {
 
                             Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue())+"TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 
-                            if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0) && shouldContinue()){
+                            if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0)
+                                   // && shouldContinue()
+                                    ){
                              //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
 
                                 if(wakeLock != null && !wakeLock.isHeld()){

@@ -3,6 +3,8 @@ package com.example.shashank_pc.trial.Helper;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.example.shashank_pc.trial.classes.Task;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -43,11 +45,12 @@ public class AlertHelper {
 
         for(int i=0;i<alert.getSelectedContacts().size();i++)
         {
-            if(alert.getSelectedContacts().get(i).equals(userID))
+            if(alert.getSelectedContacts().get(i).getId().equals(userID))
             {
                 lastTime = alert.getSelectedContacts().get(i).getTimeStamp();
             }
         }
+        FirebaseDatabase.getInstance().getReference("Debug/lastTime/"+alert.getId()).setValue(lastTime);
 
         if(alert instanceof Lookout)
         {
@@ -70,6 +73,7 @@ public class AlertHelper {
             {
                 Long realFromTime = DailyDateConversion(currTime,((Lookout) alert).getFromTime());
                 Long realToTime = DailyDateConversion(currTime,((Lookout) alert).getToTime());
+
                 if(realToTime < realFromTime)
                 {
                     realToTime = realToTime + DAY_INTERVAL;
@@ -80,6 +84,12 @@ public class AlertHelper {
 
                 if(lastTime>=realFromTime)       //If alert already rang for given time range
                     return false;
+
+                if(BasicHelper.compareDates(currTime, lastTime ))
+                {
+                    //If currDate <= completionDate (If task got completed today)
+                    return false;
+                }
             }
             else
             {
