@@ -393,6 +393,9 @@ public class GeoLocationService extends Service {
 
     private boolean shouldContinue(){
 
+        if(isAppInForeground(getApplicationContext()))
+            return true;
+
         DetectedActivityWrappers latestActivity = BasicHelper.getUserMovementState(getApplicationContext());
 
         Toast.makeText(getApplicationContext(),latestActivity.getActivityType(),Toast.LENGTH_SHORT).show();
@@ -550,9 +553,6 @@ public class GeoLocationService extends Service {
                         wakeLock.release();
                     }
 
-                    //TESTING
-                    setAlarmDuration(3000L);
-
                     handler.postDelayed(this, 3000);
                 }else{
                     try {
@@ -561,7 +561,7 @@ public class GeoLocationService extends Service {
                             Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue())+"TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 
                             if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0)
-                                   // && shouldContinue()
+                                    && shouldContinue()
                                     ){
                              //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
 
