@@ -25,9 +25,7 @@ public class BasicHelper {
 
     public static void populateStates(Context context)
     {
-        FirebaseDatabase.getInstance().getReference("Testing/fixLoc").setValue(getFixLocation(context));
         FirebaseDatabase.getInstance().getReference("Testing/ErrFlag").setValue(getErrorFlag(context));
-        FirebaseDatabase.getInstance().getReference("Testing/fixTime").setValue(getFixTime(context));
         FirebaseDatabase.getInstance().getReference("Testing/serviceStatus").setValue(getServiceStatus(context));
 
     }
@@ -58,34 +56,19 @@ public class BasicHelper {
                 DetectedActivityWrappers.class);
     }
 
-    public static void setFixLocation(Context context, Location location)
+
+
+    public static void setLastStillTime(Context context, Long timestamp)
     {
         SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
         SharedPreferences.Editor edit = fixed_values.edit();
-        String locationString = new Gson().toJson(location);
-        edit.putString("FIX_LOCATION",locationString);
+        edit.putLong("LAST_STILL_TIME",timestamp);
         edit.commit();
     }
 
-    public static Location getFixLocation(Context context)
-    {
+    public static Long getLastStillTime(Context context) {
         SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
-        return new Gson().fromJson(
-                fixed_values.getString("FIX_LOCATION",""),
-                Location.class);
-    }
-
-    public static void setFixTime(Context context, Long timestamp)
-    {
-        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
-        SharedPreferences.Editor edit = fixed_values.edit();
-        edit.putLong("FIX_TIME",timestamp);
-        edit.commit();
-    }
-
-    public static Long getFixTime(Context context) {
-        SharedPreferences fixed_values = context.getSharedPreferences("FIXED_VALUES", MODE_PRIVATE);
-        return fixed_values.getLong("FIX_TIME",System.currentTimeMillis());
+        return fixed_values.getLong("LAST_STILL_TIME",System.currentTimeMillis());
     }
 
     public static boolean getErrorFlag(Context context){
@@ -158,17 +141,6 @@ public class BasicHelper {
         return preferences.getBoolean("IS_SERVICE_APPROVED", false);
     }
 
-    private static boolean getDatabaseConnectionStatus(Context context){
-        SharedPreferences preferences = context.getSharedPreferences("IS_FIREBASE_ONLINE", MODE_PRIVATE);
-        return preferences.getBoolean("IS_FIREBASE_ONLINE", true);
-    }
-
-    public static void setDatabaseConnectionStatus(Context context, boolean flag){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("IS_FIREBASE_ONLINE", MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putBoolean("IS_FIREBASE_ONLINE",flag);
-        edit.commit();
-    }
 
     public static void turnOnFirebaseDatabases(Context context){
             FirebaseDatabase.getInstance().goOnline();
