@@ -246,6 +246,9 @@ public class LandingPageActivity extends AppCompatActivity {
 
             BasicHelper.setAppInForeground(getApplicationContext(), true);
 
+            //Needs to be set once atleast at the start (It is predicting that the next will be still. If not, it updates prediction
+            BasicHelper.setLastStillTime(getApplicationContext(),System.currentTimeMillis());
+
             BasicHelper.populateStates(getApplicationContext());
             Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
             startService(gpsIntent);

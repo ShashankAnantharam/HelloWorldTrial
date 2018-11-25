@@ -393,11 +393,17 @@ public class GeoLocationService extends Service {
 
     private boolean shouldTurnDbOff(){
         /*
-        If the phone has been still for more than 6 minutes, then turn db off
+        If the phone has been still for more than 6 minutes AND app is in background, then turn db off
          */
         Long currTime = System.currentTimeMillis();
-        if(currTime - BasicHelper.getLastStillTime(getApplicationContext())> 6*60*1000)
+        if(isAppInForeground(getApplicationContext()))
         {
+            //If App is in foreground, do nothing except update last still time for now
+            BasicHelper.setLastStillTime(getApplicationContext(),currTime);
+        }
+        else if(currTime - BasicHelper.getLastStillTime(getApplicationContext())> 6*60*1000)
+        {
+            //If app is in background AND has been still for more than 6 minutes.
             FirebaseDatabase.getInstance().getReference("Debug/dbState/"+
                     Long.toString(currTime)).setValue("TurningThisDbOff");
             return true;
@@ -405,7 +411,7 @@ public class GeoLocationService extends Service {
         return false;
     }
 
-    private boolean isTimeforPeriodicCheck()
+    private boolean isTimeForPeriodicCheck()
     {
         /*
         If phone has been still for last 1 hour, then check once now to see the location
@@ -430,18 +436,27 @@ public class GeoLocationService extends Service {
         DetectedActivityWrappers latestActivity = BasicHelper.getUserMovementState(getApplicationContext());
 
         Toast.makeText(getApplicationContext(),latestActivity.getActivityType(),Toast.LENGTH_SHORT).show();
-        if(!isTimeforPeriodicCheck() &&
-                (latestActivity.getActivityType().equals("Still") || latestActivity.getActivityType().equals("Tilting")
+
+        if(latestActivity.getActivityType().equals("Still") || latestActivity.getActivityType().equals("Tilting")
                 || latestActivity.getActivityType().equals("Unknown"))
-                )
         {
+            if(isTimeForPeriodicCheck())
+            {
+                //Only check once, so set the time to 6 minutes previously and turn db on for one cycle
+                BasicHelper.setLastStillTime(getApplicationContext(), System.currentTimeMillis()-6*60*1000L);
+                turnOnFirebaseDatabases(getApplicationContext());
+                return true;
+            }
+
             if(shouldTurnDbOff())
                 turnOffFirebaseDatabases(getApplicationContext(),BasicHelper.isAppInForeground(getApplicationContext()));
             return false;
         }
+        else {
 
-        //Set current time as the last Still time for reference
-        BasicHelper.setLastStillTime(getApplicationContext(),System.currentTimeMillis());
+            //Set current time as the last Still time for reference
+            BasicHelper.setLastStillTime(getApplicationContext(), System.currentTimeMillis());
+        }
 
         turnOnFirebaseDatabases(getApplicationContext());
         return true;
