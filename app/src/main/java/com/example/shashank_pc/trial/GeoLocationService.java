@@ -404,8 +404,8 @@ public class GeoLocationService extends Service {
         else if(currTime - BasicHelper.getLastStillTime(getApplicationContext())> 6*60*1000)
         {
             //If app is in background AND has been still for more than 6 minutes.
-            FirebaseDatabase.getInstance().getReference("Debug/dbState/"+
-                    Long.toString(currTime)).setValue("TurningThisDbOff");
+ //           FirebaseDatabase.getInstance().getReference("Debug/dbState/"+
+  //                  Long.toString(currTime)).setValue("TurningThisDbOff");
             return true;
         }
         return false;
@@ -417,6 +417,8 @@ public class GeoLocationService extends Service {
         If phone has been still for last 1 hour, then check once now to see the location
          */
         Long currTime = System.currentTimeMillis();
+        Toast.makeText(getApplicationContext(),"Deficit periodic: "+Long.toString(currTime - BasicHelper.getLastStillTime(getApplicationContext()))
+                ,Toast.LENGTH_SHORT).show();
         if(currTime - BasicHelper.getLastStillTime(getApplicationContext())> 60*60*1000)
         {
             FirebaseDatabase.getInstance().getReference("Debug/dbState/"+
@@ -445,6 +447,7 @@ public class GeoLocationService extends Service {
                 //Only check once, so set the time to 6 minutes previously and turn db on for one cycle
                 BasicHelper.setLastStillTime(getApplicationContext(), System.currentTimeMillis()-6*60*1000L);
                 turnOnFirebaseDatabases(getApplicationContext());
+                Toast.makeText(getApplicationContext(),"True",Toast.LENGTH_SHORT).show();
                 return true;
             }
 
@@ -605,18 +608,20 @@ public class GeoLocationService extends Service {
                     if(wakeLock != null && wakeLock.isHeld()){
                         wakeLock.release();
                     }
-
+                    
                     handler.postDelayed(this, 3000);
                 }else{
                     try {
                         if(getFlag() == 1){
 
-                            Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue())+"TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
+                            boolean shouldContinue = shouldContinue();
+                            Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue)+" TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 
-                            if(( (getAlarmDuration() - System.currentTimeMillis()) <= 0 || alertFlag != 0 || userSet.size()>0)
-                                    && shouldContinue()
+
+                            if(( (getAlarmDuration() - System.currentTimeMillis() <= 0) || alertFlag != 0 || userSet.size()>0)
+                                    && shouldContinue
                                     ){
-                             //    Toast.makeText(getApplicationContext(), "Alarm Time" + getAlarmDuration() + "Current time" + System.currentTimeMillis(), Toast.LENGTH_SHORT).show();
+                                 Toast.makeText(getApplicationContext(), "Inside", Toast.LENGTH_SHORT).show();
 
                                 if(wakeLock != null && !wakeLock.isHeld()){
                                     wakeLock.acquire(35000);
