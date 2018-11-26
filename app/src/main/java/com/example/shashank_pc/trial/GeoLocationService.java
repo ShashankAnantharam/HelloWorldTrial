@@ -419,8 +419,7 @@ public class GeoLocationService extends Service {
         If phone has been still for last 1 hour, then check once now to see the location
          */
         Long currTime = System.currentTimeMillis();
-        Toast.makeText(getApplicationContext(),"Deficit periodic: "+Long.toString(currTime - BasicHelper.getLastStillTime(getApplicationContext()))
-                ,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),"Deficit periodic: "+Long.toString(currTime - BasicHelper.getLastStillTime(getApplicationContext())),Toast.LENGTH_SHORT).show();
         if(currTime - BasicHelper.getLastStillTime(getApplicationContext())> 60*60*1000)
         {
             FirebaseDatabase.getInstance().getReference("Debug/dbState/"+
@@ -439,7 +438,7 @@ public class GeoLocationService extends Service {
 
         DetectedActivityWrappers latestActivity = BasicHelper.getUserMovementState(getApplicationContext());
 
-        Toast.makeText(getApplicationContext(),latestActivity.getActivityType(),Toast.LENGTH_SHORT).show();
+  //      Toast.makeText(getApplicationContext(),latestActivity.getActivityType(),Toast.LENGTH_SHORT).show();
 
         if(latestActivity.getActivityType().equals("Still") || latestActivity.getActivityType().equals("Tilting")
                 || latestActivity.getActivityType().equals("Unknown"))
@@ -449,7 +448,7 @@ public class GeoLocationService extends Service {
                 //Only check once, so set the time to 6 minutes previously and turn db on for one cycle
                 BasicHelper.setLastStillTime(getApplicationContext(), System.currentTimeMillis()-6*60*1000L);
                 turnOnFirebaseDatabases(getApplicationContext());
-                Toast.makeText(getApplicationContext(),"True",Toast.LENGTH_SHORT).show();
+   //             Toast.makeText(getApplicationContext(),"True",Toast.LENGTH_SHORT).show();
                 return true;
             }
 
@@ -475,10 +474,7 @@ public class GeoLocationService extends Service {
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void result) {
-                Toast.makeText(getApplicationContext(),
-                        "Successfully requested activity updates",
-                        Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(getApplicationContext(), "Successfully requested activity updates", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -599,7 +595,7 @@ public class GeoLocationService extends Service {
 
 
                 if(getFlag() == 0){
-                   Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putInt("FLAG",1);
@@ -617,13 +613,13 @@ public class GeoLocationService extends Service {
                         if(getFlag() == 1){
 
                             boolean shouldContinue = shouldContinue();
-                            Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue)+" TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
+                    //        Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue)+" TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 
 
                             if(( (getAlarmDuration() - System.currentTimeMillis() <= 0) || alertFlag != 0 || userSet.size()>0)
                                     && shouldContinue
                                     ){
-                                 Toast.makeText(getApplicationContext(), "Inside", Toast.LENGTH_SHORT).show();
+                    //             Toast.makeText(getApplicationContext(), "Inside", Toast.LENGTH_SHORT).show();
 
                                 if(wakeLock != null && !wakeLock.isHeld()){
                                     wakeLock.acquire(35000);
@@ -661,7 +657,7 @@ public class GeoLocationService extends Service {
                         } else if(getFlag() == 2){
 
 
-                            Toast.makeText(getApplicationContext(),"2: Backup listener fired", Toast.LENGTH_SHORT).show();
+                    //        Toast.makeText(getApplicationContext(),"2: Backup listener fired", Toast.LENGTH_SHORT).show();
                             // Location listener not yet triggered, so use backup listener instead
                             if(locationListener != null && locationManager!= null){
                                 locationManager.removeUpdates(locationListener);
@@ -684,7 +680,7 @@ public class GeoLocationService extends Service {
                             handler.postDelayed(this, 13000);
                         }else if(getFlag() == 3){
 
-                            Toast.makeText(getApplicationContext(),"3: Backup listener output", Toast.LENGTH_SHORT).show();
+                    //        Toast.makeText(getApplicationContext(),"3: Backup listener output", Toast.LENGTH_SHORT).show();
                             //Backup listener gives output
                             Location location = BasicHelper.getLocationFromLocal(getApplicationContext());
                             if (prevLoc==null)
@@ -702,7 +698,7 @@ public class GeoLocationService extends Service {
                             SharedPreferences.Editor edit = sharedPreferences.edit();
                             edit.putInt("FLAG",0);
                             edit.commit();
-                            Toast.makeText(getApplicationContext(),"3: Here", Toast.LENGTH_SHORT).show();
+                    //        Toast.makeText(getApplicationContext(),"3: Here", Toast.LENGTH_SHORT).show();
                             handler.postDelayed(this, 2000);
                         }
 
