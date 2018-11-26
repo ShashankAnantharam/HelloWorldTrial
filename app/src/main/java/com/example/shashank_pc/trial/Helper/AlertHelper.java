@@ -1,5 +1,16 @@
 package com.example.shashank_pc.trial.Helper;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+
+import com.example.shashank_pc.trial.LandingPageActivity;
+import com.example.shashank_pc.trial.R;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.example.shashank_pc.trial.classes.Task;
@@ -18,6 +29,48 @@ public class AlertHelper {
 
     public static final long DAY_INTERVAL = 1000 * 60 * 60 * 24;
     public static final long TASK_REMINDER_INTERVAL = 1000 * 60 * 60;
+
+
+    public static void alertTriggerNotification(Alert alert, Context context)
+    {
+
+        String title=alert.getName();
+        String body = "";
+        String sound = "";
+        if(alert instanceof Lookout)
+        {
+            body = "You have reached lookout location.";
+            sound="android.resource://" + context.getPackageName() + "/" + R.raw.andr_lookout_location;
+        }
+        else if(alert instanceof Task)
+        {
+            body = "You have a task nearby.";
+            sound="android.resource://" + context.getPackageName() + "/" + R.raw.andr_task_location;
+        }
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(android.R.drawable.ic_btn_speak_now)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setSound(Uri.parse(sound))
+                        .setPriority(Notification.PRIORITY_HIGH);
+
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        int id = (int) System.currentTimeMillis();
+        notificationManager.notify(id, mBuilder.build());
+    }
+
+    public static void triggerAlert(Alert alert, Context context) {
+        Long currTime = System.currentTimeMillis();
+        alertTriggerNotification(alert, context);
+        if (alert instanceof Lookout) {
+
+        } else if (alert instanceof Task){
+
+        }
+    }
 
     public static boolean checkTaskDeadline(Long deadline, Long currTime, Boolean isDaily)
     {

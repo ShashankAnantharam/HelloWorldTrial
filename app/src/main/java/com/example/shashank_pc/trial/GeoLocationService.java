@@ -78,6 +78,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
 import static com.example.shashank_pc.trial.Helper.AlertHelper.shouldCheckAlert;
+import static com.example.shashank_pc.trial.Helper.AlertHelper.triggerAlert;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.isAppInForeground;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.populateAlerts;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.setErrorFlag;
@@ -358,6 +359,7 @@ public class GeoLocationService extends Service {
                             getReference("broadcasting/"+getUserPhoneNumber()+
                                     "/TriggerAlerts/"+alert.getId()).setValue(System.currentTimeMillis());
                     updateAlertInMap(alert.getId());
+                    triggerAlert(alert,getApplicationContext());
 
                     //TODO Calculate distance here
                 }
@@ -608,7 +610,7 @@ public class GeoLocationService extends Service {
                     if(wakeLock != null && wakeLock.isHeld()){
                         wakeLock.release();
                     }
-                    
+
                     handler.postDelayed(this, 3000);
                 }else{
                     try {
