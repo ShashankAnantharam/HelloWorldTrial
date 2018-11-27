@@ -359,7 +359,7 @@ public class GeoLocationService extends Service {
                             getReference("broadcasting/"+getUserPhoneNumber()+
                                     "/TriggerAlerts/"+alert.getId()).setValue(System.currentTimeMillis());
                     updateAlertInMap(alert.getId());
-                    triggerAlert(alert,getApplicationContext());
+                    triggerAlert(alert,getApplicationContext(),getUserPhoneNumber());
 
                     //TODO Calculate distance here
                 }
@@ -397,6 +397,12 @@ public class GeoLocationService extends Service {
         /*
         If the phone has been still for more than 6 minutes AND app is in background, then turn db off
          */
+
+        //If app was not in foreground, then no need of waiting for 6 min
+        if(!BasicHelper.wasAppInForground())
+            return true;
+
+
         Long currTime = System.currentTimeMillis();
         if(isAppInForeground(getApplicationContext()))
         {
@@ -405,9 +411,10 @@ public class GeoLocationService extends Service {
         }
         else if(currTime - BasicHelper.getLastStillTime(getApplicationContext())> 6*60*1000)
         {
-            //If app is in background AND has been still for more than 6 minutes.
+            //If app was in foreground, now is in background AND has been still for more than 6 minutes.
  //           FirebaseDatabase.getInstance().getReference("Debug/dbState/"+
   //                  Long.toString(currTime)).setValue("TurningThisDbOff");
+            BasicHelper.setWasAppInForground(false);
             return true;
         }
         return false;

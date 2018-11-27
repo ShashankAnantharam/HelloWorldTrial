@@ -1,27 +1,30 @@
 package com.example.shashank_pc.trial.Helper;
 
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.widget.Toast;
 
-import com.example.shashank_pc.trial.LandingPageActivity;
 import com.example.shashank_pc.trial.R;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.example.shashank_pc.trial.classes.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 import static com.example.shashank_pc.trial.Helper.BasicHelper.DailyDateConversion;
 
@@ -62,10 +65,75 @@ public class AlertHelper {
         notificationManager.notify(id, mBuilder.build());
     }
 
-    public static void triggerAlert(Alert alert, Context context) {
+    public static void alertTransaction(final Alert alert, final String phoneNumber, final Context context)
+    {
+        //TODO lookout(others) and task(others) to ..(user). Check db once
+        DocumentReference tempRef=null;
+        String alertId = alert.getId();
+        if (alert instanceof Lookout) {
+            String lookoutCreator = ((Lookout) alert).getCreatedBy();
+
+            tempRef =  FirebaseFirestore.getInstance().collection("Users").document(lookoutCreator)
+            .collection("Lookout(Others)").document(alertId);
+
+      //      Toast.makeText(context,"Users/"+lookoutCreator+"/Lookout(Others)/"+alertId,Toast.LENGTH_SHORT).show();
+        } else if (alert instanceof Task){
+
+            String taskCreator = ((Task) alert).getCreatedBy().getName();
+            tempRef =  FirebaseFirestore.getInstance().collection("Users").document(taskCreator)
+                    .collection("Task(User)").document(alertId);
+        }
+        final DocumentReference ref = tempRef;
+
+
+        FirebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
+
+
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(ref);
+
+                if(snapshot.exists())
+                {
+                    //If document exists
+                    ArrayList <HashMap<String,Object>> list = (ArrayList) snapshot.get("selectedContacts");
+                    for(int i=0;i<list.size();i++)
+                    {
+
+                        if(list.get(i).get("id").equals(phoneNumber))
+                        {
+                            list.get(i).put("timeStamp",System.currentTimeMillis());
+                            break;
+                        }
+                    }
+                    transaction.update(ref,"selectedContacts",list);
+
+                }
+
+                return null;
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(context,"Success",Toast.LENGTH_LONG).show();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context,e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+            }
+        });;
+
+    }
+
+    public static void triggerAlert(Alert alert, Context context, String phoneNumber) {
         Long currTime = System.currentTimeMillis();
         alertTriggerNotification(alert, context);
+        alertTransaction(alert,phoneNumber, context);
         if (alert instanceof Lookout) {
+
 
         } else if (alert instanceof Task){
 

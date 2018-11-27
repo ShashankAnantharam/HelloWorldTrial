@@ -23,6 +23,16 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class BasicHelper {
 
+    private static boolean wasAppInForground= false;
+
+    public static void setWasAppInForground(boolean wasAppInForground) {
+        BasicHelper.wasAppInForground = wasAppInForground;
+    }
+
+    public static boolean wasAppInForground() {
+        return wasAppInForground;
+    }
+
     public static void populateStates(Context context)
     {
         FirebaseDatabase.getInstance().getReference("Testing/ErrFlag").setValue(getErrorFlag(context));
@@ -122,8 +132,10 @@ public class BasicHelper {
     public static void setAppInForeground(Context context,Boolean value){
         SharedPreferences isInForeground = context.getSharedPreferences("IS_FOREGROUND", MODE_PRIVATE);
         SharedPreferences.Editor edit = isInForeground.edit();
-        if(value)
-            edit.putString("IS_FOREGROUND","1");
+        if(value) {
+            edit.putString("IS_FOREGROUND", "1");
+            setWasAppInForground(true);
+        }
         else
             edit.putString("IS_FOREGROUND","0");
         edit.commit();
