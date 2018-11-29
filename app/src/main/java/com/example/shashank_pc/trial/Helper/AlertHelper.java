@@ -79,7 +79,7 @@ public class AlertHelper {
       //      Toast.makeText(context,"Users/"+lookoutCreator+"/Lookout(Others)/"+alertId,Toast.LENGTH_SHORT).show();
         } else if (alert instanceof Task){
 
-            String taskCreator = ((Task) alert).getCreatedBy().getName();
+            String taskCreator = ((Task) alert).getCreatedBy().getId();
             tempRef =  FirebaseFirestore.getInstance().collection("Users").document(taskCreator)
                     .collection("Task(User)").document(alertId);
         }
@@ -148,18 +148,23 @@ public class AlertHelper {
                     timeStamp: timeStamp
             }
             */
+                String createdBy = "";
                 
         if (alert instanceof Lookout) {
-            
-            FirebaseDatabase.getInstance().getReference("broadcasting/"+((Lookout) alert).getCreatedBy()
-            +"/Alerts/"+phoneNumber+"/"+alert.getId()).setValue(alertDetails);
-            
+
+            createdBy = ((Lookout) alert).getCreatedBy();
 
         } else if (alert instanceof Task){
 
-            FirebaseDatabase.getInstance().getReference("broadcasting/"+((Task) alert).getCreatedBy()
-                    +"/Alerts/"+phoneNumber+"/"+alert.getId()).setValue(alertDetails);
+            createdBy = ((Task) alert).getCreatedBy().getId();
+
         }
+
+        FirebaseDatabase.getInstance().getReference("broadcasting/"+createdBy
+                +"/Alerts/"+phoneNumber+"/"+alert.getId()).removeValue();
+        FirebaseDatabase.getInstance().getReference("broadcasting/"+createdBy
+                +"/Alerts/"+phoneNumber+"/"+alert.getId()).setValue(alertDetails);
+
     }
 
     public static void triggerAlert(Alert alert, Context context, String phoneNumber, String userName) {
