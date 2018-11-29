@@ -128,10 +128,45 @@ public class AlertHelper {
 
     }
 
-    public static void triggerAlert(Alert alert, Context context, String phoneNumber) {
+    public static void alertNotificationRealtimeDb(final Alert alert, final String phoneNumber, final Context context,
+                                                   String userName, Long ts)
+    {
+
+        Map<String,Object> alertDetails = new HashMap<>();
+        alertDetails.put("userName",userName);
+        alertDetails.put("address",alert.getAddress());
+        alertDetails.put("Status","Reached");
+        alertDetails.put("name",alert.getName());
+        alertDetails.put("timeStamp",ts);
+        
+                /*
+            {
+                userName: this.state.userName,
+                        address: lookout.address,
+                    Status: "Reached",
+                    name: lookout.name,
+                    timeStamp: timeStamp
+            }
+            */
+                
+        if (alert instanceof Lookout) {
+            
+            FirebaseDatabase.getInstance().getReference("broadcasting/"+((Lookout) alert).getCreatedBy()
+            +"/Alerts/"+phoneNumber+"/"+alert.getId()).setValue(alertDetails);
+            
+
+        } else if (alert instanceof Task){
+
+            FirebaseDatabase.getInstance().getReference("broadcasting/"+((Task) alert).getCreatedBy()
+                    +"/Alerts/"+phoneNumber+"/"+alert.getId()).setValue(alertDetails);
+        }
+    }
+
+    public static void triggerAlert(Alert alert, Context context, String phoneNumber, String userName) {
         Long currTime = System.currentTimeMillis();
         alertTriggerNotification(alert, context);
         alertTransaction(alert,phoneNumber, context);
+        alertNotificationRealtimeDb(alert,phoneNumber,context,userName,currTime);
         if (alert instanceof Lookout) {
 
 

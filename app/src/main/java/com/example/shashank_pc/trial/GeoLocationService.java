@@ -359,7 +359,7 @@ public class GeoLocationService extends Service {
                             getReference("broadcasting/"+getUserPhoneNumber()+
                                     "/TriggerAlerts/"+alert.getId()).setValue(System.currentTimeMillis());
                     updateAlertInMap(alert.getId());
-                    triggerAlert(alert,getApplicationContext(),getUserPhoneNumber());
+                    triggerAlert(alert,getApplicationContext(),getUserPhoneNumber(),getUserName());
 
                     //TODO Calculate distance here
                 }
@@ -746,9 +746,16 @@ public class GeoLocationService extends Service {
     }
 
     private String getUserPhoneNumber(){
+        //TODO Set this right
+
         SharedPreferences duration = getApplication().getSharedPreferences("USERNUMBER", MODE_PRIVATE);
 //        return duration.getString("USERNUMBER","");
         return "+919701420818";
+    }
+
+    private String getUserName(){
+        //TODO Set this right
+        return "Shashank";
     }
 
     private void sendMessage(Location location) {
