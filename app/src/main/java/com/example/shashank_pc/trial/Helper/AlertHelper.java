@@ -116,8 +116,8 @@ public class AlertHelper {
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snapshot = transaction.get(ref);
-
                 if (snapshot.exists()) {
+
                     //If document exists
                     HashMap<String, HashMap<String, Object>> map = (HashMap) snapshot.get("selectedContacts");
 
@@ -170,6 +170,7 @@ public class AlertHelper {
             String taskCreator = ((Task) alert).getCreatedBy().getId();
             tempRef =  FirebaseFirestore.getInstance().collection("Users").document(taskCreator)
                     .collection("Task(Others)").document(alertId);
+//            Toast.makeText(context, "Users/"+taskCreator+"/Task(Others)/"+alertId,Toast.LENGTH_SHORT).show();
 
             taskTransaction(context, tempRef, phoneNumber);
         }
