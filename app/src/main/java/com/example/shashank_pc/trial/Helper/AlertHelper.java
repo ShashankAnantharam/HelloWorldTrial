@@ -318,7 +318,6 @@ public class AlertHelper {
             //Get last time
             lastTime = ((Task) alert).getSelectedContacts().get(userID).getTimeStamp();
 
-
             if(!alert.isDaily() && ((Task) alert).getCompletedAt()> -1L)
                 return false;       //Task already completed
             else if(((Task) alert).isHasDeadline() &&
@@ -340,7 +339,7 @@ public class AlertHelper {
                     }
                 }
             }
-            if(lastTime + TASK_REMINDER_INTERVAL < currTime)
+            if(lastTime + TASK_REMINDER_INTERVAL > currTime)
             {
                 //It is less than one hour since last reminder was sent
                 return false;
