@@ -150,9 +150,10 @@ public class AlertHelper {
 
 
 
-            public static void alertTransaction(final Alert alert, final String phoneNumber, final Context context)
+    public static void alertTransaction(final Alert alert, final String phoneNumber, final Context context)
     {
-        //TODO lookout(others) and task(others) to ..(user). Check db once
+
+        //TODO Change from others to user
         DocumentReference tempRef=null;
         String alertId = alert.getId();
         if (alert instanceof Lookout) {
@@ -168,7 +169,7 @@ public class AlertHelper {
 
             String taskCreator = ((Task) alert).getCreatedBy().getId();
             tempRef =  FirebaseFirestore.getInstance().collection("Users").document(taskCreator)
-                    .collection("Task(User)").document(alertId);
+                    .collection("Task(Others)").document(alertId);
 
             taskTransaction(context, tempRef, phoneNumber);
         }
@@ -316,14 +317,6 @@ public class AlertHelper {
 
             //Get last time
             lastTime = ((Task) alert).getSelectedContacts().get(userID).getTimeStamp();
-
-            for(int i=0;i<((Lookout) alert).getSelectedContacts().size();i++)
-            {
-                if(((Lookout) alert).getSelectedContacts().get(i).getId().equals(userID))
-                {
-                    lastTime = ((Lookout) alert).getSelectedContacts().get(i).getTimeStamp();
-                }
-            }
 
 
             if(!alert.isDaily() && ((Task) alert).getCompletedAt()> -1L)

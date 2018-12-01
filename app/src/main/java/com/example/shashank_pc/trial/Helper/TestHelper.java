@@ -4,13 +4,17 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.example.shashank_pc.trial.classes.AlertContact;
+import com.example.shashank_pc.trial.classes.CreatedBy;
 import com.example.shashank_pc.trial.classes.Location;
 import com.example.shashank_pc.trial.classes.Lookout;
+import com.example.shashank_pc.trial.classes.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ThrowOnExtraProperties;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestHelper {
 
@@ -19,9 +23,30 @@ public class TestHelper {
         AlertContact alertContact = new AlertContact();
         alertContact.setTimeStamp(-1L);
         alertContact.setUserStatus("Pending");
+        Map<String,AlertContact> selectedContacts = new HashMap<>();
+        selectedContacts.put("+919701420818",alertContact);
+        Location location = new Location();
+        location.setLatitude(12.9214774);
+        location.setLongitude(77.6691266);
+        CreatedBy createdBy = new CreatedBy();
+        createdBy.setId("919701420818");
+        createdBy.setName("Shashank");
 
+        Task task = new Task();
+        task.setLocation(location);
+        task.setCreatedBy(createdBy);
+        task.setSelectedContacts(selectedContacts);
+        task.setCompletedAt(-1L);
+        task.setCompletedBy("");
+        task.setDescription("Testing task");
+        task.setName("Test task at bellandur");
+        task.setHasDeadline(false);
+        task.setAddress("Prestige Ferns Galaxy, Bellandur, Bangaluru, India");
+        task.setDaily(false);
+        task.setRadius(1270.34375);
 
-
+        FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
+                .collection("Task(Others)").document("T123123133").set(task);
 
     }
 

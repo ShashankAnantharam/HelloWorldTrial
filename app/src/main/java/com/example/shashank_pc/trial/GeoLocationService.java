@@ -252,6 +252,23 @@ public class GeoLocationService extends Service {
         });
 
 
+        FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
+                .collection("Task(Others)").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> documentSnapshots = queryDocumentSnapshots.getDocuments();
+                for(DocumentSnapshot documentSnapshot: documentSnapshots)
+                {
+                    Task task = documentSnapshot.toObject(Task.class);
+                    String tId =  documentSnapshot.getId();
+                    task.setId(tId);
+//                    Toast.makeText(getApplicationContext(), new Gson().toJson(lookout),Toast.LENGTH_LONG).show();
+                    alertMap.put(tId,task);
+                    FirebaseDatabase.getInstance().getReference("Testing/Alerts/"+tId).setValue(System.currentTimeMillis());
+                }
+            }
+        });
+
     }
 
 

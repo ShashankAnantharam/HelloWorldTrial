@@ -217,6 +217,7 @@ public class LandingPageActivity extends AppCompatActivity {
     {
 
      //   TestHelper.setLookouts(getApplicationContext());
+     //   TestHelper.setTasks(getApplicationContext());
 
         try {
             BasicHelper.turnOnFirebaseDatabases(getApplicationContext());

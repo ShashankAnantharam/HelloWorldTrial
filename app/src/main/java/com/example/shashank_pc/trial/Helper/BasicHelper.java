@@ -111,7 +111,6 @@ public class BasicHelper {
 
     public static android.location.Location getLocationFromLocal(Context context)
     {
-        //TODO CHECK THIS
         SharedPreferences locationPref = context.getSharedPreferences("LOCATION", MODE_PRIVATE);
         String locationString = locationPref.getString("LOCATION","");
         Location location = new Gson().fromJson(locationString, Location.class);
