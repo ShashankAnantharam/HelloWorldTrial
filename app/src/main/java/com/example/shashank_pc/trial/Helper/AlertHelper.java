@@ -15,6 +15,7 @@ import com.example.shashank_pc.trial.classes.Lookout;
 import com.example.shashank_pc.trial.classes.Task;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -65,27 +66,8 @@ public class AlertHelper {
         notificationManager.notify(id, mBuilder.build());
     }
 
-    public static void alertTransaction(final Alert alert, final String phoneNumber, final Context context)
+    private static void lookoutTransaction(final Context context, final DocumentReference ref, final String phoneNumber)
     {
-        //TODO lookout(others) and task(others) to ..(user). Check db once
-        DocumentReference tempRef=null;
-        String alertId = alert.getId();
-        if (alert instanceof Lookout) {
-            String lookoutCreator = ((Lookout) alert).getCreatedBy();
-
-            tempRef =  FirebaseFirestore.getInstance().collection("Users").document(lookoutCreator)
-            .collection("Lookout(Others)").document(alertId);
-
-      //      Toast.makeText(context,"Users/"+lookoutCreator+"/Lookout(Others)/"+alertId,Toast.LENGTH_SHORT).show();
-        } else if (alert instanceof Task){
-
-            String taskCreator = ((Task) alert).getCreatedBy().getId();
-            tempRef =  FirebaseFirestore.getInstance().collection("Users").document(taskCreator)
-                    .collection("Task(User)").document(alertId);
-        }
-        final DocumentReference ref = tempRef;
-
-
         FirebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
 
 
@@ -120,11 +102,79 @@ public class AlertHelper {
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context,e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                    }
+                });;
+    }
+
+    private static void taskTransaction(final Context context, final DocumentReference ref, final String phoneNumber) {
+        FirebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
+
+            @Nullable
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context,e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(ref);
+
+                if (snapshot.exists()) {
+                    //If document exists
+                    HashMap<String, HashMap<String, Object>> map = (HashMap) snapshot.get("selectedContacts");
+
+                    if(map.containsKey(phoneNumber))
+                    {
+                        map.get(phoneNumber).put("timeStamp",System.currentTimeMillis());
+                    }
+                    transaction.update(ref, "selectedContacts", map);
+
+                }
+
+                return null;
             }
-        });;
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(context, "Success", Toast.LENGTH_LONG).show();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+        ;
+    }
+
+
+
+
+
+            public static void alertTransaction(final Alert alert, final String phoneNumber, final Context context)
+    {
+        //TODO lookout(others) and task(others) to ..(user). Check db once
+        DocumentReference tempRef=null;
+        String alertId = alert.getId();
+        if (alert instanceof Lookout) {
+            String lookoutCreator = ((Lookout) alert).getCreatedBy();
+
+            tempRef =  FirebaseFirestore.getInstance().collection("Users").document(lookoutCreator)
+            .collection("Lookout(Others)").document(alertId);
+
+            lookoutTransaction(context, tempRef, phoneNumber);
+
+      //      Toast.makeText(context,"Users/"+lookoutCreator+"/Lookout(Others)/"+alertId,Toast.LENGTH_SHORT).show();
+        } else if (alert instanceof Task){
+
+            String taskCreator = ((Task) alert).getCreatedBy().getId();
+            tempRef =  FirebaseFirestore.getInstance().collection("Users").document(taskCreator)
+                    .collection("Task(User)").document(alertId);
+
+            taskTransaction(context, tempRef, phoneNumber);
+        }
+
+
+
 
     }
 
@@ -204,17 +254,20 @@ public class AlertHelper {
         Long currTime= System.currentTimeMillis();
         Long lastTime = -1L;
 
-        for(int i=0;i<alert.getSelectedContacts().size();i++)
-        {
-            if(alert.getSelectedContacts().get(i).getId().equals(userID))
-            {
-                lastTime = alert.getSelectedContacts().get(i).getTimeStamp();
-            }
-        }
+
         FirebaseDatabase.getInstance().getReference("Debug/lastTime/"+alert.getId()).setValue(lastTime);
 
         if(alert instanceof Lookout)
         {
+            //Get last time
+            for(int i=0;i<((Lookout) alert).getSelectedContacts().size();i++)
+            {
+                if(((Lookout) alert).getSelectedContacts().get(i).getId().equals(userID))
+                {
+                    lastTime = ((Lookout) alert).getSelectedContacts().get(i).getTimeStamp();
+                }
+            }
+
             if((!((Lookout) alert).isEnabled())         //Lookout is not enabled
                     ||
                     ((!((Lookout) alert).getCreatedBy().equals(userID)) //Lookout is not created by user himself
@@ -260,6 +313,19 @@ public class AlertHelper {
         }
         else if(alert instanceof Task)
         {
+
+            //Get last time
+            lastTime = ((Task) alert).getSelectedContacts().get(userID).getTimeStamp();
+
+            for(int i=0;i<((Lookout) alert).getSelectedContacts().size();i++)
+            {
+                if(((Lookout) alert).getSelectedContacts().get(i).getId().equals(userID))
+                {
+                    lastTime = ((Lookout) alert).getSelectedContacts().get(i).getTimeStamp();
+                }
+            }
+
+
             if(!alert.isDaily() && ((Task) alert).getCompletedAt()> -1L)
                 return false;       //Task already completed
             else if(((Task) alert).isHasDeadline() &&

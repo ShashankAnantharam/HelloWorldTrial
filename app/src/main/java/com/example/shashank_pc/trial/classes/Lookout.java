@@ -1,11 +1,15 @@
 package com.example.shashank_pc.trial.classes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Lookout extends Alert {
     private String createdBy;
     private String createdByName;
     private Long fromTime;
     private Long toTime;
     private boolean isEnabled;
+    private List<AlertContact> selectedContacts = new ArrayList<>();
 
     public String getCreatedBy() {
         return createdBy;
@@ -45,5 +49,13 @@ public class Lookout extends Alert {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public List<AlertContact> getSelectedContacts() {
+        return selectedContacts;
+    }
+
+    public void setSelectedContacts(List<AlertContact> selectedContacts) {
+        this.selectedContacts = selectedContacts;
     }
 }

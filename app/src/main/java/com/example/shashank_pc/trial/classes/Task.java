@@ -1,5 +1,8 @@
 package com.example.shashank_pc.trial.classes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Task extends Alert {
 
     private String description;
@@ -8,6 +11,7 @@ public class Task extends Alert {
     private String completedBy;
     private Long deadline;
     private boolean hasDeadline;
+    private Map<String,AlertContact> selectedContacts = new HashMap<>();
 
 
     public CreatedBy getCreatedBy() {
@@ -56,5 +60,13 @@ public class Task extends Alert {
 
     public void setHasDeadline(boolean hasDeadline) {
         this.hasDeadline = hasDeadline;
+    }
+
+    public Map<String, AlertContact> getSelectedContacts() {
+        return selectedContacts;
+    }
+
+    public void setSelectedContacts(Map<String, AlertContact> selectedContacts) {
+        this.selectedContacts = selectedContacts;
     }
 }

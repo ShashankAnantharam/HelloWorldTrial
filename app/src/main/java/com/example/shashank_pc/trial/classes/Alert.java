@@ -10,7 +10,7 @@ public class Alert {
     private Location location;
     private String name;
     private Double radius;
-    private List<AlertContact> selectedContacts = new ArrayList<>();
+
 
     public String getId() {
         return id;
@@ -60,11 +60,4 @@ public class Alert {
         this.radius = radius;
     }
 
-    public List<AlertContact> getSelectedContacts() {
-        return selectedContacts;
-    }
-
-    public void setSelectedContacts(List<AlertContact> selectedContacts) {
-        this.selectedContacts = selectedContacts;
-    }
 }

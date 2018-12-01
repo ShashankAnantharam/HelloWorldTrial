@@ -14,6 +14,17 @@ import java.util.List;
 
 public class TestHelper {
 
+    public static void setTasks(Context context)
+    {
+        AlertContact alertContact = new AlertContact();
+        alertContact.setTimeStamp(-1L);
+        alertContact.setUserStatus("Pending");
+
+
+
+
+    }
+
     public static void setLookouts(Context context)
     {
         AlertContact alertContact = new AlertContact();

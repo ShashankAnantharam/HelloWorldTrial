@@ -325,16 +325,28 @@ public class GeoLocationService extends Service {
     private void updateAlertInMap(String id)
     {
         Alert alert = alertMap.get(id);
-        for(int i=0;i<alert.getSelectedContacts().size();i++)
-        {
-            if(alert.getSelectedContacts().get(i).getId().equals(getUserPhoneNumber()))
-            {
-                alert.getSelectedContacts().get(i).setTimeStamp(System.currentTimeMillis());
-                break;
+        boolean doesAlertContainUser = false;
+        if(alert instanceof Lookout) {
+            for (int i = 0; i < ((Lookout) alert).getSelectedContacts().size(); i++) {
+                if (((Lookout) alert).getSelectedContacts().get(i).getId().equals(getUserPhoneNumber())) {
+                    ((Lookout) alert).getSelectedContacts().get(i).setTimeStamp(System.currentTimeMillis());
+                    doesAlertContainUser = true;
+                    break;
+                }
             }
         }
+        else if(alert instanceof Task)
+        {
+            if(((Task) alert).getSelectedContacts().containsKey(getUserPhoneNumber())) {
+                doesAlertContainUser = true;
+                ((Task) alert).getSelectedContacts().get(getUserPhoneNumber()).setTimeStamp(System.currentTimeMillis());
+            }
+        }
+
         alertMap.remove(id);
-        alertMap.put(id,alert);
+        //If alert does not contain user anymore, then remove it!
+        if(doesAlertContainUser)
+            alertMap.put(id,alert);
     }
 
 
