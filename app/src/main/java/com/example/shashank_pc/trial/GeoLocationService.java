@@ -232,6 +232,34 @@ public class GeoLocationService extends Service {
         });
     }
 
+    private  boolean hasAlertJustBeenSetForYou()
+    {
+        return (alertFlag!=0);
+    }
+
+    private boolean isTimeToCheckLocation()
+    {
+        return (getAlarmDuration() - System.currentTimeMillis() <= 0);
+    }
+
+    private boolean isSomeContactLookingAtYou()
+    {
+        return (userSet.size()>0);
+    }
+
+    private void broadcastLocationToAllFriends(double latitude, double longitude)
+    {
+        Map<String,Object> locVal = new HashMap<>();
+        locVal.put("latitude",latitude);
+        locVal.put("longitude",longitude);
+        locVal.put("time",System.currentTimeMillis());
+
+        for(Map.Entry<String,Long> friend : userSet.entrySet())
+        {
+            FirebaseDatabase.getInstance().getReference("broadcasting/"+friend.getKey() +"/cts").setValue(locVal);
+        }
+    }
+
     private void getAlertsFromDb()
     {
         FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
@@ -297,6 +325,15 @@ public class GeoLocationService extends Service {
             mainAlgo(alerts,location,prevLoc);
 
             prevLoc = location;
+
+            if(isSomeContactLookingAtYou())
+            {
+                /*
+                If someone is looking at you then send location to them
+                 */
+                broadcastLocationToAllFriends(location.getLatitude(),location.getLongitude());
+            }
+
             handler.postDelayed(sendData, 2000);
 
          //   Toast.makeText(getApplicationContext(),"loc",Toast.LENGTH_SHORT).show();
@@ -654,7 +691,7 @@ public class GeoLocationService extends Service {
                     //        Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue)+" TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 
 
-                            if(( (getAlarmDuration() - System.currentTimeMillis() <= 0) || alertFlag != 0 || userSet.size()>0)
+                            if(( isTimeToCheckLocation() || hasAlertJustBeenSetForYou() || isSomeContactLookingAtYou())
                                     && shouldContinue
                                     ){
                     //             Toast.makeText(getApplicationContext(), "Inside", Toast.LENGTH_SHORT).show();
