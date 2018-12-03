@@ -256,7 +256,7 @@ public class GeoLocationService extends Service {
 
         for(Map.Entry<String,Long> friend : userSet.entrySet())
         {
-            FirebaseDatabase.getInstance().getReference("broadcasting/"+friend.getKey() +"/cts").setValue(locVal);
+            FirebaseDatabase.getInstance().getReference("broadcasting/"+friend.getKey() +"/cts/"+getUserPhoneNumber()).setValue(locVal);
         }
     }
 
@@ -682,6 +682,8 @@ public class GeoLocationService extends Service {
                         wakeLock.release();
                     }
 
+                    removeExcessLocationRequests();
+
                     handler.postDelayed(this, 3000);
                 }else{
                     try {
@@ -824,6 +826,24 @@ public class GeoLocationService extends Service {
     private String getUserName(){
         //TODO Set this right
         return "Shashank";
+    }
+
+
+    private void removeExcessLocationRequests()
+    {
+        for(Map.Entry<String, Long> e: userSet.entrySet()){
+
+            Date date = new Date();
+            long mills = date.getTime() - e.getValue() ;
+
+            if(mills > 600000 && e.getKey().startsWith("+")) {
+                //   delete node
+                DatabaseReference mDatabase =  FirebaseDatabase.getInstance().getReference("/broadcasting/" + getUserPhoneNumber() + "/LocRequests/" + e.getKey() );
+                mDatabase.removeValue();
+
+            }
+        }
+
     }
 
     private void sendMessage(Location location) {
