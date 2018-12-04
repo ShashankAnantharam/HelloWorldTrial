@@ -387,36 +387,30 @@ public class GeoLocationService extends Service {
         }
     };
 
-    private void updateAlertInMap(String id)
-    {
-        try {
-            Alert alert = alertMap.get(id);
-            boolean doesAlertContainUser = false;
-            if (alert instanceof Lookout) {
-                for (int i = 0; i < ((Lookout) alert).getSelectedContacts().size(); i++) {
-                    if (((Lookout) alert).getSelectedContacts().get(i).getId().equals(getUserPhoneNumber())) {
-                        ((Lookout) alert).getSelectedContacts().get(i).setTimeStamp(System.currentTimeMillis());
-                        doesAlertContainUser = true;
-                        break;
-                    }
-                }
-            } else if (alert instanceof Task) {
-                if (((Task) alert).getSelectedContacts().containsKey(getUserPhoneNumber())) {
+    private void updateAlertInMap(String id) {
+
+        Alert alert = alertMap.get(id);
+        boolean doesAlertContainUser = false;
+        if (alert instanceof Lookout) {
+            for (int i = 0; i < ((Lookout) alert).getSelectedContacts().size(); i++) {
+                if (((Lookout) alert).getSelectedContacts().get(i).getId().equals(getUserPhoneNumber())) {
+                    ((Lookout) alert).getSelectedContacts().get(i).setTimeStamp(System.currentTimeMillis());
                     doesAlertContainUser = true;
-                    ((Task) alert).getSelectedContacts().get(getUserPhoneNumber()).setTimeStamp(System.currentTimeMillis());
+                    break;
                 }
             }
+        } else if (alert instanceof Task) {
+            if (((Task) alert).getSelectedContacts().containsKey(getUserPhoneNumber())) {
+                doesAlertContainUser = true;
+                ((Task) alert).getSelectedContacts().get(getUserPhoneNumber()).setTimeStamp(System.currentTimeMillis());
+            }
+        }
 
-            alertMap.remove(id);
-            //If alert does not contain user anymore, then remove it!
-            if (doesAlertContainUser)
-                alertMap.put(id, alert);
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
-            alertFlag=1;
-        }
+        alertMap.remove(id);
+        //If alert does not contain user anymore, then remove it!
+        if (doesAlertContainUser)
+            alertMap.put(id, alert);
+
     }
 
 
