@@ -157,12 +157,18 @@ public class GeoLocationService extends Service {
                     }
                     else
                     {
+                        Toast.makeText(getApplicationContext(),"Exists",Toast.LENGTH_SHORT).show();
                         if(alertMap!=null) {
                             if(alertMap.containsKey(alertId))
                                 alertMap.remove(alertId);
-                            alertMap.put(alertId, documentSnapshot.toObject(Lookout.class));
+                            Lookout lookout = documentSnapshot.toObject(Lookout.class);
+                            lookout.setId(alertId);
+                            alertMap.put(alertId, lookout);
                         }
+                        alertFlag=1;
                     }
+                    FirebaseDatabase.getInstance().getReference("/broadcasting/" + getUserPhoneNumber() +
+                            "/LocRequests/"+alertId).removeValue();
                 }
             });
         }
@@ -184,8 +190,13 @@ public class GeoLocationService extends Service {
                                 if(alertMap!=null) {
                                     if(alertMap.containsKey(alertId))
                                         alertMap.remove(alertId);
-                                    alertMap.put(alertId, documentSnapshot.toObject(Task.class));
+                                    Task task = documentSnapshot.toObject(Task.class);
+                                    task.setId(alertId);
+                                    alertMap.put(alertId, task);
                                 }
+                                alertFlag=1;
+                                FirebaseDatabase.getInstance().getReference("/broadcasting/" + getUserPhoneNumber() +
+                                        "/LocRequests/"+alertId).removeValue();
                             }
                         }
                     });
@@ -378,29 +389,34 @@ public class GeoLocationService extends Service {
 
     private void updateAlertInMap(String id)
     {
-        Alert alert = alertMap.get(id);
-        boolean doesAlertContainUser = false;
-        if(alert instanceof Lookout) {
-            for (int i = 0; i < ((Lookout) alert).getSelectedContacts().size(); i++) {
-                if (((Lookout) alert).getSelectedContacts().get(i).getId().equals(getUserPhoneNumber())) {
-                    ((Lookout) alert).getSelectedContacts().get(i).setTimeStamp(System.currentTimeMillis());
+        try {
+            Alert alert = alertMap.get(id);
+            boolean doesAlertContainUser = false;
+            if (alert instanceof Lookout) {
+                for (int i = 0; i < ((Lookout) alert).getSelectedContacts().size(); i++) {
+                    if (((Lookout) alert).getSelectedContacts().get(i).getId().equals(getUserPhoneNumber())) {
+                        ((Lookout) alert).getSelectedContacts().get(i).setTimeStamp(System.currentTimeMillis());
+                        doesAlertContainUser = true;
+                        break;
+                    }
+                }
+            } else if (alert instanceof Task) {
+                if (((Task) alert).getSelectedContacts().containsKey(getUserPhoneNumber())) {
                     doesAlertContainUser = true;
-                    break;
+                    ((Task) alert).getSelectedContacts().get(getUserPhoneNumber()).setTimeStamp(System.currentTimeMillis());
                 }
             }
-        }
-        else if(alert instanceof Task)
-        {
-            if(((Task) alert).getSelectedContacts().containsKey(getUserPhoneNumber())) {
-                doesAlertContainUser = true;
-                ((Task) alert).getSelectedContacts().get(getUserPhoneNumber()).setTimeStamp(System.currentTimeMillis());
-            }
-        }
 
-        alertMap.remove(id);
-        //If alert does not contain user anymore, then remove it!
-        if(doesAlertContainUser)
-            alertMap.put(id,alert);
+            alertMap.remove(id);
+            //If alert does not contain user anymore, then remove it!
+            if (doesAlertContainUser)
+                alertMap.put(id, alert);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+            alertFlag=1;
+        }
     }
 
 
@@ -611,15 +627,17 @@ public class GeoLocationService extends Service {
 
                 String key = dataSnapshot.getKey();
 
-                Timer newPost = dataSnapshot.getValue(Timer.class);
-                long timerString = newPost.time;
 
                 if(key.startsWith("+")){
+                    Timer newPost = dataSnapshot.getValue(Timer.class);
+                    long timerString = newPost.time;
                     userSet.put(key, timerString);
                 }
                 else
                 {
-                    alertFlag=1;
+                    Toast.makeText(getApplicationContext(),key,Toast.LENGTH_SHORT).show();
+                    String alertString  = key;
+                    getUpdatedAlertFromDb(alertString);
                 }
 
             }
@@ -693,8 +711,9 @@ public class GeoLocationService extends Service {
                     //        Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue)+" TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 
 
-                            if(( isTimeToCheckLocation() || hasAlertJustBeenSetForYou() || isSomeContactLookingAtYou())
-                                    && shouldContinue
+                            if( hasAlertJustBeenSetForYou() ||
+                                    (( isTimeToCheckLocation() || isSomeContactLookingAtYou())
+                                    && shouldContinue)
                                     ){
                     //             Toast.makeText(getApplicationContext(), "Inside", Toast.LENGTH_SHORT).show();
 
