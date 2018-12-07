@@ -61,6 +61,10 @@ public class TestHelper {
         location.setLatitude(12.9214774);
         location.setLongitude(77.6691266);
 
+        Location newClub = new Location();
+        newClub.setLatitude(17.4478);
+        newClub.setLongitude(78.5064);
+
         Lookout lookout1 = new Lookout();
         lookout1.setEnabled(true);
         lookout1.setDaily(true);
@@ -91,11 +95,32 @@ public class TestHelper {
         lookout2.setCreatedBy("+919701420818");
         lookout2.setCreatedByName("Shashank");
 
+
+        Lookout lookout3 = new Lookout();
+        lookout3.setEnabled(true);
+        lookout3.setDaily(false);
+        lookout3.setSelectedContacts(alertContactList);
+        lookout3.setLocation(newClub);
+        lookout3.setName("New club");
+        lookout3.setRadius(127.734375);
+        lookout3.setToTime(1533025800000L);
+
+        lookout3.setFromTime(1532997000000L);
+        lookout3.setAddress("New Club, Secuderabad, India");
+        lookout3.setCreatedBy("+919701420818");
+        lookout3.setCreatedByName("Shashank");
+
+
         FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
                 .collection("Lookout(Others)").document("L123123133").set(lookout1);
 
         FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
                 .collection("Lookout(Others)").document("L123132331").set(lookout2);
+
+
+        FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
+                .collection("Lookout(Others)").document("L123132335").set(lookout3);
+
 
     }
 
