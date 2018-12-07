@@ -39,6 +39,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.shashank_pc.trial.Helper.BasicHelper;
+import com.example.shashank_pc.trial.Helper.DateTimeHelper;
 import com.example.shashank_pc.trial.Helper.TestHelper;
 import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
 import com.example.shashank_pc.trial.userStatusClasses.BackgroundDetectedActivitiesService;
@@ -242,7 +243,6 @@ public class LandingPageActivity extends AppCompatActivity {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, 0);
             AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
-
 
 
             BasicHelper.setAppInForeground(getApplicationContext(), true);
