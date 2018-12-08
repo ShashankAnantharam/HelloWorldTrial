@@ -15,8 +15,7 @@ public class AlarmBroadcastReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        if(BasicHelper.getServiceStatus(context)
-                || DateTimeHelper.shouldStartServiceBasedOnTime(context,System.currentTimeMillis())) {
+        if(BasicHelper.getServiceStatus(context)) {
             Intent gpsIntent = new Intent(context, GeoLocationService.class);     //Intent to gps service class
             context.startService(gpsIntent);
 

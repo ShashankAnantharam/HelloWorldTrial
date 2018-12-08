@@ -42,6 +42,7 @@ import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.Helper.DateTimeHelper;
 import com.example.shashank_pc.trial.Helper.TestHelper;
 import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
+import com.example.shashank_pc.trial.classes.TimelyBroadcastReciever;
 import com.example.shashank_pc.trial.userStatusClasses.BackgroundDetectedActivitiesService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -245,11 +246,13 @@ public class LandingPageActivity extends AppCompatActivity {
             alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
 
             //Starting based on time
+
+            Intent timeBroadcastIntent = new Intent(getApplicationContext(), TimelyBroadcastReciever.class);
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 11); // For 1 PM or 2 PM
-            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.HOUR_OF_DAY, 17); // For 1 PM or 2 PM
+            calendar.set(Calendar.MINUTE, 20);
             calendar.set(Calendar.SECOND, 0);
-            PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, 0);
+            PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, timeBroadcastIntent, 0);
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pi);

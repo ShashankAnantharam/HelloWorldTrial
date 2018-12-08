@@ -3,6 +3,8 @@ package com.example.shashank_pc.trial.Helper;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -29,6 +31,10 @@ public class DateTimeHelper {
    //     Toast.makeText(context,"curr Time:"+ getDateTimeString(currTime) +" FixedTime: " + getDateTimeString(morningTime)
    //     , Toast.LENGTH_SHORT).show();
 
+
+        FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/currT").setValue(getDateTimeString(currTime));
+        FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/fixT").setValue(getDateTimeString(morningTime));
+        FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/flag").setValue(shouldCheckFlagFor6AM);
 
         if(currTime >= morningTime)
         {
