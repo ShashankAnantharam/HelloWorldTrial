@@ -249,8 +249,8 @@ public class LandingPageActivity extends AppCompatActivity {
 
             Intent timeBroadcastIntent = new Intent(getApplicationContext(), TimelyBroadcastReciever.class);
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 17); // For 1 PM or 2 PM
-            calendar.set(Calendar.MINUTE, 20);
+            calendar.set(Calendar.HOUR_OF_DAY, 20); // For 1 PM or 2 PM
+            calendar.set(Calendar.MINUTE, 30);
             calendar.set(Calendar.SECOND, 0);
             PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, timeBroadcastIntent, 0);
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
