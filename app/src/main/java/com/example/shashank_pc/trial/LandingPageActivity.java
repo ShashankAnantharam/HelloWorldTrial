@@ -244,6 +244,16 @@ public class LandingPageActivity extends AppCompatActivity {
             AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
 
+            //Starting based on time
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 11); // For 1 PM or 2 PM
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, 0);
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pi);
+
 
             BasicHelper.setAppInForeground(getApplicationContext(), true);
 

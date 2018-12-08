@@ -20,7 +20,7 @@ public class DateTimeHelper {
     public static boolean shouldStartServiceBasedOnTime(Context context, Long currTime){
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,6);
+        calendar.set(Calendar.HOUR_OF_DAY,10);
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
 
@@ -35,6 +35,7 @@ public class DateTimeHelper {
             if(shouldCheckFlagFor6AM)
             {
                 shouldCheckFlagFor6AM = false;
+                BasicHelper.setServiceStatus(context, true);
                 return true;
             }
         }
