@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.example.shashank_pc.trial.GeoLocationService;
+import com.example.shashank_pc.trial.Helper.AlarmManagerHelper;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.Helper.DateTimeHelper;
 import com.google.firebase.database.FirebaseDatabase;
@@ -14,9 +15,13 @@ public class TimelyBroadcastReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/time").setValue(
+        //TODO Removetesting
+        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
+                Long.toString(System.currentTimeMillis())+"/time/").setValue(
                 DateTimeHelper.getDateTimeString(System.currentTimeMillis())
         );
+
+        AlarmManagerHelper.setMorningRepeatingTask(context);
 
         if(!BasicHelper.getServiceStatus(context)) {
             //Set flag to 1 if service was closed earlier

@@ -38,6 +38,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.shashank_pc.trial.Helper.AlarmManagerHelper;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.Helper.DateTimeHelper;
 import com.example.shashank_pc.trial.Helper.TestHelper;
@@ -247,16 +248,18 @@ public class LandingPageActivity extends AppCompatActivity {
 
             //Starting based on time
 
-            Intent timeBroadcastIntent = new Intent(getApplicationContext(), TimelyBroadcastReciever.class);
+            AlarmManagerHelper.setMorningRepeatingTask(getApplicationContext());
+
+         /*   Intent timeBroadcastIntent = new Intent(getApplicationContext(), TimelyBroadcastReciever.class);
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 20); // For 1 PM or 2 PM
+            calendar.set(Calendar.HOUR_OF_DAY, 6); // For 6.30 AM
             calendar.set(Calendar.MINUTE, 30);
             calendar.set(Calendar.SECOND, 0);
             PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, timeBroadcastIntent, 0);
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pi);
-
+          */
 
             BasicHelper.setAppInForeground(getApplicationContext(), true);
 
