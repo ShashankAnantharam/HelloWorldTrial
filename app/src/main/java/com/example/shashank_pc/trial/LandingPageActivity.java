@@ -1,6 +1,5 @@
 package com.example.shashank_pc.trial;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,20 +7,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.PowerManager;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,14 +30,7 @@ import android.widget.Toast;
 
 import com.example.shashank_pc.trial.Helper.AlarmManagerHelper;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
-import com.example.shashank_pc.trial.Helper.DateTimeHelper;
-import com.example.shashank_pc.trial.Helper.TestHelper;
 import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
-import com.example.shashank_pc.trial.classes.TimelyBroadcastReciever;
-import com.example.shashank_pc.trial.userStatusClasses.BackgroundDetectedActivitiesService;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -66,15 +49,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.shashank_pc.trial.Generic.firestore;
 import static com.example.shashank_pc.trial.GenericFunctions.addProfilePic;
-import static com.example.shashank_pc.trial.GenericFunctions.decodeNumber;
-import static com.example.shashank_pc.trial.GenericFunctions.encodeNumber;
 import static com.example.shashank_pc.trial.GenericFunctions.getCircleBitmap;
 import static com.example.shashank_pc.trial.GenericFunctions.initEncoding;
-import static com.example.shashank_pc.trial.GenericFunctions.mEncoding;
 import static com.example.shashank_pc.trial.GenericFunctions.resizeImage;
-import static java.security.AccessController.getContext;
 
 public class LandingPageActivity extends AppCompatActivity {
 
@@ -267,7 +245,7 @@ public class LandingPageActivity extends AppCompatActivity {
             BasicHelper.setLastStillTime(getApplicationContext(),System.currentTimeMillis());
 
             BasicHelper.populateStates(getApplicationContext());
-            Intent gpsIntent = new Intent(getApplicationContext(), GeoLocationService.class);     //Intent to gps service class
+            Intent gpsIntent = new Intent(getApplicationContext(), FacemapLocationService.class);     //Intent to gps service class
             startService(gpsIntent);
 
             //Testing

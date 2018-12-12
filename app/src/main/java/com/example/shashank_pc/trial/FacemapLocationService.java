@@ -2,17 +2,13 @@ package com.example.shashank_pc.trial;;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -25,11 +21,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Binder;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,7 +31,6 @@ import android.Manifest;
 import android.widget.Toast;
 import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
-import android.util.Log;
 
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.classes.Alert;
@@ -45,7 +38,6 @@ import com.example.shashank_pc.trial.classes.Algorithm;
 import com.example.shashank_pc.trial.classes.BackupLocationRetriever;
 import com.example.shashank_pc.trial.classes.Lookout;
 import com.example.shashank_pc.trial.classes.Task;
-import com.example.shashank_pc.trial.userStatusClasses.Constants;
 import com.example.shashank_pc.trial.userStatusClasses.DetectedActivitiesIntentService;
 import com.example.shashank_pc.trial.userStatusClasses.DetectedActivityWrappers;
 import com.google.android.gms.location.ActivityRecognitionClient;
@@ -62,36 +54,28 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.atomic.AtomicMarkableReference;
 
 import static com.example.shashank_pc.trial.Helper.AlertHelper.shouldCheckAlert;
 import static com.example.shashank_pc.trial.Helper.AlertHelper.triggerAlert;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.isAppInForeground;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.populateAlerts;
-import static com.example.shashank_pc.trial.Helper.BasicHelper.setErrorFlag;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOffFirebaseDatabases;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.turnOnFirebaseDatabases;
-import static com.example.shashank_pc.trial.classes.Algorithm.getDistance;
 import static com.example.shashank_pc.trial.classes.Algorithm.shouldTriggerAlert;
 
 /*
-    GeoLocationService extends Service -
+    FacemapLocationService extends Service -
     onStart - service specific lifecycle method.
 */
-public class GeoLocationService extends Service {
+public class FacemapLocationService extends Service {
     public static final String FOREGROUND = "com.facemap.location.FOREGROUND";
     private static int GEOLOCATION_NOTIFICATION_ID = 12345689;
     private static int DETECTION_INTERVAL_IN_MILLISECONDS = 30*1000;
@@ -135,8 +119,8 @@ public class GeoLocationService extends Service {
 
 
     private class LocalBinder extends Binder {
-        public GeoLocationService getService() {
-            return GeoLocationService.this;
+        public FacemapLocationService getService() {
+            return FacemapLocationService.this;
         }
     }
 
@@ -323,7 +307,7 @@ public class GeoLocationService extends Service {
             edit.putInt("FLAG",0);
             edit.commit();
 
-//            GeoLocationService.this.sendMessage(location);
+//            FacemapLocationService.this.sendMessage(location);
             if (prevLoc==null)
             {
                 prevLoc=location;
@@ -760,7 +744,7 @@ public class GeoLocationService extends Service {
                                 BasicHelper.setLocationToLocal(getApplicationContext(),location);
 
                             //Location lastLocation = new Location("service Provider");
-                            //GeoLocationService.this.sendMessage(lastLocation);
+                            //FacemapLocationService.this.sendMessage(lastLocation);
                             //Toast.makeText(getApplicationContext(), "flag is 2", Toast.LENGTH_SHORT).show();
                             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
                             SharedPreferences.Editor edit = sharedPreferences.edit();
@@ -993,7 +977,7 @@ public class GeoLocationService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
 
 
-        Intent stopIntent = new Intent(this, GeoLocationService.class);
+        Intent stopIntent = new Intent(this, FacemapLocationService.class);
         stopIntent.setAction(STOP_ACTION);
         PendingIntent pstopIntent = PendingIntent.getService(this, 0,
                 stopIntent, 0);

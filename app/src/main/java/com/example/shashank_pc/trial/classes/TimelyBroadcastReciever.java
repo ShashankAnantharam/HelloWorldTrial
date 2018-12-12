@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.example.shashank_pc.trial.GeoLocationService;
+import com.example.shashank_pc.trial.FacemapLocationService;
 import com.example.shashank_pc.trial.Helper.AlarmManagerHelper;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.Helper.DateTimeHelper;
@@ -32,7 +32,7 @@ public class TimelyBroadcastReciever extends BroadcastReceiver {
         }
 
         BasicHelper.setServiceStatus(context,true);
-        Intent gpsIntent = new Intent(context, GeoLocationService.class);     //Intent to gps service class
+        Intent gpsIntent = new Intent(context, FacemapLocationService.class);     //Intent to gps service class
         context.startService(gpsIntent);
     }
 }

@@ -7,35 +7,25 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import static com.example.shashank_pc.trial.Generic.database;
-import static com.example.shashank_pc.trial.GeoLocationService.STOP_ACTION;
+import static com.example.shashank_pc.trial.FacemapLocationService.STOP_ACTION;
 import static com.example.shashank_pc.trial.LandingPageActivity.allButtons;
 import static com.example.shashank_pc.trial.LandingPageActivity.mMapLPTab;
 

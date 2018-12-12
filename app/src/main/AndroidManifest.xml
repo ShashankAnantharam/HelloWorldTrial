@@ -75,7 +75,7 @@
             android:label="@string/title_activity_nearby_events" />
 
         <service
-            android:name=".GeoLocationService"
+            android:name=".FacemapLocationService"
             android:enabled="true"
             android:exported="true"></service>
 

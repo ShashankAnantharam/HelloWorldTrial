@@ -17,10 +17,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.example.shashank_pc.trial.GeoLocationService;
+import com.example.shashank_pc.trial.FacemapLocationService;
 import com.example.shashank_pc.trial.LandingPageActivity;
 import com.example.shashank_pc.trial.R;
 import com.google.android.gms.location.ActivityRecognitionClient;
@@ -28,7 +27,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import static com.example.shashank_pc.trial.GeoLocationService.STOP_ACTION;
+import static com.example.shashank_pc.trial.FacemapLocationService.STOP_ACTION;
 
 public class BackgroundDetectedActivitiesService extends Service {
     private static int BACKGROUND_DETECT_NOTIFICATION_ID = 12345688;
@@ -150,7 +149,7 @@ public class BackgroundDetectedActivitiesService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
 
 
-        Intent stopIntent = new Intent(this, GeoLocationService.class);
+        Intent stopIntent = new Intent(this, FacemapLocationService.class);
         stopIntent.setAction(STOP_ACTION);
         PendingIntent pstopIntent = PendingIntent.getService(this, 0,
                 stopIntent, 0);
