@@ -23,16 +23,6 @@ public class TimelyBroadcastReciever extends BroadcastReceiver {
 
         AlarmManagerHelper.setMorningRepeatingTask(context);
 
-        if(!BasicHelper.getServiceStatus(context)) {
-            //Set flag to 1 if service was closed earlier
-            SharedPreferences sharedPreferences = context.getSharedPreferences("FLAG", Context.MODE_PRIVATE);
-            SharedPreferences.Editor edit = sharedPreferences.edit();
-            edit.putInt("FLAG", 1);
-            edit.commit();
-        }
 
-        BasicHelper.setServiceStatus(context,true);
-        Intent gpsIntent = new Intent(context, FacemapLocationService.class);     //Intent to gps service class
-        context.startService(gpsIntent);
     }
 }
