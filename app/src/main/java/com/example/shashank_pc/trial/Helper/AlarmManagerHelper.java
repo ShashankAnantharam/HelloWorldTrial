@@ -30,14 +30,21 @@ public class AlarmManagerHelper {
 
     private static long getMorningTriggerTime(Context context)
     {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FLAG", Context.MODE_PRIVATE);
-        return sharedPreferences.getLong("MORNING_TRIGGER_FLAG",-1L);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("TIME", Context.MODE_PRIVATE);
+        return sharedPreferences.getLong("MORNING_TRIGGER_TIME",-1L);
     }
 
-    private static boolean shouldTriggerMorningTimer(Context context)
+    private static boolean shouldTriggerMorningTimer(Context context, Long path)
     {
         Long currTime = System.currentTimeMillis();
         Long triggerTime = getMorningTriggerTime(context);
+
+        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
+                Long.toString(path)+"/currTimeMinusTriggerTime/").setValue(
+                Long.toString(currTime-triggerTime));
+
+
+
         /*
         If time has not been set OR time is not correct for trigger, return false
          */
@@ -48,14 +55,23 @@ public class AlarmManagerHelper {
 
     public static void setMorningRepeatingTask(Context context) {
 
+        Long path = System.currentTimeMillis();
 
+        boolean shouldTriggerNow = shouldTriggerMorningTimer(context,path);
 
-        boolean shouldTriggerNow = shouldTriggerMorningTimer(context);
+        //TODO remove testing
+        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
+                Long.toString(path)+"/shouldTriggerNow/").setValue(
+                Boolean.toString(shouldTriggerNow));
+
+        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
+                Long.toString(path)+"/currTime/").setValue(
+                DateTimeHelper.getDateTimeString(path));
 
         //Starting based on time
         Intent timeBroadcastIntent = new Intent(context, TimelyBroadcastReciever.class);
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 6); // For 6.30 AM
+        calendar.set(Calendar.HOUR_OF_DAY, 14); // For 6.30 AM
         calendar.set(Calendar.MINUTE, 30);
         calendar.set(Calendar.SECOND, 0);
         if (checkIfTheTimeHasPassed(calendar.getTimeInMillis()-QUARTER_HOUR_MS)) {
@@ -67,7 +83,7 @@ public class AlarmManagerHelper {
 
         //TODO RemoveTesting
         FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
-                Long.toString(System.currentTimeMillis())+"/alarmset/").setValue(
+                Long.toString(path)+"/alarmset/").setValue(
                 DateTimeHelper.getDateTimeString(calendar.getTimeInMillis())
         );
 
