@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.example.shashank_pc.trial.FacemapLocationService;
+import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
 import com.example.shashank_pc.trial.classes.TimelyBroadcastReciever;
 import com.example.shashank_pc.trial.userStatusClasses.Constants;
 import com.google.firebase.database.FirebaseDatabase;
@@ -17,6 +18,21 @@ import java.util.Calendar;
 public class AlarmManagerHelper {
 
     public static long QUARTER_HOUR_MS = 15L*60L*1000L;
+
+
+    private static void setNormalAlarmManager(Context context)
+    {
+        Calendar cur_cal = Calendar.getInstance();
+        cur_cal.setTimeInMillis(System.currentTimeMillis());
+        cur_cal.add(Calendar.SECOND, 50);
+
+        Intent broadcastIntent = new Intent(context, AlarmBroadcastReciever.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, broadcastIntent, 0);
+        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
+
+    }
 
 
     private static void setMorningTriggerTime(Context context, Long value)
@@ -102,6 +118,7 @@ public class AlarmManagerHelper {
             }
 
             BasicHelper.setServiceStatus(context, true);
+            setNormalAlarmManager(context);
             Intent gpsIntent = new Intent(context, FacemapLocationService.class);     //Intent to gps service class
             context.startService(gpsIntent);
         }
