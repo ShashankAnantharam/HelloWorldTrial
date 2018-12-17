@@ -87,7 +87,7 @@ public class AlarmManagerHelper {
         //Starting based on time
         Intent timeBroadcastIntent = new Intent(context, TimelyBroadcastReciever.class);
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 14); // For 6.30 AM
+        calendar.set(Calendar.HOUR_OF_DAY, 6); // For 6.30 AM
         calendar.set(Calendar.MINUTE, 30);
         calendar.set(Calendar.SECOND, 0);
         if (checkIfTheTimeHasPassed(calendar.getTimeInMillis()-QUARTER_HOUR_MS)) {
