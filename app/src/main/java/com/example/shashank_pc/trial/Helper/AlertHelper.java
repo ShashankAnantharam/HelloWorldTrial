@@ -59,6 +59,7 @@ public class AlertHelper {
                         .setSmallIcon(R.drawable.facemap_android_icon)
                         .setContentTitle("Facemap Alert")
                         .setContentText(text)
+                        .setDefaults(Notification.DEFAULT_ALL)
                         .setPriority(Notification.PRIORITY_HIGH);
 
 
