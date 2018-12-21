@@ -35,6 +35,38 @@ public class AlertHelper {
     public static final long TASK_REMINDER_INTERVAL = 1000 * 60 * 60;
 
 
+
+    public static void alertUserOnFacemapStatus(Context context, Integer type)
+    {
+        String text = "";
+        if(type==1)
+        {
+            //Service goes ON for the day
+            text = "Location Services have been activated for today.";
+        }
+        else if(type==0)
+        {
+            //Service goes OFF temporarily
+            text = "Location Services have been closed for today.";
+        }
+        else if(type==-1)
+        {
+            //Services goes OFF fully
+            text = "Location Services are closed permanently. Turn app ON to resume them.";
+        }
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.facemap_android_icon)
+                        .setContentTitle("Facemap Alert")
+                        .setContentText(text)
+                        .setPriority(Notification.PRIORITY_HIGH);
+
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        int id = (int) System.currentTimeMillis();
+        notificationManager.notify(id, mBuilder.build());
+    }
+
     public static void alertTriggerNotification(Alert alert, Context context)
     {
 
@@ -54,7 +86,7 @@ public class AlertHelper {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(android.R.drawable.ic_btn_speak_now)
+                        .setSmallIcon(R.drawable.facemap_android_icon)
                         .setContentTitle(title)
                         .setContentText(body)
                         .setSound(Uri.parse(sound))

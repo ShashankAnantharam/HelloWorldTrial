@@ -32,6 +32,7 @@ import android.widget.Toast;
 import android.os.PowerManager.WakeLock;
 import android.os.PowerManager;
 
+import com.example.shashank_pc.trial.Helper.AlertHelper;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.Algorithm;
@@ -926,6 +927,7 @@ public class FacemapLocationService extends Service {
         if(intent != null){
             if ((intent.getAction()!=null) && intent.getAction().equals(STOP_ACTION)) {
                 BasicHelper.setServiceStatus(getApplicationContext(),false);
+                AlertHelper.alertUserOnFacemapStatus(getApplicationContext(),0);
                 if(d != null && ch !=null){
                     d.removeEventListener(ch);
                  //   OOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
@@ -984,8 +986,8 @@ public class FacemapLocationService extends Service {
 
         String str = "Using your location in the background";
         builder
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setSmallIcon(R.drawable.facemap_android_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.facemap_android_icon))
                 .setContentTitle("Facemap")
                 .setContentText(str)
                 .setTicker(str)

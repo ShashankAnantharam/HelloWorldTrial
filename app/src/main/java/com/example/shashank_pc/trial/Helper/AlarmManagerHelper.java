@@ -121,6 +121,7 @@ public class AlarmManagerHelper {
             setNormalAlarmManager(context);
             Intent gpsIntent = new Intent(context, FacemapLocationService.class);     //Intent to gps service class
             context.startService(gpsIntent);
+            AlertHelper.alertUserOnFacemapStatus(context,1);
         }
     }
 
