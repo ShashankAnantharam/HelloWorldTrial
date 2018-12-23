@@ -568,6 +568,7 @@ public class FacemapLocationService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        startInForeground();
         /*
             Create wakeLock.
         */
@@ -929,7 +930,6 @@ public class FacemapLocationService extends Service {
         }
         */
 
-  startInForeground();
         /*
             If the user clicks on stop button on notification.
         */
