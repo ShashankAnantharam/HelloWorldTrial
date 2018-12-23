@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -41,16 +42,26 @@ public class AlertHelper {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private static String createNotificationChannel(Context context){
+    private static String createNotificationChannel(Context context, String type, String sound){
 
-        String channelId = "facemap_notification_service";
+        String channelId = "facemap_notification_service_"+type;
         String channelName = "Facemap Background Service";
+
+        AudioAttributes attributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build();
+
 
         NotificationChannel channel = new NotificationChannel(channelId,
                 channelName,
                 NotificationManager.IMPORTANCE_HIGH);
         channel.setLightColor(Color.BLUE);
         channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+
+        if(type.equals("task") || type.equals("lookout"))
+        {
+            channel.setSound(Uri.parse(sound),attributes);
+        }
 
         //val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         NotificationManager mNotificationManager =
@@ -84,7 +95,7 @@ public class AlertHelper {
         String channelId = "";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            channelId = createNotificationChannel(context);
+            channelId = createNotificationChannel(context,"normal","");
         }
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context,channelId)
@@ -106,21 +117,24 @@ public class AlertHelper {
         String title=alert.getName();
         String body = "";
         String sound = "";
+        String type = "";
         if(alert instanceof Lookout)
         {
             body = "You have reached lookout location.";
             sound="android.resource://" + context.getPackageName() + "/" + R.raw.andr_lookout_location;
+            type = "lookout";
         }
         else if(alert instanceof Task)
         {
             body = "You have a task nearby.";
             sound="android.resource://" + context.getPackageName() + "/" + R.raw.andr_task_location;
+            type = "task";
         }
 
         String channelId = "";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            channelId = createNotificationChannel(context);
+            channelId = createNotificationChannel(context, type, sound);
         }
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context,channelId)
