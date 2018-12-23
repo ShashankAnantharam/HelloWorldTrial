@@ -64,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.example.shashank_pc.trial.Helper.AlertHelper.alertNotificationRealtimeDb;
 import static com.example.shashank_pc.trial.Helper.AlertHelper.shouldCheckAlert;
 import static com.example.shashank_pc.trial.Helper.AlertHelper.triggerAlert;
 import static com.example.shashank_pc.trial.Helper.BasicHelper.isAppInForeground;
@@ -98,6 +99,7 @@ public class FacemapLocationService extends Service {
     private int hCount = 0;
 
     public static String STOP_ACTION = "com.lockquick.foregroundservice.action.stopforeground";
+    public static String FULL_STOP = "com.lockquick.foregroundservice.action.fullstop";
 
 
     private static final int TEN_MINUTES = 10 * 60 * 1000;
@@ -919,8 +921,15 @@ public class FacemapLocationService extends Service {
             /*
                 getCompatNotification() - To build sticky notification.
             */
-            startForeground(GEOLOCATION_NOTIFICATION_ID, getCompatNotification());
+  /*      if(Build.VERSION.SDK_INT>=26) {
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(NOTIFICATION_CHANNEL_DESC);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+        */
 
+  startInForeground();
         /*
             If the user clicks on stop button on notification.
         */
@@ -964,7 +973,7 @@ public class FacemapLocationService extends Service {
     }
 
 
-    private Notification getCompatNotification() {
+    private void startInForeground() {
 
         isNotificationReady = true;
         String channelId = "";
@@ -994,8 +1003,9 @@ public class FacemapLocationService extends Service {
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setPriority(Notification.PRIORITY_MAX)
-                .addAction(android.R.drawable.ic_media_pause, "Stop",
+                .addAction(android.R.drawable.ic_media_pause, "Stop for today",
                         pstopIntent)
+                .addAction(android.R.drawable.ic_media_pause,"Stop completely",pstopIntent)
                 .setWhen(System.currentTimeMillis());
 
         Intent startIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
@@ -1003,7 +1013,11 @@ public class FacemapLocationService extends Service {
 //        PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, stopIntent, 0);
 
         builder.setContentIntent(contentIntent);
-        return builder.build();
+        Notification notification = builder.build();
+
+
+        startForeground(GEOLOCATION_NOTIFICATION_ID, notification);
+
     }
 
 
@@ -1027,6 +1041,7 @@ public class FacemapLocationService extends Service {
 
         mNotificationManager.createNotificationChannel(channel);
 
+        Toast.makeText(getApplicationContext(),"Notification channel",Toast.LENGTH_SHORT).show();
 
         return channelId;
 

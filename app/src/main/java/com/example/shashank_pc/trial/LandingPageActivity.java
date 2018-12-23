@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -246,7 +247,11 @@ public class LandingPageActivity extends AppCompatActivity {
 
             BasicHelper.populateStates(getApplicationContext());
             Intent gpsIntent = new Intent(getApplicationContext(), FacemapLocationService.class);     //Intent to gps service class
-            startService(gpsIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(gpsIntent);
+            } else {
+                startService(gpsIntent);
+            }
 
             //Testing
            // Intent activityTypeIntent = new Intent(getApplicationContext(), BackgroundDetectedActivitiesService.class);

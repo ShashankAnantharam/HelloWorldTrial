@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import com.example.shashank_pc.trial.FacemapLocationService;
 import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
@@ -120,7 +121,11 @@ public class AlarmManagerHelper {
             BasicHelper.setServiceStatus(context, true);
             setNormalAlarmManager(context);
             Intent gpsIntent = new Intent(context, FacemapLocationService.class);     //Intent to gps service class
-            context.startService(gpsIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(gpsIntent);
+            } else {
+                context.startService(gpsIntent);
+            }
             AlertHelper.alertUserOnFacemapStatus(context,1);
         }
     }
