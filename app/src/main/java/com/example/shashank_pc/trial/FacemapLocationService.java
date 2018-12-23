@@ -1005,8 +1005,10 @@ public class FacemapLocationService extends Service {
                 .setPriority(Notification.PRIORITY_MAX)
                 .addAction(android.R.drawable.ic_media_pause, "Stop for today",
                         pstopIntent)
-                .addAction(android.R.drawable.ic_media_pause,"Stop completely",pstopIntent)
+         //       .addAction(android.R.drawable.ic_media_pause,"Stop completely",pstopIntent)
                 .setWhen(System.currentTimeMillis());
+
+        Toast.makeText(getApplicationContext(),channelId,Toast.LENGTH_SHORT).show();
 
         Intent startIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, startIntent, 0);
@@ -1015,8 +1017,10 @@ public class FacemapLocationService extends Service {
         builder.setContentIntent(contentIntent);
         Notification notification = builder.build();
 
+        NotificationManager mNotificationManager =
+                (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        startForeground(GEOLOCATION_NOTIFICATION_ID, notification);
+        startForeground(1, notification);
 
     }
 
@@ -1026,12 +1030,13 @@ public class FacemapLocationService extends Service {
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(){
 
-        String channelId = "my_service";
+        //TODO change to ts here
+        String channelId = "my_service123";
         String channelName = "My Background Service";
 
         NotificationChannel channel = new NotificationChannel(channelId,
                 channelName,
-                NotificationManager.IMPORTANCE_NONE);
+                NotificationManager.IMPORTANCE_HIGH);
         channel.setLightColor(Color.BLUE);
         channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
 
@@ -1040,8 +1045,6 @@ public class FacemapLocationService extends Service {
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         mNotificationManager.createNotificationChannel(channel);
-
-        Toast.makeText(getApplicationContext(),"Notification channel",Toast.LENGTH_SHORT).show();
 
         return channelId;
 
