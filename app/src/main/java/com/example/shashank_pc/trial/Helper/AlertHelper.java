@@ -1,10 +1,15 @@
 package com.example.shashank_pc.trial.Helper;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
@@ -35,6 +40,27 @@ public class AlertHelper {
     public static final long TASK_REMINDER_INTERVAL = 1000 * 60 * 60;
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private static String createNotificationChannel(Context context){
+
+        String channelId = "facemap_notification_service";
+        String channelName = "Facemap Background Service";
+
+        NotificationChannel channel = new NotificationChannel(channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH);
+        channel.setLightColor(Color.BLUE);
+        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+
+        //val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.createNotificationChannel(channel);
+
+        return channelId;
+
+    }
 
     public static void alertUserOnFacemapStatus(Context context, Integer type)
     {
@@ -54,8 +80,14 @@ public class AlertHelper {
             //Services goes OFF fully
             text = "Location Services are closed permanently. Turn app ON to resume them.";
         }
+
+        String channelId = "";
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            channelId = createNotificationChannel(context);
+        }
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context,channelId)
                         .setSmallIcon(R.drawable.facemap_android_icon)
                         .setContentTitle("Facemap Alert")
                         .setContentText(text)
@@ -85,8 +117,13 @@ public class AlertHelper {
             sound="android.resource://" + context.getPackageName() + "/" + R.raw.andr_task_location;
         }
 
+        String channelId = "";
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            channelId = createNotificationChannel(context);
+        }
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context,channelId)
                         .setSmallIcon(R.drawable.facemap_android_icon)
                         .setContentTitle(title)
                         .setContentText(body)

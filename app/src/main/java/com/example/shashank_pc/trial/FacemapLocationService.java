@@ -1020,7 +1020,7 @@ public class FacemapLocationService extends Service {
         NotificationManager mNotificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        startForeground(1, notification);
+        startForeground(GEOLOCATION_NOTIFICATION_ID, notification);
 
     }
 
