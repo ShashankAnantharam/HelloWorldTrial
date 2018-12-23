@@ -1003,9 +1003,9 @@ public class FacemapLocationService extends Service {
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setPriority(Notification.PRIORITY_MAX)
+                .addAction(android.R.drawable.ic_media_pause,"Stop completely",pstopIntent)
                 .addAction(android.R.drawable.ic_media_pause, "Stop for today",
                         pstopIntent)
-         //       .addAction(android.R.drawable.ic_media_pause,"Stop completely",pstopIntent)
                 .setWhen(System.currentTimeMillis());
 
         Toast.makeText(getApplicationContext(),channelId,Toast.LENGTH_SHORT).show();
@@ -1031,14 +1031,16 @@ public class FacemapLocationService extends Service {
     private String createNotificationChannel(){
 
         //TODO change to ts here
-        String channelId = "my_service123";
+        String channelId = "facemap_service_backend";
         String channelName = "My Background Service";
 
         NotificationChannel channel = new NotificationChannel(channelId,
                 channelName,
                 NotificationManager.IMPORTANCE_HIGH);
         channel.setLightColor(Color.BLUE);
-        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+        channel.setVibrationPattern(null);
+        channel.setSound(null,null);
+
 
         //val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         NotificationManager mNotificationManager =
