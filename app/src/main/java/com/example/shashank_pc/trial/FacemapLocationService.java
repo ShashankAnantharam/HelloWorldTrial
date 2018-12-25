@@ -934,9 +934,19 @@ public class FacemapLocationService extends Service {
             If the user clicks on stop button on notification.
         */
         if(intent != null){
-            if ((intent.getAction()!=null) && intent.getAction().equals(STOP_ACTION)) {
+            if ((intent.getAction()!=null) &&
+                    (intent.getAction().equals(STOP_ACTION) || intent.getAction().equals(FULL_STOP))
+                    ) {
                 BasicHelper.setServiceStatus(getApplicationContext(),false);
-                AlertHelper.alertUserOnFacemapStatus(getApplicationContext(),0);
+
+                if(intent.getAction().equals(STOP_ACTION)) {
+                    AlertHelper.alertUserOnFacemapStatus(getApplicationContext(), 0);
+                }
+                else if(intent.getAction().equals(FULL_STOP)){
+                    BasicHelper.setCompleteServiceStatus(getApplicationContext(),false);
+                    AlertHelper.alertUserOnFacemapStatus(getApplicationContext(), -1);
+                }
+
                 if(d != null && ch !=null){
                     d.removeEventListener(ch);
                  //   OOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
@@ -993,6 +1003,12 @@ public class FacemapLocationService extends Service {
         PendingIntent pstopIntent = PendingIntent.getService(this, 0,
                 stopIntent, 0);
 
+        Intent fullStopIntent = new Intent(this,FacemapLocationService.class);
+        fullStopIntent.setAction(FULL_STOP);
+        PendingIntent pFullStopIntent = PendingIntent.getService(this,0,
+                fullStopIntent,0);
+
+
         String str = "Using your location in the background";
         builder
                 .setSmallIcon(R.drawable.facemap_android_icon)
@@ -1003,7 +1019,7 @@ public class FacemapLocationService extends Service {
                 .setOngoing(true)
                 .setAutoCancel(false)
                 .setPriority(Notification.PRIORITY_MAX)
-                .addAction(android.R.drawable.ic_media_pause,"Stop completely",pstopIntent)
+                .addAction(android.R.drawable.ic_media_pause,"Stop completely",pFullStopIntent)
                 .addAction(android.R.drawable.ic_media_pause, "Stop for today",
                         pstopIntent)
                 .setWhen(System.currentTimeMillis());

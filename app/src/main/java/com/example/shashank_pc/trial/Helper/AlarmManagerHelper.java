@@ -9,6 +9,7 @@ import android.os.Build;
 
 import com.example.shashank_pc.trial.FacemapLocationService;
 import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
+import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.TimelyBroadcastReciever;
 import com.example.shashank_pc.trial.userStatusClasses.Constants;
 import com.google.firebase.database.FirebaseDatabase;
@@ -110,24 +111,39 @@ public class AlarmManagerHelper {
 
 
         if(shouldTriggerNow) {
-            if (!BasicHelper.getServiceStatus(context)) {
-                //Set flag to 1 if service was closed earlier
-                SharedPreferences sharedPreferences = context.getSharedPreferences("FLAG", Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit = sharedPreferences.edit();
-                edit.putInt("FLAG", 1);
-                edit.commit();
-            }
+            if(BasicHelper.getCompleteServiceStatus(context)) {
+                if (!BasicHelper.getServiceStatus(context)) {
 
-            BasicHelper.setServiceStatus(context, true);
-            setNormalAlarmManager(context);
-            Intent gpsIntent = new Intent(context, FacemapLocationService.class);     //Intent to gps service class
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(gpsIntent);
-            } else {
-                context.startService(gpsIntent);
+                    /*
+                    If service can turn on for the day
+                     */
+
+                    //Set flag to 1 if service was closed earlier
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("FLAG", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.putInt("FLAG", 1);
+                    edit.commit();
+                }
+
+                BasicHelper.setServiceStatus(context, true);
+                setNormalAlarmManager(context);
+                Intent gpsIntent = new Intent(context, FacemapLocationService.class);     //Intent to gps service class
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(gpsIntent);
+                } else {
+                    context.startService(gpsIntent);
+                }
+                AlertHelper.alertUserOnFacemapStatus(context, 1);
             }
-            AlertHelper.alertUserOnFacemapStatus(context,1);
+            else
+            {
+                /*
+                Service cannot turn on for the day: Show notification instead.
+                 */
+                AlertHelper.alertUserOnFacemapStatus(context,-2);
+            }
         }
+
     }
 
     public static boolean checkIfTheTimeHasPassed(long timeInMillis) {

@@ -91,6 +91,11 @@ public class AlertHelper {
             //Services goes OFF fully
             text = "Location Services are closed permanently. Turn app ON to resume them.";
         }
+        else if(type==-2)
+        {
+            //Services OFF; Need to remind user to turn app on to turn it on
+            text = "Click here to turn on Facemap and share updates with your family and friends.";
+        }
 
         String channelId = "";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)

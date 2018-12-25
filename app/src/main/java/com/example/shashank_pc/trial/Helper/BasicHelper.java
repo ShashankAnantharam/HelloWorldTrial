@@ -152,6 +152,20 @@ public class BasicHelper {
         return preferences.getBoolean("IS_SERVICE_APPROVED", false);
     }
 
+    public static void setCompleteServiceStatus(Context context, Boolean flag)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("IS_SERVICE_APPROVED", MODE_PRIVATE);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putBoolean("IS_SERVICE_APPROVED_FOR_TOMORROW",flag);
+        edit.commit();
+    }
+
+    public static Boolean getCompleteServiceStatus(Context context)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("IS_SERVICE_APPROVED", MODE_PRIVATE);
+        return preferences.getBoolean("IS_SERVICE_APPROVED_FOR_TOMORROW", false);
+    }
+
 
     public static void turnOnFirebaseDatabases(Context context){
             FirebaseDatabase.getInstance().goOnline();
