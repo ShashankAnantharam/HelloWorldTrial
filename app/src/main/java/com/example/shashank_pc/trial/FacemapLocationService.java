@@ -144,7 +144,6 @@ public class FacemapLocationService extends Service {
                     }
                     else
                     {
-                        Toast.makeText(getApplicationContext(),"Exists",Toast.LENGTH_SHORT).show();
                         if(alertMap!=null) {
                             if(alertMap.containsKey(alertId))
                                 alertMap.remove(alertId);
@@ -546,17 +545,14 @@ public class FacemapLocationService extends Service {
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void result) {
-                Toast.makeText(getApplicationContext(), "Successfully requested activity updates", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), "Successfully requested activity updates", Toast.LENGTH_SHORT).show();
             }
         });
 
         task.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(),
-                        "Requesting activity updates failed to start",
-                        Toast.LENGTH_SHORT)
-                        .show();
+               // Toast.makeText(getApplicationContext(), "Requesting activity updates failed to start", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -617,7 +613,6 @@ public class FacemapLocationService extends Service {
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),key,Toast.LENGTH_SHORT).show();
                     String alertString  = key;
                     getUpdatedAlertFromDb(alertString);
                 }
@@ -1023,8 +1018,6 @@ public class FacemapLocationService extends Service {
                 .addAction(android.R.drawable.ic_media_pause, "Stop for today",
                         pstopIntent)
                 .setWhen(System.currentTimeMillis());
-
-        Toast.makeText(getApplicationContext(),channelId,Toast.LENGTH_SHORT).show();
 
         Intent startIntent = new Intent(getApplicationContext(), LandingPageActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 1000, startIntent, 0);

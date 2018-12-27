@@ -57,6 +57,7 @@ public class AlarmManagerHelper {
         Long currTime = System.currentTimeMillis();
         Long triggerTime = getMorningTriggerTime(context);
 
+        //TODO remove testing
         FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
                 Long.toString(path)+"/currTimeMinusTriggerTime/").setValue(
                 Long.toString(currTime-triggerTime));

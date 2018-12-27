@@ -216,9 +216,6 @@ public class LandingPageActivity extends AppCompatActivity {
 
             BasicHelper.setServiceStatus(getApplicationContext(), true);
             BasicHelper.setCompleteServiceStatus(getApplicationContext(),true);
-            Toast.makeText(getApplicationContext(), Boolean.toString(
-                    BasicHelper.getServiceStatus(getApplicationContext())
-            ), Toast.LENGTH_SHORT).show();
 
             Intent broadcastIntent = new Intent(getApplicationContext(), AlarmBroadcastReciever.class);
 

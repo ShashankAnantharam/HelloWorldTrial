@@ -187,13 +187,12 @@ public class AlertHelper {
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(context,"Success",Toast.LENGTH_LONG).show();
+
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context,e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                     }
                 });;
     }
