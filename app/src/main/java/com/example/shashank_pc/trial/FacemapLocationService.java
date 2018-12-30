@@ -197,7 +197,7 @@ public class FacemapLocationService extends Service {
     private void getContactsFromDb()
     {
         contactRef = FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
-                .collection("activities").document("contacts");
+                .collection("Activities").document("contacts");
 
         contactRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
