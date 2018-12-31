@@ -196,8 +196,9 @@ public class FacemapLocationService extends Service {
 
     private void getContactsFromDb()
     {
+        //TODO Change to "Actvities"
         contactRef = FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
-                .collection("Activities").document("contacts");
+                .collection("activities").document("contacts");
 
         contactRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -301,7 +302,7 @@ public class FacemapLocationService extends Service {
         @Override
         public void onLocationChanged(Location location) {
 
-         //   Toast.makeText(getApplicationContext(),"Location acquired", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Location acquired", Toast.LENGTH_SHORT).show();
             //Get location
             locationManager.removeUpdates(this);
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
@@ -665,7 +666,7 @@ public class FacemapLocationService extends Service {
 
 
                 if(getFlag() == 0){
-                //   Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edit = sharedPreferences.edit();
                     edit.putInt("FLAG",1);
@@ -685,7 +686,7 @@ public class FacemapLocationService extends Service {
                         if(getFlag() == 1){
 
                             boolean shouldContinue = shouldContinue();
-                    //        Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue)+" TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue)+" TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 
 
                             if( hasAlertJustBeenSetForYou() ||
@@ -724,13 +725,17 @@ public class FacemapLocationService extends Service {
                                     handler.postDelayed(this,20000);
                                 }
                             }else{
+                                if(locationManager == null) {
+                                    //Prevent runaway GPS
+                                    locationManager =  (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+                                }
                                 handler.postDelayed(this,3000);
                             }
 
                         } else if(getFlag() == 2){
 
 
-                    //        Toast.makeText(getApplicationContext(),"2: Backup listener fired", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"2: Backup listener fired", Toast.LENGTH_SHORT).show();
                             // Location listener not yet triggered, so use backup listener instead
                             if(locationListener != null && locationManager!= null){
                                 locationManager.removeUpdates(locationListener);
@@ -753,7 +758,7 @@ public class FacemapLocationService extends Service {
                             handler.postDelayed(this, 13000);
                         }else if(getFlag() == 3){
 
-                    //        Toast.makeText(getApplicationContext(),"3: Backup listener output", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"3: Backup listener output", Toast.LENGTH_SHORT).show();
                             //Backup listener gives output
                             Location location = BasicHelper.getLocationFromLocal(getApplicationContext());
                             if (prevLoc==null)
