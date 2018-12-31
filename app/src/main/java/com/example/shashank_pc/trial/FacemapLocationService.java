@@ -727,8 +727,9 @@ public class FacemapLocationService extends Service {
                             }else{
                                 if(locationManager == null) {
                                     //Prevent runaway GPS
-                                    locationManager =  (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-                                }
+                                    if(locationListener != null && locationManager!= null){
+                                        locationManager.removeUpdates(locationListener);
+                                    }                                }
                                 handler.postDelayed(this,3000);
                             }
 
