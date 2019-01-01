@@ -402,6 +402,18 @@ public class FacemapLocationService extends Service {
 
     }
 
+    private boolean shouldBroadcastToAnyUsers()
+    {
+        if(userSet.size()==0)
+            return false;
+
+        for(Map.Entry<String, Long> friend: userSet.entrySet()){
+            if(contactStatus.containsKey(friend.getKey()) && userSet.get(friend.getKey()).equals("Y"))
+                return true;
+        }
+        return false;
+    }
+
 
     private void mainAlgo(List<Alert> alerts, Location currLoc, Location prevLoc)
     {
@@ -443,7 +455,7 @@ public class FacemapLocationService extends Service {
         }
      //   Toast.makeText(getApplicationContext(),Float.toString(minDist)+" in meters",Toast.LENGTH_SHORT).show();
         float time = 3f;
-        if(userSet.size()==0)
+        if(!shouldBroadcastToAnyUsers())
         {
             time = Algorithm.calculateTime(getApplicationContext(),minDist);
         }
@@ -613,6 +625,7 @@ public class FacemapLocationService extends Service {
                     Timer newPost = dataSnapshot.getValue(Timer.class);
                     long timerString = newPost.time;
                     userSet.put(key, timerString);
+
                 }
                 else
                 {
@@ -638,8 +651,9 @@ public class FacemapLocationService extends Service {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                userSet.remove(dataSnapshot.getKey());
-
+                if(userSet.containsKey(dataSnapshot.getKey())) {
+                    userSet.remove(dataSnapshot.getKey());
+                }
             }
 
             @Override
