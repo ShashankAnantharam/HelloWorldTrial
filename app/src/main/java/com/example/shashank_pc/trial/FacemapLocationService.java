@@ -206,6 +206,7 @@ public class FacemapLocationService extends Service {
 
                 List<Map<String,Object>> list = (List) documentSnapshot.get("Lists");
 
+                contactStatus.clear();
                 for(Map<String,Object> listItem: list)
                 {
                     String status = "";
