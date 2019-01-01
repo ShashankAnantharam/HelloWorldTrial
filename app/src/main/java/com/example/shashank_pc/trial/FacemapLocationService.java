@@ -408,7 +408,7 @@ public class FacemapLocationService extends Service {
             return false;
 
         for(Map.Entry<String, Long> friend: userSet.entrySet()){
-            if(contactStatus.containsKey(friend.getKey()) && userSet.get(friend.getKey()).equals("Y"))
+            if(contactStatus.containsKey(friend.getKey()) && contactStatus.get(friend.getKey()).equals("Y"))
                 return true;
         }
         return false;
