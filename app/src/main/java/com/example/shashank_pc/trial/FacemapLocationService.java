@@ -224,7 +224,6 @@ public class FacemapLocationService extends Service {
                         status = "N";
                     }
                     contactStatus.put(id,status);
-                    FirebaseDatabase.getInstance().getReference("Testing/Contacts/"+id).setValue(status);
                 }
             }
         });
