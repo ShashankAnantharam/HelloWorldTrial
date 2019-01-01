@@ -254,7 +254,9 @@ public class FacemapLocationService extends Service {
 
         for(Map.Entry<String,Long> friend : userSet.entrySet())
         {
-            FirebaseDatabase.getInstance().getReference("broadcasting/"+friend.getKey() +"/cts/"+getUserPhoneNumber()).setValue(locVal);
+            if(contactStatus.containsKey(friend.getKey()) && contactStatus.get(friend.getKey()).equals("Y")) {
+                FirebaseDatabase.getInstance().getReference("broadcasting/" + friend.getKey() + "/cts/" + getUserPhoneNumber()).setValue(locVal);
+            }
         }
     }
 
