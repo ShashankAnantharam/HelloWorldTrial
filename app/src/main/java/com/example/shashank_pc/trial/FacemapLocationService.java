@@ -241,7 +241,7 @@ public class FacemapLocationService extends Service {
 
     private boolean isSomeContactLookingAtYou()
     {
-        return (userSet.size()>0);
+        return (shouldBroadcastToAnyUsers());
     }
 
     private void broadcastLocationToAllFriends(double latitude, double longitude)
