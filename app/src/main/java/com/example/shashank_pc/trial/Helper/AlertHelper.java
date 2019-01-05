@@ -15,6 +15,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
 
+//TODO Replace package com.example.shashank_pc.trial with com.locquick (or whatever package name)
+
 import com.example.shashank_pc.trial.R;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.Lookout;
@@ -102,6 +104,7 @@ public class AlertHelper {
         {
             channelId = createNotificationChannel(context,"normal","");
         }
+        //TODO Add facemap_android_icon to drawable.
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context,channelId)
                         .setSmallIcon(R.drawable.facemap_android_icon)
@@ -241,12 +244,12 @@ public class AlertHelper {
     public static void alertTransaction(final Alert alert, final String phoneNumber, final Context context)
     {
 
-        //TODO Change from others to user
         DocumentReference tempRef=null;
         String alertId = alert.getId();
         if (alert instanceof Lookout) {
             String lookoutCreator = ((Lookout) alert).getCreatedBy();
 
+            //TODO Change from others to user
             tempRef =  FirebaseFirestore.getInstance().collection("Users").document(lookoutCreator)
             .collection("Lookout(Others)").document(alertId);
 
@@ -256,6 +259,8 @@ public class AlertHelper {
         } else if (alert instanceof Task){
 
             String taskCreator = ((Task) alert).getCreatedBy().getId();
+
+            //TODO Change from others to user
             tempRef =  FirebaseFirestore.getInstance().collection("Users").document(taskCreator)
                     .collection("Task(Others)").document(alertId);
 //            Toast.makeText(context, "Users/"+taskCreator+"/Task(Others)/"+alertId,Toast.LENGTH_SHORT).show();

@@ -440,7 +440,6 @@ public class FacemapLocationService extends Service {
                     updateAlertInMap(alert.getId());
                     triggerAlert(alert,getApplicationContext(),getUserPhoneNumber(),getUserName());
 
-                    //TODO Calculate distance here
                 }
                 else
                 {
@@ -834,7 +833,7 @@ public class FacemapLocationService extends Service {
     }
 
     private String getUserPhoneNumber(){
-        //TODO Set this right
+        //TODO Set this to correct getUserPhoneNumberFunction (You can simply uncomment this)
 
         SharedPreferences duration = getApplication().getSharedPreferences("USERNUMBER", MODE_PRIVATE);
 //        return duration.getString("USERNUMBER","");
@@ -842,7 +841,7 @@ public class FacemapLocationService extends Service {
     }
 
     private String getUserName(){
-        //TODO Set this right
+        //TODO Set this to the correct getUserName function (Need to do before sending code)
         return "Shashank";
     }
 
@@ -1061,7 +1060,6 @@ public class FacemapLocationService extends Service {
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(){
 
-        //TODO change to ts here
         String channelId = "facemap_service_backend";
         String channelName = "My Background Service";
 

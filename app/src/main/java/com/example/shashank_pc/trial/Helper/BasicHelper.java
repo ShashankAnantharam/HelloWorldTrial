@@ -121,6 +121,7 @@ public class BasicHelper {
     }
 
 
+    //TODO Make this isAppInForeground consistent with rest of code
     public static boolean isAppInForeground(Context context){
         SharedPreferences isInForeground = context.getSharedPreferences("IS_FOREGROUND", MODE_PRIVATE);
         if(isInForeground.getString("IS_FOREGROUND","1").equals("0")){
@@ -128,6 +129,8 @@ public class BasicHelper {
         }
         return true;
     }
+
+    //TODO Check whether this is also consistent with rest of code
     public static void setAppInForeground(Context context,Boolean value){
         SharedPreferences isInForeground = context.getSharedPreferences("IS_FOREGROUND", MODE_PRIVATE);
         SharedPreferences.Editor edit = isInForeground.edit();
