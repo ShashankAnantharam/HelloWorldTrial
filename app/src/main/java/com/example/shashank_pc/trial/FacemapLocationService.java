@@ -274,7 +274,6 @@ public class FacemapLocationService extends Service {
                     lookout.setId(lId);
 //                    Toast.makeText(getApplicationContext(), new Gson().toJson(lookout),Toast.LENGTH_LONG).show();
                     alertMap.put(lId,lookout);
-                    FirebaseDatabase.getInstance().getReference("Testing/Alerts/"+lId).setValue(System.currentTimeMillis());
                 }
             }
         });
@@ -292,7 +291,6 @@ public class FacemapLocationService extends Service {
                     task.setId(tId);
 //                    Toast.makeText(getApplicationContext(), new Gson().toJson(lookout),Toast.LENGTH_LONG).show();
                     alertMap.put(tId,task);
-                    FirebaseDatabase.getInstance().getReference("Testing/Alerts/"+tId).setValue(System.currentTimeMillis());
                 }
             }
         });
@@ -429,11 +427,9 @@ public class FacemapLocationService extends Service {
             if(shouldCheckAlert(alert,contactStatus,getUserPhoneNumber()))
             {
 
-                FirebaseDatabase.getInstance().getReference("testingBigTime/"+alert.getId()).setValue("check");
                 if(shouldTriggerAlert(x_curr, y_curr, x_prev, y_prev, alert))
                 {
                     //Trigger alert
-                    FirebaseDatabase.getInstance().getReference("testingBigTime/"+alert.getId()).setValue("pp");
                     FirebaseDatabase.getInstance().
                             getReference("broadcasting/"+getUserPhoneNumber()+
                                     "/TriggerAlerts/"+alert.getId()).setValue(System.currentTimeMillis());
@@ -449,7 +445,6 @@ public class FacemapLocationService extends Service {
             }
             else
             {
-                FirebaseDatabase.getInstance().getReference("testingBigTime/"+alert.getId()).setValue("noCheck");
             }
         }
      //   Toast.makeText(getApplicationContext(),Float.toString(minDist)+" in meters",Toast.LENGTH_SHORT).show();
@@ -462,12 +457,6 @@ public class FacemapLocationService extends Service {
 
  //       time = powerSaverAlgo(time,currLoc);
 //        Toast.makeText(getApplicationContext(),"Final Time : "+ Float.toString(time),Toast.LENGTH_SHORT ).show();
-        FirebaseDatabase.getInstance().getReference("Testing/loc/loclogs/"+Long.toString(System.currentTimeMillis()))
-                .setValue(currLoc);
-        FirebaseDatabase.getInstance().getReference("Testing/loc/Timelogs/"+Long.toString(System.currentTimeMillis()))
-                .setValue(Float.toString(time));
-        setAlarmDuration((long) time);
-
 
     }
 
@@ -507,8 +496,7 @@ public class FacemapLocationService extends Service {
 //        Toast.makeText(getApplicationContext(),"Deficit periodic: "+Long.toString(currTime - BasicHelper.getLastStillTime(getApplicationContext())),Toast.LENGTH_SHORT).show();
         if(currTime - BasicHelper.getLastStillTime(getApplicationContext())> 60*60*1000)
         {
-            FirebaseDatabase.getInstance().getReference("Debug/dbState/"+
-                    Long.toString(currTime)).setValue("TurningThisDbOnOnce");
+            // FirebaseDatabase.getInstance().getReference("Debug/dbState/"+ Long.toString(currTime)).setValue("TurningThisDbOnOnce");
             return true;
         }
         return false;
@@ -989,7 +977,6 @@ public class FacemapLocationService extends Service {
 
     public void onTaskRemoved(Intent rootIntent) {
 
-        FirebaseDatabase.getInstance().getReference("Testing/logs/brdcst").setValue("onTaskRemoved");
         BasicHelper.setAppInForeground(getApplicationContext(),false);
     }
     void writeCrashLogs(String crashType){
