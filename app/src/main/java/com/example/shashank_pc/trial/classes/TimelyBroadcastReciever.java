@@ -15,12 +15,6 @@ public class TimelyBroadcastReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //TODO Removetesting
-        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
-                Long.toString(System.currentTimeMillis())+"/time/").setValue(
-                DateTimeHelper.getDateTimeString(System.currentTimeMillis())
-        );
-
         AlarmManagerHelper.setMorningRepeatingTask(context);
 
 
