@@ -35,8 +35,8 @@ public class BasicHelper {
 
     public static void populateStates(Context context)
     {
-        FirebaseDatabase.getInstance().getReference("Testing/ErrFlag").setValue(getErrorFlag(context));
-        FirebaseDatabase.getInstance().getReference("Testing/serviceStatus").setValue(getServiceStatus(context));
+        // FirebaseDatabase.getInstance().getReference("Testing/ErrFlag").setValue(getErrorFlag(context));
+        // FirebaseDatabase.getInstance().getReference("Testing/serviceStatus").setValue(getServiceStatus(context));
 
     }
 
@@ -226,9 +226,6 @@ public class BasicHelper {
         otherDate.setSeconds(otherDateOr.getSeconds());
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
         String formattedDate = sdf.format(otherDate);
-
-        FirebaseDatabase.getInstance().getReference("Testing/ts").setValue(formattedDate);
-        FirebaseDatabase.getInstance().getReference("Testing/tsOr").setValue(sdf.format(otherDateOr));
 
         return otherDate.getTime();
     }

@@ -57,13 +57,6 @@ public class AlarmManagerHelper {
         Long currTime = System.currentTimeMillis();
         Long triggerTime = getMorningTriggerTime(context);
 
-        //TODO remove testing
-        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
-                Long.toString(path)+"/currTimeMinusTriggerTime/").setValue(
-                Long.toString(currTime-triggerTime));
-
-
-
         /*
         If time has not been set OR time is not correct for trigger, return false
          */
@@ -78,15 +71,6 @@ public class AlarmManagerHelper {
 
         boolean shouldTriggerNow = shouldTriggerMorningTimer(context,path);
 
-        //TODO remove testing
-        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
-                Long.toString(path)+"/shouldTriggerNow/").setValue(
-                Boolean.toString(shouldTriggerNow));
-
-        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
-                Long.toString(path)+"/currTime/").setValue(
-                DateTimeHelper.getDateTimeString(path));
-
         //Starting based on time
         Intent timeBroadcastIntent = new Intent(context, TimelyBroadcastReciever.class);
         Calendar calendar = Calendar.getInstance();
@@ -99,12 +83,6 @@ public class AlarmManagerHelper {
 
         //Set time to trigger in local storage
         setMorningTriggerTime(context,calendar.getTimeInMillis());
-
-        //TODO RemoveTesting
-        FirebaseDatabase.getInstance().getReference("Testing/broadcastRecieve/"+
-                Long.toString(path)+"/alarmset/").setValue(
-                DateTimeHelper.getDateTimeString(calendar.getTimeInMillis())
-        );
 
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, timeBroadcastIntent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

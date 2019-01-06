@@ -350,7 +350,7 @@ public class AlertHelper {
         Long lastTime = -1L;
 
 
-        FirebaseDatabase.getInstance().getReference("Debug/lastTime/"+alert.getId()).setValue(lastTime);
+        // FirebaseDatabase.getInstance().getReference("Debug/lastTime/"+alert.getId()).setValue(lastTime);
 
         if(alert instanceof Lookout)
         {

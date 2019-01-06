@@ -32,9 +32,9 @@ public class DateTimeHelper {
    //     , Toast.LENGTH_SHORT).show();
 
 
-        FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/currT").setValue(getDateTimeString(currTime));
-        FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/fixT").setValue(getDateTimeString(morningTime));
-        FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/flag").setValue(shouldCheckFlagFor6AM);
+        // FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/currT").setValue(getDateTimeString(currTime));
+        // FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/fixT").setValue(getDateTimeString(morningTime));
+        // FirebaseDatabase.getInstance().getReference("Testing/firedBroadcastList/flag").setValue(shouldCheckFlagFor6AM);
 
         if(currTime >= morningTime)
         {
