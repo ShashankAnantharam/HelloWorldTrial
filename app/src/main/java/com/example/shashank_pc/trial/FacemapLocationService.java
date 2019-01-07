@@ -455,6 +455,7 @@ public class FacemapLocationService extends Service {
         }
         time*=1000;
 
+        setAlarmDuration((long)time);
  //       time = powerSaverAlgo(time,currLoc);
 //        Toast.makeText(getApplicationContext(),"Final Time : "+ Float.toString(time),Toast.LENGTH_SHORT ).show();
 
