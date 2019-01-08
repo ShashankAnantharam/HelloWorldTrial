@@ -172,17 +172,16 @@ public class AlertHelper {
                 {
                     //If document exists
                     ArrayList <HashMap<String,Object>> list = (ArrayList) snapshot.get("selectedContacts");
-                    for(int i=0;i<list.size();i++)
-                    {
+                    if(list!=null) {
+                        for (int i = 0; i < list.size(); i++) {
 
-                        if(list.get(i).get("id").equals(phoneNumber))
-                        {
-                            list.get(i).put("timeStamp",System.currentTimeMillis());
-                            break;
+                            if (list.get(i).get("id").equals(phoneNumber)) {
+                                list.get(i).put("timeStamp", System.currentTimeMillis());
+                                break;
+                            }
                         }
+                        transaction.update(ref, "selectedContacts", list);
                     }
-                    transaction.update(ref,"selectedContacts",list);
-
                 }
 
                 return null;
@@ -249,7 +248,7 @@ public class AlertHelper {
         if (alert instanceof Lookout) {
             String lookoutCreator = ((Lookout) alert).getCreatedBy();
 
-            //TODO Change from others to user
+            //TODO Change from Lookout(Others) to Lookout(User)
             tempRef =  FirebaseFirestore.getInstance().collection("Users").document(lookoutCreator)
             .collection("Lookout(Others)").document(alertId);
 
@@ -260,7 +259,7 @@ public class AlertHelper {
 
             String taskCreator = ((Task) alert).getCreatedBy().getId();
 
-            //TODO Change from others to user
+            //TODO Change from Task(Others) to Task(User)
             tempRef =  FirebaseFirestore.getInstance().collection("Users").document(taskCreator)
                     .collection("Task(Others)").document(alertId);
 //            Toast.makeText(context, "Users/"+taskCreator+"/Task(Others)/"+alertId,Toast.LENGTH_SHORT).show();
@@ -314,13 +313,21 @@ public class AlertHelper {
 
     public static void triggerAlert(Alert alert, Context context, String phoneNumber, String userName) {
         Long currTime = System.currentTimeMillis();
-        alertTriggerNotification(alert, context);
         alertTransaction(alert,phoneNumber, context);
         alertNotificationRealtimeDb(alert,phoneNumber,context,userName,currTime);
         if (alert instanceof Lookout) {
 
+            if(((Lookout) alert).getCreatedBy().equals(phoneNumber))
+            {
+                alertTriggerNotification(alert, context);
+            }
 
         } else if (alert instanceof Task){
+
+            if(((Task) alert).getCreatedBy().getId().equals(phoneNumber))
+            {
+                alertTriggerNotification(alert,context);
+            }
 
         }
     }

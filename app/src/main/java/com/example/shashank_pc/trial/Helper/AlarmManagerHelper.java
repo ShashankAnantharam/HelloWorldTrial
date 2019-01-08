@@ -12,7 +12,6 @@ import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.TimelyBroadcastReciever;
 import com.example.shashank_pc.trial.userStatusClasses.Constants;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Date;
 import java.util.Calendar;
