@@ -9,7 +9,6 @@ import com.example.shashank_pc.trial.FacemapLocationService;
 import com.example.shashank_pc.trial.Helper.AlarmManagerHelper;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
 import com.example.shashank_pc.trial.Helper.DateTimeHelper;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class TimelyBroadcastReciever extends BroadcastReceiver {
     @Override

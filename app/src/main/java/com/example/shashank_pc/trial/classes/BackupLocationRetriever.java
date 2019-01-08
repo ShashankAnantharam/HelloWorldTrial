@@ -12,7 +12,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.shashank_pc.trial.Helper.BasicHelper.setLocationToLocal;
 
