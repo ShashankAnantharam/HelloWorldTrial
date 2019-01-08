@@ -197,10 +197,6 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void startServiceUsingAlarm()
     {
-
-     //   TestHelper.setLookouts(getApplicationContext());
-     //   TestHelper.setTasks(getApplicationContext());
-
         try {
             BasicHelper.turnOnFirebaseDatabases(getApplicationContext());
 
@@ -224,23 +220,12 @@ public class LandingPageActivity extends AppCompatActivity {
             alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
 
             //Starting based on time
-
             AlarmManagerHelper.setMorningRepeatingTask(getApplicationContext());
 
-         /*   Intent timeBroadcastIntent = new Intent(getApplicationContext(), TimelyBroadcastReciever.class);
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 6); // For 6.30 AM
-            calendar.set(Calendar.MINUTE, 30);
-            calendar.set(Calendar.SECOND, 0);
-            PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, timeBroadcastIntent, 0);
-            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, pi);
-          */
-
+            //App Set to foreground
             BasicHelper.setAppInForeground(getApplicationContext(), true);
 
-            //Needs to be set once atleast at the start (It is predicting that the next will be still. If not, it updates prediction
+            //Needs to be set once at least at the start (It is predicting that the next will be still. If not, it updates prediction
             BasicHelper.setLastStillTime(getApplicationContext(),System.currentTimeMillis());
 
             BasicHelper.populateStates(getApplicationContext());
@@ -251,23 +236,11 @@ public class LandingPageActivity extends AppCompatActivity {
                 startService(gpsIntent);
             }
 
-            //Testing
-           // Intent activityTypeIntent = new Intent(getApplicationContext(), BackgroundDetectedActivitiesService.class);
-           // getApplicationContext().startService(activityTypeIntent);
-
         }
         catch (Exception e)
         {
 
         }
-
-
-     /*   Intent gpsIntent = new Intent(getApplicationContext(), GPS_Service.class);     //Intent to gps service class
-        PendingIntent pintent = PendingIntent.getService(getApplicationContext(), 0, gpsIntent, 0);
-        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 30*1000, pintent);
-        //startService(gpsIntent);
-        */
     }
 
     public void getDialogue(){

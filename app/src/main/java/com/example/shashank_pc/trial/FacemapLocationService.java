@@ -196,8 +196,8 @@ public class FacemapLocationService extends Service {
 
     private void getContactsFromDb()
     {
-        //TODO Change to "Actvities"
-        contactRef = FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
+        //TODO Change to "Actvities" and Contacts
+        contactRef = FirebaseFirestore.getInstance().collection("Users").document(getUserPhoneNumber())
                 .collection("activities").document("contacts");
 
         contactRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -262,7 +262,7 @@ public class FacemapLocationService extends Service {
 
     private void getAlertsFromDb()
     {
-        FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
+        FirebaseFirestore.getInstance().collection("Users").document(getUserPhoneNumber())
                 .collection("Lookout(Others)").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -279,7 +279,7 @@ public class FacemapLocationService extends Service {
         });
 
 
-        FirebaseFirestore.getInstance().collection("Users").document("+919701420818")
+        FirebaseFirestore.getInstance().collection("Users").document(getUserPhoneNumber())
                 .collection("Task(Others)").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -430,12 +430,8 @@ public class FacemapLocationService extends Service {
                 if(shouldTriggerAlert(x_curr, y_curr, x_prev, y_prev, alert))
                 {
                     //Trigger alert
-                    FirebaseDatabase.getInstance().
-                            getReference("broadcasting/"+getUserPhoneNumber()+
-                                    "/TriggerAlerts/"+alert.getId()).setValue(System.currentTimeMillis());
                     updateAlertInMap(alert.getId());
                     triggerAlert(alert,getApplicationContext(),getUserPhoneNumber(),getUserName());
-
                 }
                 else
                 {
@@ -595,7 +591,6 @@ public class FacemapLocationService extends Service {
         mPendingIntent = PendingIntent.getService(this, 1, mIntentService, PendingIntent.FLAG_UPDATE_CURRENT);
         requestActivityUpdatesButtonHandler();
 
-        // FirebaseDatabase database = FirebaseDatabase.getInstance();
         d =  FirebaseDatabase.getInstance().getReference("/broadcasting/" + userPhoneNumber + "/LocRequests/");
 
         ch =  new ChildEventListener() {
