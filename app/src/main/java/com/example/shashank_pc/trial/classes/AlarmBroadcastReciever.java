@@ -19,9 +19,6 @@ public class AlarmBroadcastReciever extends BroadcastReceiver {
             } else {
                 context.startService(gpsIntent);
             }
-
-         //   Intent activityTypeIntent = new Intent(context, BackgroundDetectedActivitiesService.class);
-         //   context.startService(activityTypeIntent);
         }
     }
 }

@@ -104,8 +104,6 @@
             android:name=".userStatusClasses.DetectedActivitiesIntentService"
             android:exported="false" />
 
-        <service android:name=".userStatusClasses.BackgroundDetectedActivitiesService"></service>
-
     </application>
 
 </manifest>
