@@ -15,7 +15,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
 
-//TODO Replace package com.example.shashank_pc.trial with com.locquick (or whatever package name)
 
 import com.example.shashank_pc.trial.R;
 import com.example.shashank_pc.trial.classes.Alert;
@@ -62,6 +61,7 @@ public class AlertHelper {
 
         if(type.equals("task") || type.equals("lookout"))
         {
+            //TODO Add sound as resource here
             channel.setSound(Uri.parse(sound),attributes);
         }
 
@@ -306,9 +306,12 @@ public class AlertHelper {
 
         FirebaseDatabase.getInstance().getReference("broadcasting/"+createdBy
                 +"/Alerts/"+phoneNumber+"/"+alert.getId()).removeValue();
-        FirebaseDatabase.getInstance().getReference("broadcasting/"+createdBy
-                +"/Alerts/"+phoneNumber+"/"+alert.getId()).setValue(alertDetails);
+        if(!createdBy.equals(phoneNumber) && !(alert instanceof Task)) {
 
+            //Only if user is NOT the creator
+            FirebaseDatabase.getInstance().getReference("broadcasting/" + createdBy
+                    + "/Alerts/" + phoneNumber + "/" + alert.getId()).setValue(alertDetails);
+        }
     }
 
     public static void triggerAlert(Alert alert, Context context, String phoneNumber, String userName) {
@@ -351,8 +354,6 @@ public class AlertHelper {
 
     public static boolean shouldCheckAlert(Alert alert, Map<String,String> contactMap, String userID)
     {
-        //TODO Cross check once
-
         Long currTime= System.currentTimeMillis();
         Long lastTime = -1L;
 

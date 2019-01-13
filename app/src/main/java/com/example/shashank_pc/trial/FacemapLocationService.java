@@ -120,11 +120,27 @@ public class FacemapLocationService extends Service {
 
     private Location prevLoc= null;
 
+    private String userName = "";
+
 
     private class LocalBinder extends Binder {
         public FacemapLocationService getService() {
             return FacemapLocationService.this;
         }
+    }
+
+    private void getUserDetails()
+    {
+        FirebaseFirestore.getInstance().collection("Users").document(getUserPhoneNumber()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()) {
+                            userName = documentSnapshot.get("name").toString();
+                            Toast.makeText(getApplicationContext(), userName, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void getUpdatedAlertFromDb(final String alertId)
@@ -212,6 +228,7 @@ public class FacemapLocationService extends Service {
                     String status = "";
                     String id = (String)listItem.get("id");
 
+                    //TODO get(freezeMode can be null)
                     if((Boolean)listItem.get("freezeMode"))
                     {
                         status="F";
@@ -564,6 +581,9 @@ public class FacemapLocationService extends Service {
         super.onCreate();
 
         startInForeground();
+
+        getUserDetails();
+
         /*
             Create wakeLock.
         */
@@ -826,7 +846,8 @@ public class FacemapLocationService extends Service {
 
     private String getUserName(){
         //TODO Set this to the correct getUserName function (Need to do before sending code)
-        return "Shashank";
+        //return "Shashank";
+        return userName;
     }
 
 
