@@ -129,6 +129,23 @@ public class FacemapLocationService extends Service {
         }
     }
 
+    //TODO Add this
+    private void broadcastLocationToAllContacts(double latitude, double longitude){
+
+        Map<String,Object> locVal = new HashMap<>();
+        locVal.put("latitude",latitude);
+        locVal.put("longitude",longitude);
+        locVal.put("time",System.currentTimeMillis());
+
+        for(Map.Entry<String,String> friend : contactStatus.entrySet())
+        {
+            if(friend.getValue().equals("Y")) {
+                FirebaseDatabase.getInstance().getReference("broadcasting/" + friend.getKey() + "/cts/" + getUserPhoneNumber()).setValue(locVal);
+            }
+        }
+
+    }
+
     private void getUserDetails()
     {
         FirebaseFirestore.getInstance().collection("Users").document(getUserPhoneNumber()).get()
@@ -380,6 +397,9 @@ public class FacemapLocationService extends Service {
         @Override
         public void onProviderDisabled(String s) {
             if(current_gps_status == true){
+
+                //TODO add this
+                broadcastLocationToAllContacts(prevLoc.getLatitude(),prevLoc.getLongitude());
                 turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
                 current_gps_status = false;
                 userSet.clear();
@@ -539,8 +559,12 @@ public class FacemapLocationService extends Service {
                 return true;
             }
 
-            if(shouldTurnDbOff())
-                turnOffFirebaseDatabases(getApplicationContext(),BasicHelper.isAppInForeground(getApplicationContext()));
+            if(shouldTurnDbOff()) {
+
+                //TODO add this
+                broadcastLocationToAllContacts(prevLoc.getLatitude(),prevLoc.getLongitude());
+                turnOffFirebaseDatabases(getApplicationContext(), BasicHelper.isAppInForeground(getApplicationContext()));
+            }
             return false;
         }
         else {
