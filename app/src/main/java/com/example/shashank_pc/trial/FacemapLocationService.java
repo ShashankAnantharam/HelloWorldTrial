@@ -403,7 +403,9 @@ public class FacemapLocationService extends Service {
             if(current_gps_status == true){
 
                 //TODO add this
-                broadcastLocationToAllContacts(prevLoc.getLatitude(),prevLoc.getLongitude());
+                if(prevLoc!=null) {
+                    broadcastLocationToAllContacts(prevLoc.getLatitude(), prevLoc.getLongitude());
+                }
                 turnOffFirebaseDatabases(getApplicationContext(),isAppInForeground(getApplicationContext()));
                 current_gps_status = false;
                 userSet.clear();
