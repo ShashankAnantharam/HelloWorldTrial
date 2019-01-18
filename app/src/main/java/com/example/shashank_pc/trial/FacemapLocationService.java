@@ -797,7 +797,11 @@ public class FacemapLocationService extends Service {
                                 locationManager.removeUpdates(locationListener);
                             }
 
-                            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            //TODO Change this
+                            Location location = null;
+                            if(locationManager!=null) {
+                                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            }
                             if(location==null)
                                 backupLocationRetriever.getLocation();
                             else
@@ -841,7 +845,10 @@ public class FacemapLocationService extends Service {
                         e.printStackTrace();
 
                         //TODO Add this
-                        FirebaseDatabase.getInstance().getReference("Testing/error/"+getUserPhoneNumber()).setValue(e.getMessage());
+                        handler.postDelayed(this, 2000);
+                        FirebaseDatabase.getInstance().getReference("Testing/error/"+getUserPhoneNumber()
+                        +"/"+Long.toString(System.currentTimeMillis())
+                        ).setValue(e.getMessage());
                     }
                 }
             }
@@ -875,6 +882,7 @@ public class FacemapLocationService extends Service {
                     edit.putInt("FLAG",1);
                     edit.commit();
 
+                    FirebaseDatabase.getInstance().getReference("Testing/Logs/Started/"+Long.toString(System.currentTimeMillis())).setValue("");
                     handler.postDelayed(sendData,1000);
                     Toast.makeText(getApplicationContext(),"Here",Toast.LENGTH_SHORT).show();
                 }
