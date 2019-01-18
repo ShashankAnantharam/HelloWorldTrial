@@ -101,6 +101,10 @@ public class FacemapLocationService extends Service {
     public static String STOP_ACTION = "com.lockquick.foregroundservice.action.stopforeground";
     public static String FULL_STOP = "com.lockquick.foregroundservice.action.fullstop";
 
+    //TODO add this
+    private Handler backupHandler;
+    private Runnable backupRunnable;
+    private Long lastRunnableTime;
 
     private static final int TEN_MINUTES = 10 * 60 * 1000;
     private Handler handler;
@@ -452,6 +456,9 @@ public class FacemapLocationService extends Service {
 
     private void mainAlgo(List<Alert> alerts, Location currLoc, Location prevLoc)
     {
+        //TODO Add this
+        turnOnFirebaseDatabases(getApplicationContext());
+
         double x_curr = currLoc.getLatitude();
         double y_curr = currLoc.getLongitude();
         double x_prev = prevLoc.getLatitude();
@@ -707,6 +714,9 @@ public class FacemapLocationService extends Service {
 
             public void run(){
 
+                //TODO Add this
+                lastRunnableTime = System.currentTimeMillis();
+                Toast.makeText(getApplicationContext(),"Runnable Time: "+Long.toString(lastRunnableTime),Toast.LENGTH_SHORT).show();
 
                 if(getFlag() == 0){
                    Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
@@ -827,6 +837,9 @@ public class FacemapLocationService extends Service {
                     }
                     catch (Exception e) {
                         e.printStackTrace();
+
+                        //TODO Add this
+                        FirebaseDatabase.getInstance().getReference("Testing/error/"+getUserPhoneNumber()).setValue(e.getMessage());
                     }
                 }
             }
@@ -834,6 +847,42 @@ public class FacemapLocationService extends Service {
 
         //Toast.makeText(getApplicationContext(),"START",Toast.LENGTH_SHORT).show();
         handler.postDelayed(sendData, 100);
+
+        //TODO Add this
+        lastRunnableTime = System.currentTimeMillis();
+        backupHandler = new Handler();
+        backupRunnable  = new Runnable() {
+            @Override
+            public void run() {
+                int flag = getFlag();
+                if((System.currentTimeMillis() - lastRunnableTime > 120000) ||
+                        (flag!=0 && flag!=1 && flag!=2 && flag!=3))
+                {
+                    /*
+                    If flag is incorrect OR runnable stopped working, then restart runnable
+                     */
+
+                    //Prevent runaway GPS
+                    if(locationListener != null && locationManager!= null){
+                        locationManager.removeUpdates(locationListener);
+                    }
+
+                    current_gps_status=true;
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.putInt("FLAG",1);
+                    edit.commit();
+
+                    handler.postDelayed(sendData,1000);
+                    Toast.makeText(getApplicationContext(),"Here",Toast.LENGTH_SHORT).show();
+                }
+
+                backupHandler.postDelayed(backupRunnable,4000);
+
+            }
+        };
+        backupHandler.postDelayed(backupRunnable,4000);
+
     }
 
 
