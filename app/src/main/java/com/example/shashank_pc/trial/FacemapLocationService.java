@@ -131,7 +131,6 @@ public class FacemapLocationService extends Service {
         }
     }
 
-    //TODO Add this
     private void broadcastLocationToAllContacts(double latitude, double longitude){
 
         Map<String,Object> locVal = new HashMap<>();
@@ -248,18 +247,19 @@ public class FacemapLocationService extends Service {
                     String id = (String)listItem.get("id");
 
                     //TODO get(freezeMode can be null)
-                    if((Boolean)listItem.get("freezeMode"))
-                    {
-                        status="F";
-                    }
-                    else if((Boolean) listItem.get("isBroadcasting"))
+                    if((Boolean) listItem.get("isBroadcasting"))
                     {
                         status = "Y";
+                    }
+                    else if(listItem.containsKey("freezeMode") && (Boolean)listItem.get("freezeMode"))
+                    {
+                        status="F";
                     }
                     else
                     {
                         status = "N";
                     }
+
                     contactStatus.put(id,status);
                 }
             }
@@ -305,11 +305,15 @@ public class FacemapLocationService extends Service {
                 List<DocumentSnapshot> documentSnapshots = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot documentSnapshot: documentSnapshots)
                 {
-                    Lookout lookout = documentSnapshot.toObject(Lookout.class);
-                    String lId =  documentSnapshot.getId();
-                    lookout.setId(lId);
+                    try {
+                        Lookout lookout = documentSnapshot.toObject(Lookout.class);
+                        String lId = documentSnapshot.getId();
+                        lookout.setId(lId);
 //                    Toast.makeText(getApplicationContext(), new Gson().toJson(lookout),Toast.LENGTH_LONG).show();
-                    alertMap.put(lId,lookout);
+                        alertMap.put(lId, lookout);
+                    }catch(Exception e){
+
+                    }
                 }
             }
         });
@@ -322,11 +326,16 @@ public class FacemapLocationService extends Service {
                 List<DocumentSnapshot> documentSnapshots = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot documentSnapshot: documentSnapshots)
                 {
-                    Task task = documentSnapshot.toObject(Task.class);
-                    String tId =  documentSnapshot.getId();
-                    task.setId(tId);
+                    try {
+                        Task task = documentSnapshot.toObject(Task.class);
+                        String tId = documentSnapshot.getId();
+                        task.setId(tId);
 //                    Toast.makeText(getApplicationContext(), new Gson().toJson(lookout),Toast.LENGTH_LONG).show();
-                    alertMap.put(tId,task);
+                        alertMap.put(tId, task);
+                    }
+                    catch (Exception e){
+
+                    }
                 }
             }
         });
