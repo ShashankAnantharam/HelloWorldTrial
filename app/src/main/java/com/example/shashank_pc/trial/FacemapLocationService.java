@@ -571,7 +571,9 @@ public class FacemapLocationService extends Service {
             if(shouldTurnDbOff()) {
 
                 //TODO add this
-                broadcastLocationToAllContacts(prevLoc.getLatitude(),prevLoc.getLongitude());
+                if(prevLoc!=null) {
+                    broadcastLocationToAllContacts(prevLoc.getLatitude(), prevLoc.getLongitude());
+                }
                 turnOffFirebaseDatabases(getApplicationContext(), BasicHelper.isAppInForeground(getApplicationContext()));
             }
             return false;
@@ -718,7 +720,8 @@ public class FacemapLocationService extends Service {
 
                 //TODO Add this
                 lastRunnableTime = System.currentTimeMillis();
-                Toast.makeText(getApplicationContext(),"Runnable Time: "+Long.toString(lastRunnableTime),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Runnable Time: "+Long.toString(lastRunnableTime)
+                        +" flag: "+Integer.toString(getFlag()),Toast.LENGTH_SHORT).show();
 
                 if(getFlag() == 0){
                    Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
@@ -737,7 +740,7 @@ public class FacemapLocationService extends Service {
 
                     handler.postDelayed(this, 3000);
                 }else{
-                    try {
+                 //   try {
                         if(getFlag() == 1){
 
                             boolean shouldContinue = shouldContinue();
@@ -799,8 +802,15 @@ public class FacemapLocationService extends Service {
 
                             //TODO Change this
                             Location location = null;
-                            if(locationManager!=null) {
+                            try{
                                 location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            }
+                            catch (Exception e){
+
+                                FirebaseDatabase.getInstance().getReference("Testing/error/hreebaba/"+getUserPhoneNumber()
+                                        +"/"+Long.toString(System.currentTimeMillis())
+                                ).setValue(e.getMessage());
+
                             }
                             if(location==null)
                                 backupLocationRetriever.getLocation();
@@ -841,7 +851,7 @@ public class FacemapLocationService extends Service {
                         }
 
                     }
-                    catch (Exception e) {
+            /*        catch (Exception e) {
                         e.printStackTrace();
 
                         //TODO Add this
@@ -850,7 +860,9 @@ public class FacemapLocationService extends Service {
                         +"/"+Long.toString(System.currentTimeMillis())
                         ).setValue(e.getMessage());
                     }
+
                 }
+                */
             }
         };
 
