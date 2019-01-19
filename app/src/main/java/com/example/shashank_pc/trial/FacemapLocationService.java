@@ -56,6 +56,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -101,10 +103,6 @@ public class FacemapLocationService extends Service {
     public static String STOP_ACTION = "com.lockquick.foregroundservice.action.stopforeground";
     public static String FULL_STOP = "com.lockquick.foregroundservice.action.fullstop";
 
-    //TODO add this
-    private Handler backupHandler;
-    private Runnable backupRunnable;
-    private Long lastRunnableTime;
 
     private static final int TEN_MINUTES = 10 * 60 * 1000;
     private Handler handler;
@@ -718,11 +716,6 @@ public class FacemapLocationService extends Service {
 
             public void run(){
 
-                //TODO Add this
-                lastRunnableTime = System.currentTimeMillis();
-                Toast.makeText(getApplicationContext(),"Runnable Time: "+Long.toString(lastRunnableTime)
-                        +" flag: "+Integer.toString(getFlag()),Toast.LENGTH_SHORT).show();
-
                 if(getFlag() == 0){
                    Toast.makeText(getApplicationContext(),"0", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
@@ -740,7 +733,8 @@ public class FacemapLocationService extends Service {
 
                     handler.postDelayed(this, 3000);
                 }else{
-                 //   try {
+                    try {
+
                         if(getFlag() == 1){
 
                             boolean shouldContinue = shouldContinue();
@@ -851,7 +845,7 @@ public class FacemapLocationService extends Service {
                         }
 
                     }
-            /*        catch (Exception e) {
+                    catch (Exception e) {
                         e.printStackTrace();
 
                         //TODO Add this
@@ -859,51 +853,21 @@ public class FacemapLocationService extends Service {
                         FirebaseDatabase.getInstance().getReference("Testing/error/"+getUserPhoneNumber()
                         +"/"+Long.toString(System.currentTimeMillis())
                         ).setValue(e.getMessage());
+                        StringWriter sw = new StringWriter();
+                        e.printStackTrace(new PrintWriter(sw));
+                        String exceptionAsString = sw.toString();
+                        FirebaseDatabase.getInstance().getReference("Testing/FullError/"+getUserPhoneNumber()
+                                +"/"+Long.toString(System.currentTimeMillis())
+                        ).setValue(exceptionAsString);
                     }
 
                 }
-                */
+
             }
         };
 
         //Toast.makeText(getApplicationContext(),"START",Toast.LENGTH_SHORT).show();
         handler.postDelayed(sendData, 100);
-
-        //TODO Add this
-        lastRunnableTime = System.currentTimeMillis();
-        backupHandler = new Handler();
-        backupRunnable  = new Runnable() {
-            @Override
-            public void run() {
-                int flag = getFlag();
-                if((System.currentTimeMillis() - lastRunnableTime > 120000) ||
-                        (flag!=0 && flag!=1 && flag!=2 && flag!=3))
-                {
-                    /*
-                    If flag is incorrect OR runnable stopped working, then restart runnable
-                     */
-
-                    //Prevent runaway GPS
-                    if(locationListener != null && locationManager!= null){
-                        locationManager.removeUpdates(locationListener);
-                    }
-
-                    current_gps_status=true;
-                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("FLAG", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor edit = sharedPreferences.edit();
-                    edit.putInt("FLAG",1);
-                    edit.commit();
-
-                    FirebaseDatabase.getInstance().getReference("Testing/Logs/Started/"+Long.toString(System.currentTimeMillis())).setValue("");
-                    handler.postDelayed(sendData,1000);
-                    Toast.makeText(getApplicationContext(),"Here",Toast.LENGTH_SHORT).show();
-                }
-
-                backupHandler.postDelayed(backupRunnable,4000);
-
-            }
-        };
-        backupHandler.postDelayed(backupRunnable,4000);
 
     }
 
