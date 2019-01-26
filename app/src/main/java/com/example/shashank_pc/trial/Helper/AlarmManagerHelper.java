@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import com.example.shashank_pc.trial.FacemapLocationService;
-import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
+//import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
 import com.example.shashank_pc.trial.classes.Alert;
 import com.example.shashank_pc.trial.classes.TimelyBroadcastReciever;
 import com.example.shashank_pc.trial.userStatusClasses.Constants;
@@ -20,8 +20,8 @@ public class AlarmManagerHelper {
 
     public static long QUARTER_HOUR_MS = 15L*60L*1000L;
 
-
-    private static void setNormalAlarmManager(Context context)
+    //TODO Comment this 25Jan
+ /*   private static void setNormalAlarmManager(Context context)
     {
         Calendar cur_cal = Calendar.getInstance();
         cur_cal.setTimeInMillis(System.currentTimeMillis());
@@ -34,7 +34,7 @@ public class AlarmManagerHelper {
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
 
     }
-
+*/
 
     private static void setMorningTriggerTime(Context context, Long value)
     {
@@ -104,7 +104,10 @@ public class AlarmManagerHelper {
                 }
 
                 BasicHelper.setServiceStatus(context, true);
-                setNormalAlarmManager(context);
+
+                //TODO Comment this 25Jan
+                //setNormalAlarmManager(context);
+
                 Intent gpsIntent = new Intent(context, FacemapLocationService.class);     //Intent to gps service class
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(gpsIntent);

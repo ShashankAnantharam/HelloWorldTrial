@@ -746,6 +746,12 @@ public class FacemapLocationService extends Service {
 
                         if(getFlag() == 1){
 
+                            //TODO Add this 25Jan
+                            if(isAppInForeground(getApplicationContext()))
+                            {
+                                turnOnFirebaseDatabases(getApplicationContext());
+                            }
+
                             boolean shouldContinue = shouldContinue();
                             Toast.makeText(getApplicationContext(), Boolean.toString(shouldContinue)+" TimeDeficit: " + Long.toString(getAlarmDuration() - System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 

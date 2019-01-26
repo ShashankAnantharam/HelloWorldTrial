@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import com.example.shashank_pc.trial.Helper.AlarmManagerHelper;
 import com.example.shashank_pc.trial.Helper.BasicHelper;
-import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
+//import com.example.shashank_pc.trial.classes.AlarmBroadcastReciever;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -213,11 +213,11 @@ public class LandingPageActivity extends AppCompatActivity {
             BasicHelper.setServiceStatus(getApplicationContext(), true);
             BasicHelper.setCompleteServiceStatus(getApplicationContext(),true);
 
-            Intent broadcastIntent = new Intent(getApplicationContext(), AlarmBroadcastReciever.class);
-
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, 0);
-            AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
+            //TODO Comment this 25Jan
+           // Intent broadcastIntent = new Intent(getApplicationContext(), AlarmBroadcastReciever.class);
+          //  PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, broadcastIntent, 0);
+          //  AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+           // alarm.setRepeating(AlarmManager.RTC_WAKEUP, cur_cal.getTimeInMillis(), 1 * 1000, pendingIntent);
 
             //Starting based on time
             AlarmManagerHelper.setMorningRepeatingTask(getApplicationContext());

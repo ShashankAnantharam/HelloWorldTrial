@@ -81,6 +81,8 @@
             android:enabled="true"
             android:exported="true"></service>
 
+        <!--TODO remove this 25Jan -->
+    <!--
         <receiver
             android:name=".classes.AlarmBroadcastReciever"
             android:enabled="true"
@@ -90,6 +92,7 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
+        -->
 
         <receiver android:name=".classes.TimelyBroadcastReciever"
             android:enabled="true"
