@@ -183,6 +183,12 @@ public class AlertHelper {
                         transaction.update(ref, "selectedContacts", list);
                     }
                 }
+                else
+                {
+                    //TODO Latest1 Add this
+                    FirebaseFirestore.getInstance().collection("Users").document(phoneNumber).
+                            collection("Lookout(Others)").document(snapshot.getId()).delete();
+                }
 
                 return null;
             }
@@ -217,6 +223,11 @@ public class AlertHelper {
                     }
                     transaction.update(ref, "selectedContacts", map);
 
+                }
+                else{
+                    //TODO Latest1 Add this
+                    FirebaseFirestore.getInstance().collection("Users").document(phoneNumber).
+                            collection("Task(Others)").document(snapshot.getId()).delete();
                 }
 
                 return null;

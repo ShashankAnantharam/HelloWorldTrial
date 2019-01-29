@@ -10,7 +10,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -197,6 +200,27 @@ public class LandingPageActivity extends AppCompatActivity {
 
     public void startServiceUsingAlarm()
     {
+
+        //TODO Latest1 Add this
+        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        boolean isIgnoringBatteryOptimizations = false;
+
+        if(Build.VERSION.SDK_INT >= 23) {
+            try {
+                isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+            } catch (Exception e) {
+            }
+            ;
+
+            if (!isIgnoringBatteryOptimizations) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "PLEASE REMOVE OPTIMIZATION SETTINGS FOR FACEMAP IN ORDER TO FULLY UTILIZE THE APP", Toast.LENGTH_LONG).show();
+            }
+        }
+
         try {
             BasicHelper.turnOnFirebaseDatabases(getApplicationContext());
 
